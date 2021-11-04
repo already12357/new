@@ -10,6 +10,12 @@ public class DateUtil {
         return dateFromStr(strDate, "yyyy-MM-dd HH:mm:ss");
     }
 
+    /**
+     * 根据提供的字符串格式, 解析为对应的日期
+     * @param strDate 对应的日期字符串
+     * @param format 解析的格式字符串
+     * @return 返回解析成功的日期时间
+     */
     public static Date dateFromStr(String strDate, String format) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.CHINA);
         Date parsedDate;

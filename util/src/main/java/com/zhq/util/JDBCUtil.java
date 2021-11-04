@@ -18,8 +18,4 @@ public class JDBCUtil {
     public static final String MYSQLURL(String name, String ip) {
         return MYSQLURL(name, ip, "3306");
     }
-
-    public static void writeFileToDB() {
-
-    }
 }
