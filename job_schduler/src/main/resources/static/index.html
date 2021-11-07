@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>多任务调度</title>
+    <script src="js/jQuery/jquery-1.11.0.js"></script>
+    <script src="js/index.js"></script>
+</head>
+<body>
+<a href="/page/to_delete">delete job</a>
+<br/>
+<form method="post" action="/job_schduler">
+    <input type="text" name="job_id" />
+    <br/>
+    <input type="date" name="start_time" />
+    <br/>
+    <input type="date" name="end_time" />
+    <br/>
+    <input type="number" name="interval" />
+    <br/>
+    <input type="submit" value="submit_end" id="submit_end" onsubmit="submit_info(this);"/>
+    <br/>
+    <input type="submit" value="submit_start" id="submit_start"  onsubmit="submit_info(this);"/>
+    <br/>
+    <input type="submit" value="submit_ajust" id="submit_ajust"  onsubmit="submit_info(this);"/>
+</form>
+</body>
+<script>
+
+</script>
+</html>
