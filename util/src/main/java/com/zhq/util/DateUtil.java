@@ -40,6 +40,8 @@ public class DateUtil {
      */
     public static int getHour_24(Date date) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -48,7 +50,9 @@ public class DateUtil {
      * @return
      */
     public static int getHour_12(Date date) {
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR);
     }
 
 
@@ -59,7 +63,6 @@ public class DateUtil {
      * @return
      */
     public static boolean isBetweenTimes_H_M_S_MS(Date start, Date end) {
-        boolean isBetween = false;
         Calendar nowCalendar = Calendar.getInstance();
         Calendar startCalendar = Calendar.getInstance();
         Calendar endCalendar = Calendar.getInstance();
@@ -81,13 +84,63 @@ public class DateUtil {
                     nowCalendar.get(Calendar.HOUR_OF_DAY) == startCalendar.get(Calendar.HOUR_OF_DAY)) {
                 return isBetweenTimes_M_S_MS(start, end);
             }
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) <= endCalendar.get(Calendar.HOUR_OF_DAY) &&
+            if (nowCalendar.get(Calendar.HOUR_OF_DAY) < endCalendar.get(Calendar.HOUR_OF_DAY) &&
                     nowCalendar.get(Calendar.HOUR_OF_DAY) == startCalendar.get(Calendar.HOUR_OF_DAY)) {
-
+                return isAfterTimes_M_S_MS(start);
             }
             if  (nowCalendar.get(Calendar.HOUR_OF_DAY) == endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                    nowCalendar.get(Calendar.HOUR_OF_DAY) >= startCalendar.get(Calendar.HOUR_OF_DAY)) {
+                    nowCalendar.get(Calendar.HOUR_OF_DAY) > startCalendar.get(Calendar.HOUR_OF_DAY)) {
+                return isBeforeTimes_M_S_MS(end);
+            }
+        }
 
+        return false;
+    }
+
+    /**
+     * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
+     * @param date
+     * @return
+     */
+    public static boolean isBeforeTimes_H_M_S_MS(Date date) {
+        Calendar nowCalendar = Calendar.getInstance();
+        Calendar dateCalendar = Calendar.getInstance();
+
+        nowCalendar.setTime(new Date());
+        dateCalendar.setTime(date);
+
+        // 可能满足条件的情况
+        if (nowCalendar.get(Calendar.HOUR_OF_DAY) <= dateCalendar.get(Calendar.HOUR_OF_DAY)) {
+            if (nowCalendar.get(Calendar.HOUR_OF_DAY) == dateCalendar.get(Calendar.HOUR_OF_DAY)) {
+                return isBeforeTimes_M_S_MS(date);
+            }
+            else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断当前时间是否在对应的时间段后 ( hh:mm:ss:SSS )
+     * @param date
+     * @return
+     */
+    public static boolean isAfterTimes_H_M_S_MS(Date date) {
+        Calendar nowCalendar = Calendar.getInstance();
+        Calendar dateCalendar = Calendar.getInstance();
+
+        nowCalendar.setTime(new Date());
+        dateCalendar.setTime(date);
+
+        // 可能满足条件的情况
+        if (nowCalendar.get(Calendar.HOUR_OF_DAY) >= dateCalendar.get(Calendar.HOUR_OF_DAY)) {
+            if (nowCalendar.get(Calendar.HOUR_OF_DAY) == dateCalendar.get(Calendar.HOUR_OF_DAY)) {
+                return isAfterTimes_M_S_MS(date);
+            }
+            else {
+                return true;
             }
         }
 
@@ -124,11 +177,11 @@ public class DateUtil {
             }
             if (nowCalendar.get(Calendar.MINUTE) < endCalendar.get(Calendar.MINUTE) &&
                     nowCalendar.get(Calendar.MINUTE) == startCalendar.get(Calendar.MINUTE)) {
-                return isBeforeTimes_S_MS(end);
+                return isAfterTimes_S_MS(start);
             }
             if  (nowCalendar.get(Calendar.MINUTE) == endCalendar.get(Calendar.MINUTE) &&
                     nowCalendar.get(Calendar.MINUTE) > startCalendar.get(Calendar.MINUTE)) {
-                return isAfterTimes_S_MS(start);
+                return isBeforeTimes_S_MS(end);
             }
         }
 
@@ -178,7 +231,7 @@ public class DateUtil {
                 return isAfterTimes_S_MS(date);
             }
             else {
-                return false;
+                return true;
             }
         }
 
@@ -215,13 +268,15 @@ public class DateUtil {
             }
             if (nowCalendar.get(Calendar.SECOND) < endCalendar.get(Calendar.SECOND) &&
                     nowCalendar.get(Calendar.SECOND) == startCalendar.get(Calendar.SECOND)) {
-                return isBeforeTimes_MS(end);
+                return isAfterTimes_MS(start);
             }
             if  (nowCalendar.get(Calendar.SECOND) == endCalendar.get(Calendar.SECOND) &&
                     nowCalendar.get(Calendar.SECOND) > startCalendar.get(Calendar.SECOND)) {
-                return isAfterTimes_MS(start);
+                return isBeforeTimes_MS(end);
             }
         }
+
+        return false;
     }
 
     /**

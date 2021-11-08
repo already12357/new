@@ -1,11 +1,19 @@
 package com.zhq;
 
+import com.zhq.util.DateUtil;
 import org.junit.Test;
 
-public class DateUtil {
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateUtilTest {
     @Test
+    public void test() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+        Date date1 = simpleDateFormat.parse("19:56:15.127");
+        Date date2 = simpleDateFormat.parse("21:16:15.127");
 
-    public void test() {
-
+        System.out.println(DateUtil.isBetweenTimes_H_M_S_MS(date1, date2));
     }
 }
