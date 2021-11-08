@@ -5,8 +5,11 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressBase;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.DataSourceFactory;
 
 import javax.activation.FileTypeMap;
+import javax.sql.DataSource;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -48,7 +51,7 @@ public class FileUtil {
 //    }
 
     /**
-     * 将一个文件从一个地点拷贝到另一个地点
+     * 将一个文件从一个地点拷贝到另一个文件
      * @param from 文件的出发地
      * @param to 文件的目的地
      */
@@ -83,6 +86,15 @@ public class FileUtil {
         }
     }
 
+
+    /**
+     * 将对应的文件存储到对应的数据库中的对应字段
+     * @param from
+     * @param dataSource
+     */
+    public static void storeFile(File from, DataSource dataSource) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    }
 
 
     /**
