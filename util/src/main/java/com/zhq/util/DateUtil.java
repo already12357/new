@@ -65,9 +65,17 @@ public class DateUtil {
     }
 
 
-//    public static boolean isBetweenTimes(Date start, Date end, String format) {
-//
-//    }
+    public static boolean isBetweenTimes(Date start, Date end, String format) {
+
+    }
+
+    public static boolean isBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
+
+    }
+
+    public static boolean isBetweenTimes(Date start, Date end, String format) {
+
+    }
 
     /**
      * 判断当前时间是否在对应的时间段内 ( hh:mm:ss:SSS )
