@@ -12,8 +12,8 @@ public class DateUtilTest {
     public void test() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
         Date date1 = simpleDateFormat.parse("19:56:15.127");
-        Date date2 = simpleDateFormat.parse("21:16:15.127");
+        Date date2 = simpleDateFormat.parse("8:16:15.127");
 
-        System.out.println(DateUtil.isBetweenTimes_H_M_S_MS(date1, date2));
+        System.out.println(DateUtil.isBetweenTimes_H_M_S_MS(date2, date1));
     }
 }
