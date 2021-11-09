@@ -10,8 +10,6 @@ public class DateUtil {
     public static final int H_M_S_MS = 0;
     public static final int H_M_S = 1;
     public static final int H_M = 2;
-    public static final String HOUR_12 = "3";
-    public static final String HOUR_24 = "4";
 
     public static Date dateFromStr(String strDate) {
         // 使用多个重载的方式构建出默认函数的效果
@@ -42,30 +40,40 @@ public class DateUtil {
         return parsedDate;
     }
 
-//    public static int getDateHour(Date date, String timeBase)
-
     /**
-     * 获取对应日期的小时 ( 24 )
-     * @param date
+     * 根据时间段获取对应的小时数
+     * @param date 日期时间
+     * @param calendarTimeBase Calendar 中的时间进制
      * @return
      */
-    public static int getHour_24(Date date) {
+    public static int getDateHour(Date date, int calendarTimeBase) {
         Calendar calendar = calendarWithDate(date);
-        return calendar.get(Calendar.HOUR_OF_DAY);
+        return calendar.get(calendarTimeBase);
     }
+
+    public static int getDateHour(Date date) {
+        return getDateHour(date, Calendar.HOUR_OF_DAY);
+    }
+
 
     /**
-     * 获取对应日期的小时 ( 12 )
-     * @param date
+     * 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之间 ( 仅比较时间 )
+     * @param start 起始时间
+     * @param end 结束时间
+     * @param second 比较是否包括秒
+     * @param millisecond 比较是否包括毫秒
      * @return
      */
-    public static int getHour_12(Date date) {
-        Calendar calendar = calendarWithDate(date);
-        return calendar.get(Calendar.HOUR);
-    }
+    public static boolean isBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
+        Calendar nowCalendar = calendarWithDate(new Date());
+        Calendar startCalendar = calendarWithDate(start);
+        Calendar endCalendar = calendarWithDate(end);
 
-    public static boolean isBetweenTimes(Date start, Date end) {
-        return isBetweenTimes(start, end, false, false);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, second, millisecond);
+        LocalTime startTime = localTimeWithCalendar(startCalendar, second, millisecond);
+        LocalTime endTime = localTimeWithCalendar(endCalendar, second, millisecond);
+
+        return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
 
     public static boolean isBetweenTimes(Date start, Date end, int format) {
@@ -81,17 +89,13 @@ public class DateUtil {
         }
     }
 
-    public static boolean isBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
-        Calendar nowCalendar = calendarWithDate(new Date());
-        Calendar startCalendar = calendarWithDate(start);
-        Calendar endCalendar = calendarWithDate(end);
-
-        LocalTime nowTime = localTimeWithCalendar(nowCalendar, second, millisecond);
-        LocalTime startTime = localTimeWithCalendar(startCalendar, second, millisecond);
-        LocalTime endTime = localTimeWithCalendar(endCalendar, second, millisecond);
-
-        return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
+    public static boolean isBetweenTimes(Date start, Date end) {
+        return isBetweenTimes(start, end, false, false);
     }
+
+
+
+
 
     /**
      * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
@@ -108,6 +112,7 @@ public class DateUtil {
 
         return (nowTime.compareTo(dateTime) <= 0);
     }
+
 
     /**
      * 判断当前时间是否在对应的时间段后 ( hh:mm:ss:SSS )
@@ -139,14 +144,6 @@ public class DateUtil {
     }
 
 
-    public static LocalTime localTimeWithCalendar(Calendar calendar) {
-        return localTimeWithCalendar(calendar, false, false);
-    }
-
-    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second) {
-        return localTimeWithCalendar(calendar, second, false);
-    }
-
     /**
      * 根据对应的日历返回对应的时间信息
      * @param calendar 传入的日历
@@ -172,5 +169,13 @@ public class DateUtil {
             return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE));
         }
+    }
+
+    public static LocalTime localTimeWithCalendar(Calendar calendar) {
+        return localTimeWithCalendar(calendar, false, false);
+    }
+
+    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second) {
+        return localTimeWithCalendar(calendar, second, false);
     }
 }
