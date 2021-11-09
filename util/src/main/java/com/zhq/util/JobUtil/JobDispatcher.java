@@ -1,33 +1,61 @@
 package com.zhq.util.JobUtil;
 
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 // 用于调度发配对应的任务
 public class JobDispatcher {
+    public static final String DEFAULT_TRIGGER_ID = "default_trigger_id";
+
+    // 需要注入默认的调度器
     @Autowired
     private Scheduler scheduler;
 
+    public JobDispatcher() throws SchedulerException {
+        if (scheduler == null) {
+            scheduler = StdSchedulerFactory.getDefaultScheduler();
+        }
+    }
+
     /**
-     * 向调度器中, 添加一个任务
+     * 向调度器中, 添加一个任务, 默认状态下, 调度器时没有运行的
      * @param jobId 任务的编号
      * @param clazz 对应任务的类
      * @param args 启动任务所需的参数, 以 <参数名, 参数>
      */
-    public void addJob(String jobId, Class<? extends Job> clazz, Map<String, Object>...args) {
-        JobDetail jobDetail = JobBuilder.newJob(clazz).build();
+    public void addJob(String jobId, String triggerId, Date startDate, Date endDate, int interval,
+                       Class<? extends Job> clazz, Map<String, Object> args)
+            throws SchedulerException {
+        JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobId).build();
+
+        // 向工作的空间中传入参数
+        if (null != args && !args.isEmpty()) {
+            jobDetail.getJobDataMap().putAll(args);
+        }
+
+        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+                .withIdentity(triggerId)
+                .startAt(startDate)
+                .endAt(endDate)
+                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(interval)).build();
+
+        scheduler.scheduleJob(jobDetail, simpleTrigger);
+        scheduler.start();
     }
 
-    public void suspendJob() {
+    public void suspendJob(String jobId, String triggerId, Date startDate, Date endDate, int interval,
+                           Class<? extends Job> clazz, Map<String, Object> args) {
 
     }
 
     public void removeJob() {
-
+        TriggerKey triggerKey = TriggerKey.triggerKey()
+        scheduler.getTrigger()
     }
 }
