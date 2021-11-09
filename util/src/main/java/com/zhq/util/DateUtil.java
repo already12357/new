@@ -1,11 +1,18 @@
 package com.zhq.util;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class DateUtil {
+    public static final String H_M_S_MS = "0";
+    public static final String H_M_S = "1";
+    public static final String H_M = "2";
+    public static final String HOUR_12 = "3";
+    public static final String HOUR_24 = "4";
+
     public static Date dateFromStr(String strDate) {
         // 使用多个重载的方式构建出默认函数的效果
         return dateFromStr(strDate, "yyyy-MM-dd HH:mm:ss");
@@ -23,7 +30,9 @@ public class DateUtil {
 
         try {
             simpleDateFormat.setLenient(false);
-            parsedDate = simpleDateFormat.parse(strDate);
+            synchronized (DateUtil.class) {
+                parsedDate = simpleDateFormat.parse(strDate);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -33,14 +42,15 @@ public class DateUtil {
         return parsedDate;
     }
 
+//    public static int getDateHour(Date date, String timeBase)
+
     /**
      * 获取对应日期的小时 ( 24 )
      * @param date
      * @return
      */
     public static int getHour_24(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        Calendar calendar = calendarWithDate(date);
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
@@ -50,76 +60,48 @@ public class DateUtil {
      * @return
      */
     public static int getHour_12(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        Calendar calendar = calendarWithDate(date);
         return calendar.get(Calendar.HOUR);
     }
 
 
+//    public static boolean isBetweenTimes(Date start, Date end, String format) {
+//
+//    }
+
     /**
      * 判断当前时间是否在对应的时间段内 ( hh:mm:ss:SSS )
+     * 该方法仅比较时间段, 不考虑对应的日期
      * @param start
      * @param end
      * @return
      */
     public static boolean isBetweenTimes_H_M_S_MS(Date start, Date end) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar startCalendar = Calendar.getInstance();
-        Calendar endCalendar = Calendar.getInstance();
+        Calendar nowCalendar = calendarWithDate(new Date());
+        Calendar startCalendar = calendarWithDate(start);
+        Calendar endCalendar = calendarWithDate(end);
 
-        nowCalendar.setTime(new Date());
-        startCalendar.setTime(start);
-        endCalendar.setTime(end);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
+        LocalTime startTime = localTimeWithCalendar(startCalendar, true, true);
+        LocalTime endTime = localTimeWithCalendar(endCalendar, true, true);
 
-        // 满足条件时
-        if (nowCalendar.get(Calendar.HOUR_OF_DAY) <= endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                nowCalendar.get(Calendar.HOUR_OF_DAY) >= startCalendar.get(Calendar.HOUR_OF_DAY)) {
-            // 不用判断分钟的情况
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) < endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                    nowCalendar.get(Calendar.HOUR_OF_DAY) > startCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return true;
-            }
-            // 需要判断分钟的三种情况
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) == endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                    nowCalendar.get(Calendar.HOUR_OF_DAY) == startCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return isBetweenTimes_M_S_MS(start, end);
-            }
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) < endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                    nowCalendar.get(Calendar.HOUR_OF_DAY) == startCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return isAfterTimes_M_S_MS(start);
-            }
-            if  (nowCalendar.get(Calendar.HOUR_OF_DAY) == endCalendar.get(Calendar.HOUR_OF_DAY) &&
-                    nowCalendar.get(Calendar.HOUR_OF_DAY) > startCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return isBeforeTimes_M_S_MS(end);
-            }
-        }
-
-        return false;
+        return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
 
     /**
      * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
+     * 默认包含相等的情况
      * @param date
      * @return
      */
     public static boolean isBeforeTimes_H_M_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
+        Calendar nowCalendar = calendarWithDate(new Date());
+        Calendar dateCalendar = calendarWithDate(date);
 
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
+        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
 
-        // 可能满足条件的情况
-        if (nowCalendar.get(Calendar.HOUR_OF_DAY) <= dateCalendar.get(Calendar.HOUR_OF_DAY)) {
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) == dateCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return isBeforeTimes_M_S_MS(date);
-            }
-            else {
-                return true;
-            }
-        }
-
-        return false;
+        return (nowTime.compareTo(dateTime) <= 0);
     }
 
     /**
@@ -128,267 +110,62 @@ public class DateUtil {
      * @return
      */
     public static boolean isAfterTimes_H_M_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
+        Calendar nowCalendar = calendarWithDate(new Date());
+        Calendar dateCalendar = calendarWithDate(date);
 
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
+        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
 
-        // 可能满足条件的情况
-        if (nowCalendar.get(Calendar.HOUR_OF_DAY) >= dateCalendar.get(Calendar.HOUR_OF_DAY)) {
-            if (nowCalendar.get(Calendar.HOUR_OF_DAY) == dateCalendar.get(Calendar.HOUR_OF_DAY)) {
-                return isAfterTimes_M_S_MS(date);
+        return (nowTime.compareTo(dateTime) >= 0);
+    }
+
+
+    /**
+     * 返回对应日期时间的日历
+     * @param date 传入的日期
+     * @return
+     */
+    public static Calendar calendarWithDate(Date date) {
+        synchronized (Calendar.class) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar;
+        }
+    }
+
+
+    public static LocalTime localTimeWithCalendar(Calendar calendar) {
+        return localTimeWithCalendar(calendar, false, false);
+    }
+
+    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second) {
+        return localTimeWithCalendar(calendar, second, false);
+    }
+
+    /**
+     * 根据对应的日历返回对应的时间信息
+     * @param calendar 传入的日历
+     * @param second 是否需要比较秒 ( 默认不要 )
+     * @param millisecond 是否需要比较毫秒 ( 默认不要 )
+     * @return
+     */
+    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second, boolean millisecond) {
+        if (second) {
+            if (millisecond) {
+                return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND),
+                        calendar.get(Calendar.MILLISECOND));
             }
             else {
-                return true;
+                return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND));
             }
         }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段内 ( mm:ss:SSS )
-     * @param start
-     * @param end
-     * @return
-     */
-    public static boolean isBetweenTimes_M_S_MS(Date start, Date end) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar startCalendar = Calendar.getInstance();
-        Calendar endCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        startCalendar.setTime(start);
-        endCalendar.setTime(end);
-
-        // 满足条件时
-        if (nowCalendar.get(Calendar.MINUTE) <= endCalendar.get(Calendar.MINUTE) &&
-                nowCalendar.get(Calendar.MINUTE) >= startCalendar.get(Calendar.MINUTE)) {
-            // 不用判断毫秒的情况
-            if (nowCalendar.get(Calendar.MINUTE) < endCalendar.get(Calendar.MINUTE) &&
-                    nowCalendar.get(Calendar.MINUTE) > startCalendar.get(Calendar.MINUTE)) {
-                return true;
-            }
-            // 需要判断分钟的三种情况
-            if (nowCalendar.get(Calendar.MINUTE) == endCalendar.get(Calendar.MINUTE) &&
-                    nowCalendar.get(Calendar.MINUTE) == startCalendar.get(Calendar.MINUTE)) {
-                return isBetweenTimes_S_MS(start, end);
-            }
-            if (nowCalendar.get(Calendar.MINUTE) < endCalendar.get(Calendar.MINUTE) &&
-                    nowCalendar.get(Calendar.MINUTE) == startCalendar.get(Calendar.MINUTE)) {
-                return isAfterTimes_S_MS(start);
-            }
-            if  (nowCalendar.get(Calendar.MINUTE) == endCalendar.get(Calendar.MINUTE) &&
-                    nowCalendar.get(Calendar.MINUTE) > startCalendar.get(Calendar.MINUTE)) {
-                return isBeforeTimes_S_MS(end);
-            }
+        else {
+            return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE));
         }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段前 ( mm:ss:SSS )
-     * @param date
-     * @return
-     */
-    public static boolean isBeforeTimes_M_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        // 满足条件时
-        if (nowCalendar.get(Calendar.MINUTE) <= dateCalendar.get(Calendar.MINUTE)) {
-            if (nowCalendar.get(Calendar.MINUTE) == dateCalendar.get(Calendar.MINUTE)) {
-                return isBeforeTimes_S_MS(date);
-            }
-            else {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段后 ( mm:ss:SSS )
-     * @param date
-     * @return
-     */
-    public static boolean isAfterTimes_M_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        // 满足条件时
-        if (nowCalendar.get(Calendar.MINUTE) >= dateCalendar.get(Calendar.MINUTE)) {
-            if (nowCalendar.get(Calendar.MINUTE) == dateCalendar.get(Calendar.MINUTE)) {
-                return isAfterTimes_S_MS(date);
-            }
-            else {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段内 ( ss:SSS )
-     * @param start
-     * @param end
-     * @return
-     */
-    public static boolean isBetweenTimes_S_MS(Date start, Date end) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar startCalendar = Calendar.getInstance();
-        Calendar endCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        startCalendar.setTime(start);
-        endCalendar.setTime(end);
-
-        // 满足条件时
-        if (nowCalendar.get(Calendar.SECOND) <= endCalendar.get(Calendar.SECOND) &&
-                nowCalendar.get(Calendar.SECOND) >= startCalendar.get(Calendar.SECOND)) {
-            // 不用判断毫秒的情况
-            if (nowCalendar.get(Calendar.SECOND) < endCalendar.get(Calendar.SECOND) &&
-                    nowCalendar.get(Calendar.SECOND) > startCalendar.get(Calendar.SECOND)) {
-                return true;
-            }
-            // 需要判断分钟的三种情况
-            if (nowCalendar.get(Calendar.SECOND) == endCalendar.get(Calendar.SECOND) &&
-                    nowCalendar.get(Calendar.SECOND) == startCalendar.get(Calendar.SECOND)) {
-                return isBetweenTimes_MS(start, end);
-            }
-            if (nowCalendar.get(Calendar.SECOND) < endCalendar.get(Calendar.SECOND) &&
-                    nowCalendar.get(Calendar.SECOND) == startCalendar.get(Calendar.SECOND)) {
-                return isAfterTimes_MS(start);
-            }
-            if  (nowCalendar.get(Calendar.SECOND) == endCalendar.get(Calendar.SECOND) &&
-                    nowCalendar.get(Calendar.SECOND) > startCalendar.get(Calendar.SECOND)) {
-                return isBeforeTimes_MS(end);
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段前 ( ss:SSS )
-     * @param date
-     * @return
-     */
-    public static boolean isBeforeTimes_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        if (nowCalendar.get(Calendar.SECOND) <= dateCalendar.get(Calendar.SECOND)) {
-            // 需要比较秒时
-            if (nowCalendar.get(Calendar.SECOND) == dateCalendar.get(Calendar.SECOND)) {
-                return isBeforeTimes_MS(date);
-            }
-            else {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段后 ( ss:SSS )
-     * @param date
-     * @return
-     */
-    public static boolean isAfterTimes_S_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        // 当满足条件时
-        if (nowCalendar.get(Calendar.SECOND) >= dateCalendar.get(Calendar.SECOND)) {
-            // 需要比较秒时
-            if (nowCalendar.get(Calendar.SECOND) == dateCalendar.get(Calendar.SECOND)) {
-                return isAfterTimes_MS(date);
-            }
-            else {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段内 ( SSS )
-     * @param start
-     * @param end
-     * @return
-     */
-    public static boolean isBetweenTimes_MS(Date start, Date end) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar startCalendar = Calendar.getInstance();
-        Calendar endCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        startCalendar.setTime(start);
-        endCalendar.setTime(end);
-
-        if (nowCalendar.get(Calendar.MILLISECOND) >= startCalendar.get(Calendar.MILLISECOND) &&
-                nowCalendar.get(Calendar.MILLISECOND) <= startCalendar.get(Calendar.MILLISECOND)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段前 ( SSS )
-     * @param date 判断对比的时间
-     * @return
-     */
-    public static boolean isBeforeTimes_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        if (nowCalendar.get(Calendar.MILLISECOND) <= dateCalendar.get(Calendar.MILLISECOND)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段后 ( SSS )
-     * @param date 判断对比的时间
-     * @return
-     */
-    public static boolean isAfterTimes_MS(Date date) {
-        Calendar nowCalendar = Calendar.getInstance();
-        Calendar dateCalendar = Calendar.getInstance();
-
-        nowCalendar.setTime(new Date());
-        dateCalendar.setTime(date);
-
-        if (nowCalendar.get(Calendar.MILLISECOND) >= dateCalendar.get(Calendar.MILLISECOND)) {
-            return true;
-        }
-
-        return false;
     }
 }
