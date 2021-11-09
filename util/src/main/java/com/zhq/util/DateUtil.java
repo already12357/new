@@ -70,9 +70,6 @@ public class DateUtil {
 
     public static boolean isBetweenTimes(Date start, Date end, int format) {
         switch (format) {
-            case H_M_S_MS:
-                return isBetweenTimes(start, end, true, true);
-
             case H_M_S:
                 return isBetweenTimes(start, end, true, false);
 
@@ -92,25 +89,6 @@ public class DateUtil {
         LocalTime nowTime = localTimeWithCalendar(nowCalendar, second, millisecond);
         LocalTime startTime = localTimeWithCalendar(startCalendar, second, millisecond);
         LocalTime endTime = localTimeWithCalendar(endCalendar, second, millisecond);
-
-        return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段内 ( hh:mm:ss:SSS )
-     * 该方法仅比较时间段, 不考虑对应的日期
-     * @param start
-     * @param end
-     * @return
-     */
-    public static boolean isBetweenTimes_H_M_S_MS(Date start, Date end) {
-        Calendar nowCalendar = calendarWithDate(new Date());
-        Calendar startCalendar = calendarWithDate(start);
-        Calendar endCalendar = calendarWithDate(end);
-
-        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
-        LocalTime startTime = localTimeWithCalendar(startCalendar, true, true);
-        LocalTime endTime = localTimeWithCalendar(endCalendar, true, true);
 
         return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
