@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateUtil {
-    public static final String H_M_S_MS = "0";
-    public static final String H_M_S = "1";
-    public static final String H_M = "2";
+    public static final int H_M_S_MS = 0;
+    public static final int H_M_S = 1;
+    public static final int H_M = 2;
     public static final String HOUR_12 = "3";
     public static final String HOUR_24 = "4";
 
@@ -64,17 +64,36 @@ public class DateUtil {
         return calendar.get(Calendar.HOUR);
     }
 
+    public static boolean isBetweenTimes(Date start, Date end) {
+        return isBetweenTimes(start, end, false, false);
+    }
 
-    public static boolean isBetweenTimes(Date start, Date end, String format) {
+    public static boolean isBetweenTimes(Date start, Date end, int format) {
+        switch (format) {
+            case H_M_S_MS:
+                return isBetweenTimes(start, end, true, true);
 
+            case H_M_S:
+                return isBetweenTimes(start, end, true, false);
+
+            case H_M:
+                return isBetweenTimes(start, end, false, false);
+
+            default:
+                return isBetweenTimes(start, end, true, true);
+        }
     }
 
     public static boolean isBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
+        Calendar nowCalendar = calendarWithDate(new Date());
+        Calendar startCalendar = calendarWithDate(start);
+        Calendar endCalendar = calendarWithDate(end);
 
-    }
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, second, millisecond);
+        LocalTime startTime = localTimeWithCalendar(startCalendar, second, millisecond);
+        LocalTime endTime = localTimeWithCalendar(endCalendar, second, millisecond);
 
-    public static boolean isBetweenTimes(Date start, Date end, String format) {
-
+        return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
 
     /**
