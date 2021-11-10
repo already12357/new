@@ -19,6 +19,37 @@ import java.util.List;
 import java.util.Map;
 
 public class FileUtil {
+//    private static Map<String, String> fileType = new HashMap<>();
+//    static {
+//        // 存入不同文件的前四个用于表示文件类型的字节
+//        // 用于统计对应的文件类型
+//        fileType.put("FFD8FF",".jpg");
+//        fileType.put("FFD8FFE0", ".jpg");
+//        fileType.put("FFD8FFE1", ".jpg");
+//        fileType.put("89504E47", ".png");
+//        fileType.put("47494638", ".gif");
+//        fileType.put("49492A00", ".tif");
+//        fileType.put("3C3F786D6C",".xml");
+//    }
+//
+//    private static String fileType(File file) {
+//        byte[] typeBytes = new byte[4];
+//        FileInputStream fin = null;
+//        String fileType = null;
+//
+//        try {
+//            fin = new FileInputStream(file);
+//            int readCount = fin.read(typeBytes, 0, typeBytes.length);
+//
+//
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return fileType;
+//    }
+
     /**
      * 将一个文件从一个地点拷贝到另一个文件
      * @param from 文件的出发地

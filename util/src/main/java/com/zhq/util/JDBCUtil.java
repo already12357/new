@@ -5,8 +5,6 @@ import com.sun.istack.internal.NotNull;
 import sun.applet.Main;
 
 import javax.sql.DataSource;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -30,30 +28,13 @@ public class JDBCUtil {
     }
 
 
-    public static DataSource druidDataSourceWithProperties(File propFile) throws Exception {
-        return druidDataSourceWithProperties(propFile.getAbsolutePath());
-    }
 
-    /**
-     * 根据对应的属性配置文件获取对应的德鲁伊数据源对象
-     * @param propFileName 对应的配置文件名
-     * @return
-     * @throws Exception
-     */
-    public static DataSource druidDataSourceWithProperties(String propFileName) throws Exception {
-        InputStream propIn = JDBCUtil.class.getResourceAsStream(propFileName);
-        Properties druidProperties = new Properties();
-        druidProperties.load(propIn);
-        return DruidDataSourceFactory.createDataSource(druidProperties);
-    }
 
     private static DataSource ds;
 
     static {
         Properties prop = new Properties();
         InputStream is = JDBCUtil.class.getClassLoader().getResourceAsStream("druid.properties");
-        File propertyFile1 = new File("classpath:druid.properties");
-        File propertyFile2 = new File("classpath:druid.properties");
 
         try {
             prop.load(is);

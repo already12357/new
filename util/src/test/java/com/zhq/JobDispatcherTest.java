@@ -1,6 +1,7 @@
 package com.zhq;
 
 import com.zhq.util.JobUtil.JobDispatcher;
+import com.zhq.util.JobUtil.job.VideoNoticeJob;
 import org.junit.Test;
 import org.quartz.SchedulerException;
 
