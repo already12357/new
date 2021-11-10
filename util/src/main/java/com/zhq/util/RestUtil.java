@@ -15,11 +15,12 @@ public class RestUtil {
      * 如下格式 :
      * {
      *     # message 包含 返回状态码 和 返回的附加信息
+     *     # data 返回的 json 数据字符串
+     *     eg.
      *     "message" : {
      *         “status”:"200",
      *         "attachment":"请求成功"
      *     },
-     *     # data 返回的 json 数据字符串
      *     “data” : "....."
      * }
      */

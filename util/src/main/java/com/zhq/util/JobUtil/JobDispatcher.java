@@ -1,14 +1,12 @@
-package com.zhq.util.JobUtil;
+package com.epoint.pa.videonotice.job;
 
 import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 // 用于调度发配对应的任务
 @Component
@@ -19,12 +17,6 @@ public class JobDispatcher {
     // 需要注入默认的调度器
     @Autowired
     private Scheduler scheduler;
-
-    public JobDispatcher() throws SchedulerException {
-        if (scheduler == null) {
-            scheduler = StdSchedulerFactory.getDefaultScheduler();
-        }
-    }
 
     /**
      * 向调度器中, 添加一个任务, 默认状态下, 调度器时没有运行的
@@ -41,6 +33,13 @@ public class JobDispatcher {
         // 通过 ID 拼接前缀来形成对应的编号
         String jobId = JOB_PREFIX + Id;
         String triggerId = TRIGGER_PREFIX + Id;
+        JobKey jobKey = new JobKey(jobId);
+
+        if (scheduler.checkExists(jobKey)) {
+            scheduler.deleteJob(jobKey);
+            jobKey = new JobKey(jobId);
+        }
+
         JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobId).build();
 
         // 向工作的空间中传入参数
@@ -51,24 +50,28 @@ public class JobDispatcher {
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                 .withIdentity(triggerId)
-                .startAt(startDate)
+                .startNow()
                 .endAt(endDate)
-                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval)).build();
+                .withSchedule(simpleScheduleBuilder.
+                        withIntervalInMinutes(minutesInterval).
+                        repeatForever()).build();
 
         scheduler.scheduleJob(jobDetail, simpleTrigger);
+        scheduler.start();
     }
-
-
 
     public void suspendJob(String Id)
             throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
-        String triggerId = TRIGGER_PREFIX + Id;
         JobKey jobKey = JobKey.jobKey(jobId);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
+        String triggerId = TRIGGER_PREFIX + Id;
+        TriggerKey triggerKey = new TriggerKey(triggerId);
+
         if (null != jobDetail) {
-            scheduler.pauseJob(jobKey);
+//            scheduler.pauseJob(jobKey);
+            scheduler.pauseTrigger(triggerKey);
         }
     }
 
@@ -78,8 +81,11 @@ public class JobDispatcher {
         JobKey jobKey = JobKey.jobKey(jobId);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
+        String triggerId = TRIGGER_PREFIX + Id;
+        TriggerKey triggerKey = new TriggerKey(triggerId);
+
         if (null != jobDetail) {
-            scheduler.resumeJob(jobKey);
+            scheduler.resumeTrigger(triggerKey);
         }
     }
 
@@ -96,16 +102,9 @@ public class JobDispatcher {
                 .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval)).build();
     }
 
-    public void removeJob(String Id) throws SchedulerException {
-        String jobId = JOB_PREFIX + Id;
-        JobKey jobKey = JobKey.jobKey(jobId);
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
-        if (null != jobDetail) {
-            // 停止触发器 和 任务
-            scheduler.pauseJob(jobKey);
-            // 删除触发器对应的任务
-            scheduler.deleteJob(jobKey);
-        }
+    public void clearAllJob() throws SchedulerException {
+        scheduler.standby();
+        scheduler.clear();
     }
 }

@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 public class JobConfig {
     @Bean
     public Scheduler scheduler() throws SchedulerException {
+//        waitForJobsToCompleteOnShutdown
+        StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
+
         return StdSchedulerFactory.getDefaultScheduler();
     }
 }
