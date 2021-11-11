@@ -1,4 +1,4 @@
-package com.epoint.pa.videonotice.job;
+package com.zhq.util.JobUtil;
 
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
