@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 // 用于调度发配对应的任务
@@ -40,7 +39,11 @@ public class JobDispatcher {
             jobKey = new JobKey(jobId);
         }
 
-        JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(jobId).build();
+        // 建立对应的任务对象
+        // 注意设置其 duration 属性为 true, 保证在对应的触发器删除时, 任务不不删除
+        JobDetail jobDetail = JobBuilder.newJob(clazz).
+                withIdentity(jobId).
+                storeDurably(true).build();
 
         // 向工作的空间中传入参数
         if (null != args && !args.isEmpty()) {
@@ -70,8 +73,8 @@ public class JobDispatcher {
         TriggerKey triggerKey = new TriggerKey(triggerId);
 
         if (null != jobDetail) {
-//            scheduler.pauseJob(jobKey);
             scheduler.pauseTrigger(triggerKey);
+            scheduler.pauseJob(jobKey);
         }
     }
 
@@ -89,18 +92,30 @@ public class JobDispatcher {
         }
     }
 
-    public void modifyJob(String Id, Date startDate, Date endDate, int minutesInterval) {
+
+    public void modifyJob(String Id, Date startDate, Date endDate, int minutesInterval)
+            throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
         String triggerId = TRIGGER_PREFIX + Id;
         JobKey jobKey = JobKey.jobKey(jobId);
+        TriggerKey triggerKey = TriggerKey.triggerKey(triggerId);
 
-        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-                .withIdentity(triggerId)
-                .startAt(startDate)
-                .endAt(endDate)
-                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval)).build();
+        // 停止触发器触发当前的任务
+        scheduler.pauseTrigger(triggerKey);
+        scheduler.unscheduleJob(triggerKey);
+        scheduler.pauseJob(jobKey);
+
+
+
+
+//        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+//        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+//                .withIdentity(triggerId)
+//                .startAt(startDate)
+//                .endAt(endDate)
+//                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval)).build();
     }
+
 
 
     public void clearAllJob() throws SchedulerException {

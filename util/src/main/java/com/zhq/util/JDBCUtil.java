@@ -5,6 +5,7 @@ import com.sun.istack.internal.NotNull;
 import sun.applet.Main;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -27,7 +28,14 @@ public class JDBCUtil {
         return MYSQLURL(name, ip, "3306");
     }
 
-
+//    /**
+//     * 根据配置文件获取对应的数据源对象
+//     * @param propertyFile 配置文件
+//     * @return
+//     */
+//    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
+//
+//    }
 
 
     private static DataSource ds;
