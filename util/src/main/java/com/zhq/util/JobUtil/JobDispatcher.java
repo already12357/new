@@ -96,8 +96,9 @@ public class JobDispatcher {
     public void modifyJob(String Id, Date startDate, Date endDate, int minutesInterval)
             throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
-        String triggerId = TRIGGER_PREFIX + Id;
         JobKey jobKey = JobKey.jobKey(jobId);
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        String triggerId = TRIGGER_PREFIX + Id;
         TriggerKey triggerKey = TriggerKey.triggerKey(triggerId);
 
         // 停止触发器触发当前的任务
@@ -105,15 +106,16 @@ public class JobDispatcher {
         scheduler.unscheduleJob(triggerKey);
         scheduler.pauseJob(jobKey);
 
-
-
-
-//        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-//        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-//                .withIdentity(triggerId)
-//                .startAt(startDate)
-//                .endAt(endDate)
-//                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval)).build();
+        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+                .withIdentity(triggerKey)
+                .startAt(startDate)
+                .endAt(endDate)
+                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval).repeatForever())
+                .build();
+        // 重新配置任务对应的执行器,并启动执行
+        scheduler.scheduleJob(jobDetail, simpleTrigger);
+        scheduler.resumeJob(jobKey);
     }
 
 
