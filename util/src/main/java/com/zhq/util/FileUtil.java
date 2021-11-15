@@ -41,17 +41,7 @@ public class FileUtil {
             e.printStackTrace();
         }
         finally {
-            try {
-                if (fin != null) {
-                    fin.close();
-                }
-                if (fout != null) {
-                    fout.close();
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            ResourceUtil.closeResources(fin, fout);
         }
     }
 

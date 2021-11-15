@@ -66,7 +66,7 @@ public class HttpUtil {
             }
         }
         finally {
-            closeResources(postOut);
+            ResourceUtil.closeResources(postOut);
         }
     }
 
@@ -84,24 +84,6 @@ public class HttpUtil {
         String receiveString = new String();
 
         return receiveString;
-    }
-
-
-    /**
-     * 关闭资源 (流, 连接 )
-     * @param resources
-     */
-    public static void closeResources(Closeable...resources) {
-        try {
-            for (Closeable resource : resources) {
-                if (resource != null) {
-                    resource.close();
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -131,7 +113,7 @@ public class HttpUtil {
             e.printStackTrace();
         }
         finally {
-            closeResources(inReader);
+            ResourceUtil.closeResources(inReader);
         }
 
         return result.toString();
@@ -164,7 +146,7 @@ public class HttpUtil {
             e.printStackTrace();
         }
         finally {
-            closeResources(inReader);
+            ResourceUtil.closeResources(inReader);
         }
 
         return result.toString();
@@ -208,7 +190,7 @@ public class HttpUtil {
             e.printStackTrace();
         }
         finally {
-            closeResources(bufReader);
+            ResourceUtil.closeResources(bufReader);
         }
 
         return result.toString();
