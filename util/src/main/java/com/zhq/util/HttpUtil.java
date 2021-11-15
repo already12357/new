@@ -201,27 +201,44 @@ public class HttpUtil {
         return result.toString();
     }
 
-
-    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file) {
-        // 获取请求中的 Range, 得到对应响应中的下载大小
-        String[] ranges = request.getHeader("Range").split("=")[1].split("-");
-        // 根据请求头的 Range 构造出响应的 Content-Range
-        Long startPos = Long.parseLong(ranges[0]);
-        Long endPos = Long.parseLong(ranges[1]);
-        String contentRange = "bytes " + startPos + "-" + (endPos - 1) + "/" + endPos;
-
 //        二进制下载文件 ( 长度相关参参数 )
 //        请求
 //        Range: bytes=0-801
 //        响应
 //        Content-Range: bytes 0-800/801
 
+
+    /**
+     * 在处理器方法中下载对应的文件
+     * @param request Servlet 原生请求
+     * @param response Servlet 原生响应
+     * @param file 需要下载的文件
+     */
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file) {
+        // 获取请求中的 Range, 得到对应响应中的下载大小
+        String rangeContent = request.getHeader("Range");
+        Long startPos = 0L;
+        Long endPos = 0L;
+        String[] ranges = new String[2];
+
+        if (StringUtil.hasContent(rangeContent)) {
+            // 根据请求头的 Range 构造出响应的 Content-Range
+            ranges = request.getHeader("Range").split("=")[1].split("-");
+            startPos = Long.parseLong(ranges[0]);
+            endPos = Long.parseLong(ranges[1]);
+        }
+        else {
+            endPos = file.length();
+        }
+
+        String contentRange = "bytes " + startPos + "-" + (endPos - 1) + "/" + endPos;
+
         // 设置响应的主要内容为二进制流
         response.setContentType("application/octet-stream");
         // 添加下载文件的标识字段
         // inline / attachment inline : 将文件内容直接显示在页面
         // attachment : 弹出对话框让用户下载
-        response.addHeader("Content-Disposition", "attachment;filename=");
+        response.addHeader("Content-Disposition", "attachment;filename=" + file.getName());
         // 设置响应中下载文件的范围
         response.addHeader("Content-Range", contentRange);
         // 设置响应中下载文件的大小

@@ -27,7 +27,6 @@
         <spring-jdbc.version>5.2.9.RELEASE</spring-jdbc.version>
     </properties>
 
-    spring-boot-starter-pa
     <dependencies>
         <dependency>
             <artifactId>spring-boot-starter-web</artifactId>
