@@ -16,17 +16,43 @@ import java.util.Properties;
 public class JDBCUtil {
     /**
      * 通过函数返回不同数据库的不同驱动
-     * @param name 数据库名称
+     * @param dbname 数据库名称
      * @param ip   ip 地址
      * @param port 端口
      * @return
      */
-    public static final String MYSQLURL(String name, String ip, String port) {
-        return "jdbc:mysql://" + ip + ":" + port + "/" + name + "?useSSL=false";
+    // mysql
+    public static final String URL_MYSQL(String dbname, String ip, String port) {
+        return "jdbc:mysql://" + ip + ":" + port + "/" + dbname + "?useSSL=false";
     }
-    public static final String MYSQLURL(String name, String ip) {
-        return MYSQLURL(name, ip, "3306");
+    public static final String URL_MYSQL(String dbname, String ip) {
+        return URL_MYSQL(dbname, ip, "3306");
     }
+
+    // sqlserver
+    public static final String URL_SQLSERVER(String dbname, String ip, String port) {
+        return "jdbc:sqlserver://" + ip + ":" + port + "; DatabaseName=" + dbname;
+    }
+    public static final String URL_SQLSERVER(String dbname, String ip) {
+        return URL_SQLSERVER(dbname, ip, "1433");
+    }
+
+    // oracle
+    public static final String URL_ORACLE(String dbname, String ip, String port) {
+        return "jdbc:oracle:thin:@" + ip + ":" + port + ":" + dbname;
+    }
+    public static final String URL_ORACLE(String dbname, String ip) {
+        return URL_ORACLE(dbname, ip, "1521");
+    }
+
+    // db2
+    public static final String URL_DB2(String dbname, String ip, String port) {
+        return "jdbc:db2://" + ip + ":" + port + "/" + dbname;
+    }
+    public static final String URL_DB2(String dbname, String ip) {
+        return URL_DB2(dbname, ip, "5000");
+    }
+
 
 //    /**
 //     * 根据配置文件获取对应的数据源对象
@@ -37,7 +63,10 @@ public class JDBCUtil {
 //
 //    }
 
-
+    // 将文件插入对应的表中(Blob 类型)
+//    public static void insertFileToTable(String tableName, String columnName, DataSource dataSource);
+    
+    
     private static DataSource ds;
 
     static {
@@ -50,9 +79,6 @@ public class JDBCUtil {
         } catch (Exception var3) {
             var3.printStackTrace();
         }
-    }
-
-    public JDBCUtil() {
     }
 
     public static Connection getConnection() throws SQLException {
