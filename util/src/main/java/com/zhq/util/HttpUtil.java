@@ -210,9 +210,9 @@ public class HttpUtil {
 
     /**
      * 在处理器方法中下载对应的文件
-     * @param request Servlet 原生请求
-     * @param response Servlet 原生响应
-     * @param file 需要下载的文件
+     * @param request 处理器方法传入的 Servlet 原生请求
+     * @param response 处理器方法传入的 Servlet 原生响应
+     * @param file 需要下载的文件对象
      */
     public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file) {
         // 获取请求中的 Range, 得到对应响应中的下载大小
