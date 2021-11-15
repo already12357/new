@@ -2,11 +2,16 @@ package com.zhq.util;
 
 import com.alibaba.fastjson.JSONObject;
 import jdk.internal.util.xml.impl.Input;
+import org.springframework.http.HttpRequest;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class HttpUtil {
@@ -194,5 +199,56 @@ public class HttpUtil {
         }
 
         return result.toString();
+    }
+
+
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file) {
+        // 获取请求中的 Range, 得到对应响应中的下载大小
+        String[] ranges = request.getHeader("Range").split("=")[1].split("-");
+        // 根据请求头的 Range 构造出响应的 Content-Range
+        Long startPos = Long.parseLong(ranges[0]);
+        Long endPos = Long.parseLong(ranges[1]);
+        String contentRange = "bytes " + startPos + "-" + (endPos - 1) + "/" + endPos;
+
+//        二进制下载文件 ( 长度相关参参数 )
+//        请求
+//        Range: bytes=0-801
+//        响应
+//        Content-Range: bytes 0-800/801
+
+        // 设置响应的主要内容为二进制流
+        response.setContentType("application/octet-stream");
+        // 添加下载文件的标识字段
+        // inline / attachment inline : 将文件内容直接显示在页面
+        // attachment : 弹出对话框让用户下载
+        response.addHeader("Content-Disposition", "attachment;filename=");
+        // 设置响应中下载文件的范围
+        response.addHeader("Content-Range", contentRange);
+        // 设置响应中下载文件的大小
+        response.addHeader("Content-Length", String.valueOf(endPos));
+        // 设置响应中接受数据的类型
+        response.addHeader("Accept-Ranges", "bytes");
+
+
+        byte[] buffer = new byte[1024];
+        OutputStream out = null;
+        InputStream in = null;
+
+        try {
+            // 用于向外写出数据
+            out = response.getOutputStream();
+            in = new FileInputStream(file);
+            int readLength = 0;
+
+            while ((readLength = in.read(buffer)) != -1) {
+                out.write(buffer, 0, readLength);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(in, out);
+        }
     }
 }
