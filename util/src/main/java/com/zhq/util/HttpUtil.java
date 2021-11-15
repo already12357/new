@@ -1,13 +1,12 @@
 package com.zhq.util;
 
-import org.springframework.http.HttpRequest;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 public class HttpUtil {
@@ -71,14 +70,13 @@ public class HttpUtil {
         }
     }
 
-
     /**
      * 发送一个 POST 请求
      * @param urlStr 请求地址
      * @param paramJson 请求体参数信息，以 JSON 格式发送
      * @return
      */
-    public static String sendPost_Json(String urlStr, String paramJson) {
+    public static String postJson(String urlStr, String paramJson) {
         HttpURLConnection connection = null;
         BufferedReader inReader = null;
         StringBuilder result = new StringBuilder("");
@@ -111,7 +109,7 @@ public class HttpUtil {
      * @param xFormUrlEncoded 请求体参数信息, Map传入, 以参数据 ( key1=value1&key2=value2... ) 形式请求接口
      * @return
      */
-    public static String sendPost_xFormUrlEncoded(String urlStr, Map<String, String> xFormUrlEncoded) {
+    public static String postXForm(String urlStr, Map<String, String> xFormUrlEncoded) {
         StringBuilder result = new StringBuilder("");
         HttpURLConnection connection = null;
         String xFormParam = StringUtil.mergeMapToxFormUrlEncoded(xFormUrlEncoded);
@@ -138,12 +136,12 @@ public class HttpUtil {
     }
 
 
-    /**
-     * 发送一个 POST 请求, 发送参数据形式
-     * @param urlStr
-     * @param jsonStr 请求体参数信息, json 传入, 以参数据 ( key1=value1&key2=value2... ) 形式请求接口
-     * @return
-     */
+//    /**
+//     * 发送一个 POST 请求, 发送参数据形式
+//     * @param urlStr
+//     * @param jsonStr 请求体参数信息, json 传入, 以参数据 ( key1=value1&key2=value2... ) 形式请求接口
+//     * @return
+//     */
 //    public static String sendPost_xFormUrlEncoded(String urlStr, String jsonStr) {
 //
 //    }
@@ -154,7 +152,7 @@ public class HttpUtil {
      * @param urlStr 请求地址
      * @return
      */
-    public static String sendGet(String urlStr) {
+    public static String get(String urlStr) {
         /**
          * 1. 读取对应 paramJson, 转换并拼接到, url 上
          */
@@ -180,128 +178,6 @@ public class HttpUtil {
 
         return result.toString();
     }
-
-
-//        二进制下载文件 ( 长度相关参参数 )
-//        请求
-//        Range: bytes=0-801
-//        响应
-//        Content-Range: bytes 0-800/801
-
-
-    /**
-     * 读取对应的文件到响应中
-     * @param response 处理器方法传入的 Servlet 原生响应
-     * @param file 需要处理的文件对象
-     */
-    private static void loadFileToResponse(HttpServletRequest request, HttpServletResponse response, File file) {
-        // 获取请求中的 Range, 得到对应响应中的下载大小
-        String rangeContent = request.getHeader("Range");
-        String[] ranges = new String[2];
-        Long startPos = 0L;
-
-        if (StringUtil.hasContent(rangeContent)) {
-            // 根据请求头的 Range 构造出响应的 Content-Range
-            ranges = request.getHeader("Range").split("=")[1].split("-");
-            startPos = Long.parseLong(ranges[0]);
-        }
-
-        byte[] buffer = new byte[1024];
-        OutputStream out = null;
-        InputStream in = null;
-
-        try {
-            // 用于向外写出数据
-            out = response.getOutputStream();
-            in = new FileInputStream(file);
-            int readLength = 0;
-
-            // 跳过已经下载的部分
-            in.skip(startPos);
-
-            while ((readLength = in.read(buffer)) != -1) {
-                out.write(buffer, 0, readLength);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            ResourceUtil.closeResources(in, out);
-        }
-    }
-
-
-//    /**
-//     * 在处理器方法中下载对应的文件
-//     * @param request 处理器方法传入的 Servlet 原生请求
-//     * @param response 处理器方法传入的 Servlet 原生响应
-//     * @param file 需要下载的文件对象
-//     */
-//    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file)
-//            throws UnsupportedEncodingException {
-//        // 获取请求中的 Range, 得到对应响应中的下载大小
-//        String rangeContent = request.getHeader("Range");
-//        Long startPos = 0L;
-//        Long endPos = 0L;
-//        String[] ranges = new String[2];
-//
-//        if (StringUtil.hasContent(rangeContent)) {
-//            // 根据请求头的 Range 构造出响应的 Content-Range
-//            ranges = request.getHeader("Range").split("=")[1].split("-");
-//            startPos = Long.parseLong(ranges[0]);
-//            endPos = Long.parseLong(ranges[1]);
-//        }
-//        else {
-//            endPos = file.length();
-//        }
-//
-//        String contentRange = "bytes " + startPos + "-" + (endPos - 1) + "/" + endPos;
-//
-//
-//        // 在线显示 PDF
-////        response.reset();
-////        response.setContentType(response.getContentType());
-////        response.addHeader("Content-Disposition", "inline; filename=" + file.getName());
-//
-//
-//        // 设置响应的主要内容为二进制流
-//        response.setContentType("application/octet-stream");
-//        // 添加下载文件的标识字段
-//        // inline / attachment inline : 将文件内容直接显示在页面
-//        // attachment : 弹出对话框让用户下载
-//        response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
-        // 设置响应中下载文件的范围
-//        response.addHeader("Content-Range", contentRange);
-//        // 设置响应中下载文件的大小
-//        response.addHeader("Content-Length", String.valueOf(endPos));
-//        // 设置响应中接受数据的类型
-//        response.addHeader("Accept-Ranges", "bytes");
-//
-//        byte[] buffer = new byte[1024];
-//        OutputStream out = null;
-//        InputStream in = null;
-//
-//        try {
-//            // 用于向外写出数据
-//            out = response.getOutputStream();
-//            in = new FileInputStream(file);
-//            int readLength = 0;
-//
-//            // 跳过已经下载的部分
-//            in.skip(startPos);
-//
-//            while ((readLength = in.read(buffer)) != -1) {
-//                out.write(buffer, 0, readLength);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        finally {
-//            ResourceUtil.closeResources(in, out);
-//        }
-//    }
-
-
 
 
     /**
@@ -364,7 +240,6 @@ public class HttpUtil {
         // 设置响应中接受数据的类型
         response.addHeader("Accept-Ranges", "bytes");
 
-
         return response;
     }
 
@@ -418,5 +293,46 @@ public class HttpUtil {
         String contentRange = "bytes " + startPos + "-" + (endPos - 1) + "/" + endPos;
 
         return contentRange;
+    }
+
+    /**
+     * 读取对应的文件到响应中
+     * @param response 处理器方法传入的 Servlet 原生响应
+     * @param file 需要处理的文件对象
+     */
+    private static void loadFileToResponse(HttpServletRequest request, HttpServletResponse response, File file) {
+        // 获取请求中的 Range, 得到对应响应中的下载大小
+        String rangeContent = request.getHeader("Range");
+        String[] ranges = new String[2];
+        Long startPos = 0L;
+
+        if (StringUtil.hasContent(rangeContent)) {
+            // 根据请求头的 Range 构造出响应的 Content-Range
+            ranges = request.getHeader("Range").split("=")[1].split("-");
+            startPos = Long.parseLong(ranges[0]);
+        }
+
+        byte[] buffer = new byte[1024];
+        OutputStream out = null;
+        InputStream in = null;
+
+        try {
+            // 用于向外写出数据
+            out = response.getOutputStream();
+            in = new FileInputStream(file);
+            int readLength = 0;
+
+            // 跳过已经下载的部分
+            in.skip(startPos);
+
+            while ((readLength = in.read(buffer)) != -1) {
+                out.write(buffer, 0, readLength);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(in, out);
+        }
     }
 }
