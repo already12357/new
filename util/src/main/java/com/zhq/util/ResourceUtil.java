@@ -3,6 +3,7 @@ package com.zhq.util;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 public class ResourceUtil {
     /**
@@ -30,6 +31,27 @@ public class ResourceUtil {
     public static InputStream loadFromResources(String filePath) {
         InputStream in = ResourceUtil.class.getResourceAsStream(filePath);
         return in;
+    }
+
+    /**
+     * 从资源文件夹 ( resources ) 下读取对应的 .properties 文件
+     * @param propPath 从 resources 下开始的路径
+     * @return
+     */
+    public static Properties loadPropertiesFromResources(String propPath) {
+        InputStream in = null;
+        Properties props = new Properties();
+        try {
+            in = ResourceUtil.loadFromResources(propPath);
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            closeResources(in);
+        }
+
+        return props;
     }
 
     /**

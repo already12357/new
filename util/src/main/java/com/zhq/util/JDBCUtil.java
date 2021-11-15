@@ -23,7 +23,6 @@ public class JDBCUtil {
     public static final String URL_MYSQL(String dbname, String ip, String port) {
         return "jdbc:mysql://" + ip + ":" + port + "/" + dbname + "?useSSL=false";
     }
-
     public static final String URL_MYSQL(String dbname, String ip) {
         return URL_MYSQL(dbname, ip, "3306");
     }
@@ -32,7 +31,6 @@ public class JDBCUtil {
     public static final String URL_SQLSERVER(String dbname, String ip, String port) {
         return "jdbc:sqlserver://" + ip + ":" + port + "; DatabaseName=" + dbname;
     }
-
     public static final String URL_SQLSERVER(String dbname, String ip) {
         return URL_SQLSERVER(dbname, ip, "1433");
     }
@@ -41,7 +39,6 @@ public class JDBCUtil {
     public static final String URL_ORACLE(String dbname, String ip, String port) {
         return "jdbc:oracle:thin:@" + ip + ":" + port + ":" + dbname;
     }
-
     public static final String URL_ORACLE(String dbname, String ip) {
         return URL_ORACLE(dbname, ip, "1521");
     }
@@ -50,7 +47,6 @@ public class JDBCUtil {
     public static final String URL_DB2(String dbname, String ip, String port) {
         return "jdbc:db2://" + ip + ":" + port + "/" + dbname;
     }
-
     public static final String URL_DB2(String dbname, String ip) {
         return URL_DB2(dbname, ip, "5000");
     }
@@ -65,7 +61,7 @@ public class JDBCUtil {
 //
 //    }
 
-    // 将文件插入对应的表中(Blob 类型)
+    // 将文件更新到对应的表中(Blob 类型)
     public static void insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) throws SQLException {
         Connection connection = dataSource.getConnection();
         String sql = "insert into " + tableName + "(`" + columnName + "`) values(?)";
@@ -85,19 +81,20 @@ public class JDBCUtil {
 
     // 从表中读取对应的二进制数据(Blob 类型)
     public static void readFileFromTable(String tableName, String columnName, DataSource dataSource) {
-        
+
     }
 
 
     private static DataSource ds;
 
     static {
-        Properties prop = new Properties();
-        InputStream is = JDBCUtil.class.getClassLoader().getResourceAsStream("druid.properties");
+        Properties properties = ResourceUtil.loadPropertiesFromResources("druid.properties");
 
+//        Properties prop = new Properties();
+//        InputStream is = JDBCUtil.class.getClassLoader().getResourceAsStream("druid.properties");
         try {
-            prop.load(is);
-            ds = DruidDataSourceFactory.createDataSource(prop);
+//            prop.load(is);
+            ds = DruidDataSourceFactory.createDataSource(properties);
         } catch (Exception var3) {
             var3.printStackTrace();
         }

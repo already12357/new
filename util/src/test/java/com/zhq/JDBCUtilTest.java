@@ -17,7 +17,7 @@ import java.util.UUID;
 public class JDBCUtilTest {
     @Test
     public void testExecuteSqlStorage() throws SQLException, IOException {
-        Connection connection = JDBCUtil.getDataSource().getConnection();
+        Connection connection = JDBCUtil.getConnection();
         String sql = "insert into filerepository(`attachguid`, `filedata`, `filetype`) values(?, ?, ?);";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         InputStream fIn = new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/druid.properties"));
