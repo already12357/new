@@ -205,10 +205,10 @@ public class HttpUtil {
      * @param file 需要下载的文件对象
      */
     public static void displayFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
-        // 拼接取得 contentRange 属性
-        String contentRange = initContentRange(request, file);
         // 将文件转换为 pdf 然后在网页上在线显示
         File pdfFile = FileUtil.toPdf(file);
+        // 拼接取得 contentRange 属性
+        String contentRange = initContentRange(request, pdfFile);
         // 设置响应头
         initDisplayResponse(response, contentRange, pdfFile);
         // 将文件写入到响应中
