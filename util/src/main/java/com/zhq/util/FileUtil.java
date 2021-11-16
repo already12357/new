@@ -1,5 +1,7 @@
 package com.zhq.util;
 
+import com.aspose.pdf.Document;
+import com.aspose.pdf.operators.Do;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressBase;
@@ -42,6 +44,28 @@ public class FileUtil {
         }
         finally {
             ResourceUtil.closeResources(fin, fout);
+        }
+    }
+
+
+    /**
+     * 将传出的文件转化为 pdf 文件并返回
+     * @param file 传入的文件
+     * @return
+     */
+    public static File toPdf(File file, String pdfPath) {
+        File pdfFile = new File(pdfPath);
+        FileInputStream fin = null;
+        try {
+            fin = new FileInputStream(file);
+            Document document = new Document(fin);
+            document.save();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(fin);
         }
     }
 

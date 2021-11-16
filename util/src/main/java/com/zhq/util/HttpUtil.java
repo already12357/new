@@ -70,6 +70,7 @@ public class HttpUtil {
         }
     }
 
+
     /**
      * 发送一个 POST 请求
      * @param urlStr 请求地址
@@ -196,6 +197,7 @@ public class HttpUtil {
         loadFileToResponse(request, response, file);
     }
 
+
     /**
      * 在处理器方法中在线显示对应的文件
      * @param request 处理器方法传入的 Servlet 原生请求
@@ -205,6 +207,8 @@ public class HttpUtil {
     public static void displayFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
         // 拼接取得 contentRange 属性
         String contentRange = initContentRange(request, file);
+        // 将文件转换为 pdf 然后在网页上在线显示
+//        File pdfFile = FileUtil.toPdf(file);
         // 设置响应头
         initDisplayResponse(response, contentRange, file);
         // 将文件写入到响应中
@@ -243,6 +247,7 @@ public class HttpUtil {
         return response;
     }
 
+
     /**
      * 初始化在线显示情况下的响应信息
      * @param response 处理器方法传入的 Servlet 原生响应
@@ -273,6 +278,12 @@ public class HttpUtil {
     }
 
 
+    /**
+     * 根据请求信息和文件拼接出对应的下载响应
+     * @param request 操作的请求信息
+     * @param file 操作的文件
+     * @return
+     */
     public static String initContentRange(HttpServletRequest request, File file) {
         // 获取请求中的 Range, 得到对应响应中的下载大小
         String rangeContent = request.getHeader("Range");
@@ -294,6 +305,7 @@ public class HttpUtil {
 
         return contentRange;
     }
+
 
     /**
      * 读取对应的文件到响应中
