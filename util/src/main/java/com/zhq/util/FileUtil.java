@@ -1,27 +1,36 @@
 package com.zhq.util;
 
-import com.aspose.pdf.Document;
-import com.aspose.pdf.SaveFormat;
-import com.aspose.pdf.operators.Do;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddressBase;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.aspose.cells.Workbook;
+import com.aspose.slides.Presentation;
+import com.aspose.words.Document;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.DataSourceFactory;
 
-import javax.activation.FileTypeMap;
 import javax.sql.DataSource;
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 public class FileUtil {
+    public static final String DOC = "doc";
+    public static final String DOCX = "docx";
+    public static final String PPT = "ppt";
+    public static final String PPTX = "pptx";
+    public static final String XLS = "xls";
+    public static final String XLSX = "xlsx";
+    public static final String PDF = "pdf";
+
+    /**
+     * 用于解析对应的文件后缀名
+     * @param file 解析的文件名
+     * @return
+     */
+    public static String parseSuffix(File file) {
+        String filePath = file.getAbsolutePath();
+        String[] fileParts = filePath.split("\\.");
+        String suffix = fileParts[fileParts.length - 1];
+
+        return suffix.toLowerCase(Locale.ENGLISH);
+    }
+
     /**
      * 将一个文件从一个地点拷贝到另一个文件
      * @param from 文件的出发地
@@ -50,27 +59,77 @@ public class FileUtil {
 
 
     /**
-     * 将传出的文件转化为 pdf 文件并返回
-     * @param file 传入的文件
-     * @param pdfPath 转化后的文件地址
+     * 使用 Aspose 将传出的文件转化为 pdf 文件并返回
+     * @param file 需要转化的文件
      * @return
      */
-    public static File toPdf(File file, String pdfPath) {
-        File pdfFile = new File(pdfPath);
+    public static File toPdf(File file) {
+        String suffix = parseSuffix(file);
+//        String tempFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file";
+        File tempPdfFile = null;
         FileOutputStream fout = null;
-        try {
-            fout = new FileOutputStream(pdfFile);
-            // 建立对应的文件
-            Document document = new Document(new FileInputStream(file));
-             // 调用 save 方法转化
-            document.save(fout, SaveFormat.Pdf);
 
-        } catch (FileNotFoundException e) {
+
+        try {
+            if (null == tempPdfFile || !tempPdfFile.exists()) {
+                tempPdfFile = File.createTempFile("temp", ".pdf");
+            }
+
+            fout = new FileOutputStream(tempPdfFile);
+
+            switch (suffix) {
+                case DOC:
+                case DOCX:
+                    Document document = new Document(file.getAbsolutePath());
+                    document.save(fout, com.aspose.words.SaveFormat.PDF);
+                    break;
+
+                case PPT:
+                case PPTX:
+                    Presentation presentation = new Presentation(file.getAbsolutePath());
+                    presentation.save(fout, com.aspose.slides.SaveFormat.Pdf);
+                    break;
+
+                case XLS:
+                case XLSX:
+                    Workbook workbook = new Workbook(file.getAbsolutePath());
+                    workbook.save(fout, com.aspose.cells.SaveFormat.PDF);
+                    break;
+
+                case PDF:
+                    tempPdfFile = file;
+                    break;
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         finally {
             ResourceUtil.closeResources(fout);
         }
+
+        return tempPdfFile;
+
+//        // 使用
+//        if (suffix.equalsIgnoreCase("doc"))
+//        FileOutputStream fout = null;
+//        try {
+//            if (!pdfFile.exists()) {
+//                pdfFile.createNewFile();
+//            }
+//
+//            fout = new FileOutputStream(pdfPath);
+//            // 建立对应的文件
+//            Document document = new Document(filePath);
+//             // 调用 save 方法转化
+//            document.save(fout, SaveFormat.PDF);
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            ResourceUtil.closeResources(fout);
+//        }
     }
 
 
@@ -84,30 +143,30 @@ public class FileUtil {
     }
 
 
-    /**
-     * 读取 Excel 文件 ( .xlsx 结尾 )
-     * @param file 表格文件
-     */
-    public static List<Cell> readSpreadSheet(File file) {
-        List<Cell> sheetCells = new ArrayList<>();
-
-        try {
-            Workbook exclWorkBook = WorkbookFactory.create(file);
-
-            // 工作簿 ==> 工作表 ==> 行 ==> 列 ( 格子 )
-            for (Sheet sheet : exclWorkBook) {
-                for (Row row : sheet) {
-                    for (Cell cell : row) {
-                        sheetCells.add(cell);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
-            e.printStackTrace();
-        }
-
-        return sheetCells;
-    }
+//    /**
+//     * 读取 Excel 文件 ( .xlsx 结尾 )
+//     * @param file 表格文件
+//     */
+//    public static List<Cell> readSpreadSheet(File file) {
+//        List<Cell> sheetCells = new ArrayList<>();
+//
+//        try {
+//            Workbook exclWorkBook = WorkbookFactory.create(file);
+//
+//            // 工作簿 ==> 工作表 ==> 行 ==> 列 ( 格子 )
+//            for (Sheet sheet : exclWorkBook) {
+//                for (Row row : sheet) {
+//                    for (Cell cell : row) {
+//                        sheetCells.add(cell);
+//                    }
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InvalidFormatException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return sheetCells;
+//    }
 }

@@ -208,11 +208,11 @@ public class HttpUtil {
         // 拼接取得 contentRange 属性
         String contentRange = initContentRange(request, file);
         // 将文件转换为 pdf 然后在网页上在线显示
-//        File pdfFile = FileUtil.toPdf(file);
+        File pdfFile = FileUtil.toPdf(file);
         // 设置响应头
-        initDisplayResponse(response, contentRange, file);
+        initDisplayResponse(response, contentRange, pdfFile);
         // 将文件写入到响应中
-        loadFileToResponse(request, response, file);
+        loadFileToResponse(request, response, pdfFile);
     }
 
 
@@ -251,6 +251,7 @@ public class HttpUtil {
     /**
      * 初始化在线显示情况下的响应信息
      * @param response 处理器方法传入的 Servlet 原生响应
+     * @param contentRange 通过 Request 信息拼接的响应中的 content-Range 属性
      * @return
      */
     public static HttpServletResponse initDisplayResponse(HttpServletResponse response, String contentRange, File file) throws UnsupportedEncodingException {
@@ -309,6 +310,7 @@ public class HttpUtil {
 
     /**
      * 读取对应的文件到响应中
+     * @param request
      * @param response 处理器方法传入的 Servlet 原生响应
      * @param file 需要处理的文件对象
      */
