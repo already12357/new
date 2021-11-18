@@ -9,6 +9,8 @@ import java.util.Map;
 
 // 用于调度发配对应的任务
 // 默认注入 IOC
+// 用于调度发配对应的任务
+// 默认注入 IOC
 @Component
 public class JobDispatcher {
     public static final String TRIGGER_PREFIX = "trigger_";
@@ -79,6 +81,7 @@ public class JobDispatcher {
         }
     }
 
+
     public void resumeJob(String Id)
             throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
@@ -93,8 +96,7 @@ public class JobDispatcher {
         }
     }
 
-
-    public void modifyJob(String Id, Date startDate, Date endDate, int minutesInterval)
+    public void modifyJob(String Id, Date startDate, Date endDate, int secondsInterval)
             throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
         JobKey jobKey = JobKey.jobKey(jobId);
@@ -102,20 +104,22 @@ public class JobDispatcher {
         String triggerId = TRIGGER_PREFIX + Id;
         TriggerKey triggerKey = TriggerKey.triggerKey(triggerId);
 
-        // 停止触发器触发当前的任务
+        // 停止触发器的触发
+        // 停止当前任务的执行
         scheduler.pauseTrigger(triggerKey);
-        scheduler.unscheduleJob(triggerKey);
         scheduler.pauseJob(jobKey);
+        scheduler.unscheduleJob(triggerKey);
 
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
                 .startAt(startDate)
                 .endAt(endDate)
-                .withSchedule(simpleScheduleBuilder.withIntervalInMinutes(minutesInterval).repeatForever())
+                .forJob(jobDetail)
+                .withSchedule(simpleScheduleBuilder.withIntervalInSeconds(secondsInterval).repeatForever())
                 .build();
         // 重新配置任务对应的执行器,并启动执行
-        scheduler.scheduleJob(jobDetail, simpleTrigger);
+        scheduler.scheduleJob(simpleTrigger);
         scheduler.resumeJob(jobKey);
     }
 
