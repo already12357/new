@@ -1,4 +1,4 @@
-package com.zhq.util.JobUtil.util1;
+package com.zhq.util.JobUtil;
 
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Map;
 
 // 用于调度发配对应的任务
+// 默认注入 IOC
 @Component
 public class JobDispatcher {
     public static final String TRIGGER_PREFIX = "trigger_";
@@ -53,7 +54,7 @@ public class JobDispatcher {
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                 .withIdentity(triggerId)
-                .startNow()
+                .startAt(startDate)
                 .endAt(endDate)
                 .withSchedule(simpleScheduleBuilder.
                         withIntervalInMinutes(minutesInterval).

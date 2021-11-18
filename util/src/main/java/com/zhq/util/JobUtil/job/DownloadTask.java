@@ -1,4 +1,4 @@
-package com.zhq.util.JobUtil.util2.job;
+package com.zhq.util.JobUtil.job;
 
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
@@ -8,13 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-/**
- * 定义对应执行的任务
- */
 @Component
 @DisallowConcurrentExecution
-public class UploadTask extends QuartzJobBean {
-    @Override
+public class DownloadTask extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         System.out.println(new Date() + "任务开始------------------------------------");
         try {
