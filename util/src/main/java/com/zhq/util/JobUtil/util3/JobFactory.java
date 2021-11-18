@@ -1,4 +1,4 @@
-package com.zhq.util.JobUtil.util2;
+package com.zhq.util.JobUtil.util3;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +8,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JobFactory extends AdaptableJobFactory {
-    // 注入对象，该对象用于将其他对象注入到 Spring IOC 中
+    // 注入对象，该对象用于将其他对象注入到 IOC 中
     @Autowired
     private AutowireCapableBeanFactory capableBeanFactory;
 
+    /**
+     * 每次在执行任务时，会由该对象创建对应的任务实例来执行，然后在执行完成后销毁
+     * @param bundle
+     * @return
+     * @throws Exception
+     */
     @Override
     protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
         Object jobInstance = super.createJobInstance(bundle);
