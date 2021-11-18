@@ -13,7 +13,7 @@ public class JobFactory extends AdaptableJobFactory {
     private AutowireCapableBeanFactory capableBeanFactory;
 
     /**
-     * 每次在执行任务时，会由该对象创建对应的任务实例来执行，然后在执行完成后销毁
+     * 每次在执行任务时，会由该方法创建对应的任务实例来执行，然后在执行完成后销毁
      * @param bundle
      * @return
      * @throws Exception
@@ -21,7 +21,8 @@ public class JobFactory extends AdaptableJobFactory {
     @Override
     protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
         Object jobInstance = super.createJobInstance(bundle);
-        // 使用 AutowireCapableBeanFactory 将建立的实体类注入到 Spring 的 IOC 中
+        // 使用 AutowireCapableBeanFactory 将建立的实体类注入到 Spring 的 IOC 中,
+        // 注入后，可以通过 Spring 对对应的任务进行操作
         capableBeanFactory.autowireBean(jobInstance);
         return jobInstance;
     }

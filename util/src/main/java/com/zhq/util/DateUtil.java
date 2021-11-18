@@ -11,9 +11,21 @@ public class DateUtil {
     public static final int H_M_S = 1;
     public static final int H_M = 2;
 
-    public static Date dateFromStr(String strDate) {
-        // 使用多个重载的方式构建出默认函数的效果
-        return dateFromStr(strDate, "yyyy-MM-dd HH:mm:ss");
+    /**
+     * 将当前时间加上对应小时后返回
+     * @param date 需要操作的时间
+     * @param hours 添加的小时数
+     * @return
+     */
+    public static Date dateAfterHour(Date date, int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTime();
+    }
+
+    public static Date dateAfterHour(int hours) {
+        return dateAfterHour(new Date(), hours);
     }
 
     /**
@@ -40,6 +52,12 @@ public class DateUtil {
         return parsedDate;
     }
 
+    public static Date dateFromStr(String strDate) {
+        // 使用多个重载的方式构建出默认函数的效果
+        return dateFromStr(strDate, "yyyy-MM-dd HH:mm:ss");
+    }
+
+
     /**
      * 根据时间段获取对应的小时数
      * @param date 日期时间
@@ -64,7 +82,7 @@ public class DateUtil {
      * @param millisecond 比较是否包括毫秒
      * @return
      */
-    public static boolean isBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
+    public static boolean onlyBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
         Calendar nowCalendar = calendarWithDate(new Date());
         Calendar startCalendar = calendarWithDate(start);
         Calendar endCalendar = calendarWithDate(end);
@@ -76,58 +94,64 @@ public class DateUtil {
         return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
 
-    public static boolean isBetweenTimes(Date start, Date end, int format) {
+    public static boolean onlyBetweenTimes(Date start, Date end, int format) {
         switch (format) {
             case H_M_S:
-                return isBetweenTimes(start, end, true, false);
+                return onlyBetweenTimes(start, end, true, false);
 
             case H_M:
-                return isBetweenTimes(start, end, false, false);
+                return onlyBetweenTimes(start, end, false, false);
 
             default:
-                return isBetweenTimes(start, end, true, true);
+                return onlyBetweenTimes(start, end, true, true);
         }
     }
 
-    public static boolean isBetweenTimes(Date start, Date end) {
-        return isBetweenTimes(start, end, false, false);
-    }
-
-    /**
-     * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
-     * 默认包含相等的情况
-     * @param date
-     * @return
-     */
-    public static boolean isBeforeTimes_H_M_S_MS(Date date) {
-        Calendar nowCalendar = calendarWithDate(new Date());
-        Calendar dateCalendar = calendarWithDate(date);
-
-        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
-        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
-
-        return (nowTime.compareTo(dateTime) <= 0);
+    public static boolean onlyBetweenTimes(Date start, Date end) {
+        return onlyBetweenTimes(start, end, false, false);
     }
 
 
+    // 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之后 ( 仅比较时间 )
+    // onlyAfterTimes
+    // 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之前 ( 仅比较时间 )
+    // onlyBeforeTimes
+
+//    /**
+//     * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
+//     * 默认包含相等的情况
+//     * @param date
+//     * @return
+//     */
+//    public static boolean isBeforeTimes_H_M_S_MS(Date date) {
+//        Calendar nowCalendar = calendarWithDate(new Date());
+//        Calendar dateCalendar = calendarWithDate(date);
+//
+//        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
+//        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
+//
+//        return (nowTime.compareTo(dateTime) <= 0);
+//    }
+
+
+//    /**
+//     * 判断当前时间是否在对应的时间段后 ( hh:mm:ss:SSS )
+//     * @param date
+//     * @return
+//     */
+//    public static boolean isAfterTimes_H_M_S_MS(Date date) {
+//        Calendar nowCalendar = calendarWithDate(new Date());
+//        Calendar dateCalendar = calendarWithDate(date);
+//
+//        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
+//        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
+//
+//        return (nowTime.compareTo(dateTime) >= 0);
+//    }
+
+
     /**
-     * 判断当前时间是否在对应的时间段后 ( hh:mm:ss:SSS )
-     * @param date
-     * @return
-     */
-    public static boolean isAfterTimes_H_M_S_MS(Date date) {
-        Calendar nowCalendar = calendarWithDate(new Date());
-        Calendar dateCalendar = calendarWithDate(date);
-
-        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
-        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
-
-        return (nowTime.compareTo(dateTime) >= 0);
-    }
-
-
-    /**
-     * 返回对应日期时间的日历
+     * 获取当前日期时间对应的日历
      * @param date 传入的日期
      * @return
      */
@@ -141,7 +165,7 @@ public class DateUtil {
 
 
     /**
-     * 根据对应的日历返回对应的时间信息
+     * 根据日历返回当前的时间信息
      * @param calendar 传入的日历
      * @param second 是否需要比较秒 ( 默认不要 )
      * @param millisecond 是否需要比较毫秒 ( 默认不要 )

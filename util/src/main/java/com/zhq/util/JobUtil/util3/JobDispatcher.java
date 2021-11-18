@@ -54,7 +54,7 @@ public class JobDispatcher {
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                 .withIdentity(triggerId)
-                .startNow()
+                .startAt(startDate)
                 .endAt(endDate)
                 .withSchedule(simpleScheduleBuilder.
                         withIntervalInMinutes(minutesInterval).
