@@ -1,4 +1,4 @@
-package com.zhq.util.JobUtil;
+package com.zhq.util.JobUtil.util1;
 
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;

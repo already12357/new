@@ -1,6 +1,6 @@
 package com.zhq;
 
-import com.zhq.util.JobUtil.JobDispatcher;
+import com.zhq.util.JobUtil.util1.JobDispatcher;
 import org.junit.Test;
 import org.quartz.SchedulerException;
 

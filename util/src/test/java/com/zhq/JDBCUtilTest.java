@@ -1,20 +1,20 @@
 package com.zhq;
 
 import com.zhq.util.JDBCUtil;
-import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.dao.DataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 
 import java.io.*;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class JDBCUtilTest {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Test
     public void testExecuteSqlStorage() throws SQLException, IOException {
         Connection connection = JDBCUtil.getConnection();

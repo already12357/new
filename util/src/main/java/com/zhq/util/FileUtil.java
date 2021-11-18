@@ -65,13 +65,12 @@ public class FileUtil {
      */
     public static File toPdf(File file) {
         String suffix = parseSuffix(file);
-//        String tempFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file";
         File tempPdfFile = null;
         FileOutputStream fout = null;
 
-
         try {
             if (null == tempPdfFile || !tempPdfFile.exists()) {
+                // 通过临时文件来存储存储在线显示的内容
                 tempPdfFile = File.createTempFile("temp", ".pdf");
             }
 
@@ -109,27 +108,6 @@ public class FileUtil {
         }
 
         return tempPdfFile;
-
-//        // 使用
-//        if (suffix.equalsIgnoreCase("doc"))
-//        FileOutputStream fout = null;
-//        try {
-//            if (!pdfFile.exists()) {
-//                pdfFile.createNewFile();
-//            }
-//
-//            fout = new FileOutputStream(pdfPath);
-//            // 建立对应的文件
-//            Document document = new Document(filePath);
-//             // 调用 save 方法转化
-//            document.save(fout, SaveFormat.PDF);
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            ResourceUtil.closeResources(fout);
-//        }
     }
 
 
