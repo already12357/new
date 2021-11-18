@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-// 用于调度发配对应的任务
-// 默认注入 IOC
 // 用于调度发配对应的任务
 // 默认注入 IOC
 @Component
@@ -25,17 +24,19 @@ public class JobDispatcher {
      * @param Id 用于定位任务的编号
      * @param startDate 任务的起始日期
      * @param endDate 任务的结束日期
-     * @param minutesInterval 执行的时间间隔 ( 分钟 )
+     * @param unit 执行时间间隔的时间单位
+     * @param interval 执行的时间间隔 ( 分钟 )
      * @param clazz 对应任务的类
      * @param args 启动任务所需的参数, 以 <参数名, 参数>
      */
-    public void addJob(String Id, Date startDate, Date endDate, int minutesInterval,
+    public void addJob(String Id, Date startDate, Date endDate, TimeUnit unit, int interval,
                        Class<? extends Job> clazz, Map<String, Object> args)
             throws SchedulerException {
         // 通过 ID 拼接前缀来形成对应的编号
         String jobId = JOB_PREFIX + Id;
         String triggerId = TRIGGER_PREFIX + Id;
         JobKey jobKey = new JobKey(jobId);
+        TriggerKey triggerKey = new TriggerKey(triggerId);
 
         if (scheduler.checkExists(jobKey)) {
             scheduler.deleteJob(jobKey);
@@ -53,14 +54,7 @@ public class JobDispatcher {
             jobDetail.getJobDataMap().putAll(args);
         }
 
-        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-                .withIdentity(triggerId)
-                .startAt(startDate)
-                .endAt(endDate)
-                .withSchedule(simpleScheduleBuilder.
-                        withIntervalInMinutes(minutesInterval).
-                        repeatForever()).build();
+        SimpleTrigger simpleTrigger =  simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, TimeUnit.SECONDS, 2);
 
         scheduler.scheduleJob(jobDetail, simpleTrigger);
         scheduler.start();
@@ -96,7 +90,7 @@ public class JobDispatcher {
         }
     }
 
-    public void modifyJob(String Id, Date startDate, Date endDate, int secondsInterval)
+    public void modifyJob(String Id, Date startDate, Date endDate, TimeUnit timeUnit, int interval)
             throws SchedulerException {
         String jobId = JOB_PREFIX + Id;
         JobKey jobKey = JobKey.jobKey(jobId);
@@ -110,14 +104,8 @@ public class JobDispatcher {
         scheduler.pauseJob(jobKey);
         scheduler.unscheduleJob(triggerKey);
 
-        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
-        SimpleTrigger simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-                .withIdentity(triggerKey)
-                .startAt(startDate)
-                .endAt(endDate)
-                .forJob(jobDetail)
-                .withSchedule(simpleScheduleBuilder.withIntervalInSeconds(secondsInterval).repeatForever())
-                .build();
+        SimpleTrigger simpleTrigger = simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, timeUnit, interval);
+
         // 重新配置任务对应的执行器,并启动执行
         scheduler.scheduleJob(simpleTrigger);
         scheduler.resumeJob(jobKey);
@@ -128,5 +116,51 @@ public class JobDispatcher {
     public void clearAllJob() throws SchedulerException {
         scheduler.standby();
         scheduler.clear();
+    }
+
+
+
+    public SimpleTrigger simpleTriggerWithTimeUnit(JobDetail jobDetail, TriggerKey triggerKey, Date startDate, Date endDate, TimeUnit unit, int interval) {
+        SimpleTrigger simpleTrigger = null;
+        SimpleScheduleBuilder simpleScheduleBuilder = null;
+
+        try {
+            simpleScheduleBuilder = simpleScheduleBuilderWithTimeUnit(unit, interval);
+            simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+                    .withIdentity(triggerKey)
+                    .startAt(startDate)
+                    .endAt(endDate)
+                    .forJob(jobDetail)
+                    .withSchedule(simpleScheduleBuilder)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return simpleTrigger;
+    }
+
+    public SimpleScheduleBuilder simpleScheduleBuilderWithTimeUnit(TimeUnit unit, int interval) {
+        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder
+                .simpleSchedule()
+                .repeatForever();
+
+        switch (unit) {
+            case SECONDS:
+                simpleScheduleBuilder.withIntervalInSeconds(interval);
+                break;
+            case MINUTES:
+                simpleScheduleBuilder.withIntervalInMinutes(interval);
+                break;
+            case HOURS:
+                simpleScheduleBuilder.withIntervalInHours(interval);
+                break;
+            case MICROSECONDS:
+                simpleScheduleBuilder.withIntervalInMilliseconds(interval);
+                break;
+        }
+
+        return simpleScheduleBuilder;
     }
 }

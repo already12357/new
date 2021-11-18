@@ -13,8 +13,6 @@ W
 'src/test/java/com/zhq/HttpUtilTest.java,6\5\654c9e2e634088199cf186b62776b4d42974a8ac
 X
 (src/main/java/com/zhq/util/JDBCUtil.java,4\3\43adee1c766fd4b93f978e13fee5d303a1f69875
-\
-,src/test/java/com/zhq/JobDispatcherTest.java,2\0\20b0bfcb777e2d462b348d1a66ca13bc841e88c2
 W
 'src/test/java/com/zhq/JDBCUtilTest.java,8\a\8a77b912961ecff2da4118e0d4777e2510b9f90d
 g
