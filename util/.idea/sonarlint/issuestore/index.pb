@@ -5,5 +5,3 @@ W
 'src/test/java/com/zhq/FileUtilTest.java,7\a\7ac56c00ddc8e13226bd35d6aa6d55410f2841a5
 W
 'src/test/java/com/zhq/HttpUtilTest.java,6\5\654c9e2e634088199cf186b62776b4d42974a8ac
-W
-'src/test/java/com/zhq/JDBCUtilTest.java,8\a\8a77b912961ecff2da4118e0d4777e2510b9f90d

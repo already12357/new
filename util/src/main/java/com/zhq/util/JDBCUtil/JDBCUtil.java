@@ -1,11 +1,11 @@
-package com.zhq.util;
+package com.zhq.util.JDBCUtil;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.zhq.util.ResourceUtil;
 
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
@@ -52,14 +52,14 @@ public class JDBCUtil {
     }
 
 
-//    /**
-//     * 根据配置文件获取对应的数据源对象
-//     * @param propertyFile 配置文件
-//     * @return
-//     */
-//    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-//
-//    }
+    /**
+     * 根据配置文件获取对应的数据源对象
+     * @param propertyFile 配置文件
+     * @return
+     */
+    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
+        Properties properties = ResourceUtil.loadPropertiesFromResources()
+    }
 
     // 将文件插入到对应的表中(Blob 类型)
     public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {
@@ -86,10 +86,9 @@ public class JDBCUtil {
         return inserted;
     }
 
-    // 从表中读取对应的二进制数据(Blob 类型)
-    public static void readFileFromTable(String tableName, String columnName, DataSource dataSource) {
 
-    }
+//    // 从表中读取对应的二进制数据(Blob 类型)
+//    public static InputStream readFileFromTable(String tableName, String columnName, DataSource dataSource) { }
 
 
     private static DataSource ds;

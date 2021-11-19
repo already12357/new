@@ -55,7 +55,7 @@ public class ResourceUtil {
     }
 
     /**
-     * 从类路径文件夹下读取对应的文件数据
+     * 从目标类路径文件夹 ( target/classes/ ) 下读取对应的文件数据
      * @param filePath 从 src 开始的文件路径
      * @return
      */

@@ -1,6 +1,6 @@
 package com.zhq;
 
-import com.zhq.util.JDBCUtil;
+import com.zhq.util.JDBCUtil.JDBCUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,11 +30,5 @@ public class JDBCUtilTest {
 
         fIn.close();
         connection.close();
-    }
-
-
-    public void testExecuteSqlRead() {
-        String sql = "select * from filerepository where attachguid=?";
-
     }
 }
