@@ -15,5 +15,3 @@ X
 (src/main/java/com/zhq/util/JDBCUtil.java,4\3\43adee1c766fd4b93f978e13fee5d303a1f69875
 W
 'src/test/java/com/zhq/JDBCUtilTest.java,8\a\8a77b912961ecff2da4118e0d4777e2510b9f90d
-g
-7src/main/java/com/zhq/util/JobUtil/util1/JobConfig.java,b\5\b5d77745561024435dd65eb7b0e5f6732ed4f74d

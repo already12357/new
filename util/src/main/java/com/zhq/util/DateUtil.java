@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
     public static final int H_M_S_MS = 0;
@@ -17,15 +18,15 @@ public class DateUtil {
      * @param hours 添加的小时数
      * @return
      */
-    public static Date dateAfterHour(Date date, int hours) {
+    public static Date dateAfterHours(Date date, int hours) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.HOUR_OF_DAY, hours);
         return calendar.getTime();
     }
 
-    public static Date dateAfterHour(int hours) {
-        return dateAfterHour(new Date(), hours);
+    public static Date dateAfterHours(int hours) {
+        return dateAfterHours(new Date(), hours);
     }
 
     /**
@@ -76,78 +77,68 @@ public class DateUtil {
 
     /**
      * 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之间 ( 仅比较时间 )
-     * @param start 起始时间
-     * @param end 结束时间
-     * @param second 比较是否包括秒
-     * @param millisecond 比较是否包括毫秒
+     * @param objDate 需要判断的日期对象
+     * @param start 比较的起始日期对象
+     * @param end 比较的结束日期对象
+     * @param timeUnit 比较的颗粒度
      * @return
      */
-    public static boolean onlyBetweenTimes(Date start, Date end, boolean second, boolean millisecond) {
-        Calendar nowCalendar = calendarWithDate(new Date());
+    public static boolean onlyTimeBetween(Date objDate, Date start, Date end, TimeUnit timeUnit) {
+        Calendar nowCalendar = calendarWithDate(objDate);
         Calendar startCalendar = calendarWithDate(start);
         Calendar endCalendar = calendarWithDate(end);
 
-        LocalTime nowTime = localTimeWithCalendar(nowCalendar, second, millisecond);
-        LocalTime startTime = localTimeWithCalendar(startCalendar, second, millisecond);
-        LocalTime endTime = localTimeWithCalendar(endCalendar, second, millisecond);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, timeUnit);
+        LocalTime startTime = localTimeWithCalendar(startCalendar, timeUnit);
+        LocalTime endTime = localTimeWithCalendar(endCalendar, timeUnit);
 
         return (nowTime.compareTo(startTime) >= 0 && nowTime.compareTo(endTime) <= 0);
     }
 
-    public static boolean onlyBetweenTimes(Date start, Date end, int format) {
-        switch (format) {
-            case H_M_S:
-                return onlyBetweenTimes(start, end, true, false);
-
-            case H_M:
-                return onlyBetweenTimes(start, end, false, false);
-
-            default:
-                return onlyBetweenTimes(start, end, true, true);
-        }
-    }
-
-    public static boolean onlyBetweenTimes(Date start, Date end) {
-        return onlyBetweenTimes(start, end, false, false);
+    public static boolean onlyTimeBetween(Date start, Date end, TimeUnit timeUnit) {
+        return onlyTimeBetween(new Date(), start, end, timeUnit);
     }
 
 
-    // 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之后 ( 仅比较时间 )
-    // onlyAfterTimes
-    // 查看对应的日期对象的时间 (HH:mm:ss:SSS) 是否在对应的时间之前 ( 仅比较时间 )
-    // onlyBeforeTimes
+    /**
+     * 判断传入日期中的时间, 是否在当前时间之后
+     * @param objDate 当前判断的时间
+     * @param target 需要对比的时间
+     * @param timeUnit 比较时间的颗粒度 ( 分 / 秒 / 毫秒 )
+     * @return
+     */
+    public static boolean onlyTimeAfter(Date objDate, Date target, TimeUnit timeUnit) {
+        Calendar nowCalendar = calendarWithDate(objDate);
+        Calendar targetCalendar = calendarWithDate(target);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, timeUnit);
+        LocalTime targetTime = localTimeWithCalendar(targetCalendar, timeUnit);
 
-//    /**
-//     * 判断当前时间是否在对应的时间段前 ( hh:mm:ss:SSS )
-//     * 默认包含相等的情况
-//     * @param date
-//     * @return
-//     */
-//    public static boolean isBeforeTimes_H_M_S_MS(Date date) {
-//        Calendar nowCalendar = calendarWithDate(new Date());
-//        Calendar dateCalendar = calendarWithDate(date);
-//
-//        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
-//        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
-//
-//        return (nowTime.compareTo(dateTime) <= 0);
-//    }
+        return (nowTime.compareTo(targetTime) > 0);
+    }
 
+    public static boolean onlyTimeAfter(Date target, TimeUnit timeUnit) {
+        return onlyTimeAfter(new Date(), target,  timeUnit);
+    }
 
-//    /**
-//     * 判断当前时间是否在对应的时间段后 ( hh:mm:ss:SSS )
-//     * @param date
-//     * @return
-//     */
-//    public static boolean isAfterTimes_H_M_S_MS(Date date) {
-//        Calendar nowCalendar = calendarWithDate(new Date());
-//        Calendar dateCalendar = calendarWithDate(date);
-//
-//        LocalTime nowTime = localTimeWithCalendar(nowCalendar, true, true);
-//        LocalTime dateTime = localTimeWithCalendar(dateCalendar, true, true);
-//
-//        return (nowTime.compareTo(dateTime) >= 0);
-//    }
+    /**
+     * 判断传入日期中的时间, 是否在当前时间之后
+     * @param objDate 当前判断的时间
+     * @param target 比较的时间对象
+     * @param timeUnit 比较时间单位的颗粒度 ( 分 / 秒 / 毫秒 )
+     * @return
+     */
+    public static boolean onlyTimeBefore(Date objDate, Date target, TimeUnit timeUnit) {
+        Calendar nowCalendar = calendarWithDate(objDate);
+        Calendar targetCalendar = calendarWithDate(target);
+        LocalTime nowTime = localTimeWithCalendar(nowCalendar, timeUnit);
+        LocalTime targetTime = localTimeWithCalendar(targetCalendar, timeUnit);
+
+        return (nowTime.compareTo(targetTime) < 0);
+    }
+
+    public static boolean onlyTimeBefore(Date target, TimeUnit timeUnit) {
+        return onlyTimeBefore(new Date(), target, timeUnit);
+    }
 
 
     /**
@@ -167,35 +158,25 @@ public class DateUtil {
     /**
      * 根据日历返回当前的时间信息
      * @param calendar 传入的日历
-     * @param second 是否需要比较秒 ( 默认不要 )
-     * @param millisecond 是否需要比较毫秒 ( 默认不要 )
+     * @param timeUnit 返回时间的颗粒度 ( 精确到 秒 / 毫秒 / 分钟 )
      * @return
      */
-    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second, boolean millisecond) {
-        if (second) {
-            if (millisecond) {
+    public static LocalTime localTimeWithCalendar(Calendar calendar, TimeUnit timeUnit) {
+        switch (timeUnit) {
+            case SECONDS:
+                return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND));
+
+            case MILLISECONDS:
                 return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
                         calendar.get(Calendar.SECOND),
                         calendar.get(Calendar.MILLISECOND));
-            }
-            else {
+
+            default:
                 return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        calendar.get(Calendar.SECOND));
-            }
+                        calendar.get(Calendar.MINUTE));
         }
-        else {
-            return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE));
-        }
-    }
-
-    public static LocalTime localTimeWithCalendar(Calendar calendar) {
-        return localTimeWithCalendar(calendar, false, false);
-    }
-
-    public static LocalTime localTimeWithCalendar(Calendar calendar, boolean second) {
-        return localTimeWithCalendar(calendar, second, false);
     }
 }
