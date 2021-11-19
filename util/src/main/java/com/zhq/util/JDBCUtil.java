@@ -61,22 +61,29 @@ public class JDBCUtil {
 //
 //    }
 
-    // 将文件更新到对应的表中(Blob 类型)
-    public static void insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) throws SQLException {
-        Connection connection = dataSource.getConnection();
+    // 将文件插入到对应的表中(Blob 类型)
+    public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {
         String sql = "insert into " + tableName + "(`" + columnName + "`) values(?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         FileInputStream fIn = null;
+        boolean inserted = false;
+
         try {
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+
             fIn = new FileInputStream(file);
             preparedStatement.setBlob(1, fIn);
-            boolean inserted = preparedStatement.execute();
+            inserted = preparedStatement.execute();
 
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             ResourceUtil.closeResources(fIn);
         }
+
+        return inserted;
     }
 
     // 从表中读取对应的二进制数据(Blob 类型)
