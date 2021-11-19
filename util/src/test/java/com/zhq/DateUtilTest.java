@@ -15,7 +15,7 @@ public class DateUtilTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
         Date date1 = simpleDateFormat.parse("9:10:15.127");
         Date date2 = simpleDateFormat.parse("9:20:15.127");
-        Date dateTest = DateUtil.dateAfterTimes(date1, Calendar.HOUR_OF_DAY, 20);
+        Date dateTest = DateUtil.nowBeforeTimes(Calendar.HOUR_OF_DAY, 20);
 
         System.out.println(dateTest);
     }
