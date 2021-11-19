@@ -21,20 +21,20 @@ public class JobDispatcher {
 
     /**
      * 向调度器中, 添加一个任务, 默认状态下, 调度器时没有运行的
-     * @param Id 用于定位任务的编号
+     * @param id 用于定位任务的编号
      * @param startDate 任务的起始日期
      * @param endDate 任务的结束日期
-     * @param unit 执行时间间隔的时间单位
+     * @param intervalTimeUnit 执行时间间隔的颗粒度
      * @param interval 执行的时间间隔 ( 分钟 )
      * @param clazz 对应任务的类
      * @param args 启动任务所需的参数, 以 <参数名, 参数>
      */
-    public void addJob(String Id, Date startDate, Date endDate, TimeUnit unit, int interval,
+    public void addJob(String id, Date startDate, Date endDate, TimeUnit intervalTimeUnit, int interval,
                        Class<? extends Job> clazz, Map<String, Object> args)
             throws SchedulerException {
         // 通过 ID 拼接前缀来形成对应的编号
-        String jobId = JOB_PREFIX + Id;
-        String triggerId = TRIGGER_PREFIX + Id;
+        String jobId = JOB_PREFIX + id;
+        String triggerId = TRIGGER_PREFIX + id;
         JobKey jobKey = new JobKey(jobId);
         TriggerKey triggerKey = new TriggerKey(triggerId);
 
@@ -54,19 +54,24 @@ public class JobDispatcher {
             jobDetail.getJobDataMap().putAll(args);
         }
 
-        SimpleTrigger simpleTrigger =  simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, TimeUnit.SECONDS, 2);
+        SimpleTrigger simpleTrigger =  simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
 
         scheduler.scheduleJob(jobDetail, simpleTrigger);
         scheduler.start();
     }
 
-    public void suspendJob(String Id)
+    /**
+     * 暂停一个任务, 同时暂停其触发器
+     * @param id 任务的 Id
+     * @throws SchedulerException
+     */
+    public void suspendJob(String id)
             throws SchedulerException {
-        String jobId = JOB_PREFIX + Id;
+        String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
-        String triggerId = TRIGGER_PREFIX + Id;
+        String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = new TriggerKey(triggerId);
 
         if (null != jobDetail) {
@@ -76,13 +81,18 @@ public class JobDispatcher {
     }
 
 
-    public void resumeJob(String Id)
+    /**
+     * 恢复一个任务
+     * @param id 恢复任务编号
+     * @throws SchedulerException
+     */
+    public void resumeJob(String id)
             throws SchedulerException {
-        String jobId = JOB_PREFIX + Id;
+        String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
-        String triggerId = TRIGGER_PREFIX + Id;
+        String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = new TriggerKey(triggerId);
 
         if (null != jobDetail) {
@@ -90,12 +100,22 @@ public class JobDispatcher {
         }
     }
 
-    public void modifyJob(String Id, Date startDate, Date endDate, TimeUnit timeUnit, int interval)
+
+    /**
+     * 任务执行的调整
+     * @param id 任务编号
+     * @param startDate 起始日期
+     * @param endDate 结束日期
+     * @param intervalTimeUnit 时间间隔的颗粒度
+     * @param interval 间隔大小
+     * @throws SchedulerException
+     */
+    public void modifyJob(String id, Date startDate, Date endDate, TimeUnit intervalTimeUnit, int interval)
             throws SchedulerException {
-        String jobId = JOB_PREFIX + Id;
+        String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-        String triggerId = TRIGGER_PREFIX + Id;
+        String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = TriggerKey.triggerKey(triggerId);
 
         // 停止触发器的触发
@@ -104,7 +124,7 @@ public class JobDispatcher {
         scheduler.pauseJob(jobKey);
         scheduler.unscheduleJob(triggerKey);
 
-        SimpleTrigger simpleTrigger = simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, timeUnit, interval);
+        SimpleTrigger simpleTrigger = simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
 
         // 重新配置任务对应的执行器,并启动执行
         scheduler.scheduleJob(simpleTrigger);
@@ -112,7 +132,10 @@ public class JobDispatcher {
     }
 
 
-
+    /**
+     * 清楚一个调度器下的所有任务和调度器
+     * @throws SchedulerException
+     */
     public void clearAllJob() throws SchedulerException {
         scheduler.standby();
         scheduler.clear();
@@ -120,12 +143,12 @@ public class JobDispatcher {
 
 
 
-    public SimpleTrigger simpleTriggerWithTimeUnit(JobDetail jobDetail, TriggerKey triggerKey, Date startDate, Date endDate, TimeUnit unit, int interval) {
+    public SimpleTrigger simpleTriggerWithTimeUnit(JobDetail jobDetail, TriggerKey triggerKey, Date startDate, Date endDate, TimeUnit intervalUnit, int interval) {
         SimpleTrigger simpleTrigger = null;
         SimpleScheduleBuilder simpleScheduleBuilder = null;
 
         try {
-            simpleScheduleBuilder = simpleScheduleBuilderWithTimeUnit(unit, interval);
+            simpleScheduleBuilder = simpleScheduleBuilderWithTimeUnit(intervalUnit, interval);
             simpleTrigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                     .withIdentity(triggerKey)
                     .startAt(startDate)
@@ -141,12 +164,12 @@ public class JobDispatcher {
         return simpleTrigger;
     }
 
-    public SimpleScheduleBuilder simpleScheduleBuilderWithTimeUnit(TimeUnit unit, int interval) {
+    public SimpleScheduleBuilder simpleScheduleBuilderWithTimeUnit(TimeUnit intervalUnit, int interval) {
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder
                 .simpleSchedule()
                 .repeatForever();
 
-        switch (unit) {
+        switch (intervalUnit) {
             case SECONDS:
                 simpleScheduleBuilder.withIntervalInSeconds(interval);
                 break;
