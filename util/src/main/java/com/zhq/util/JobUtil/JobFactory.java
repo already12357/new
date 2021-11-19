@@ -19,7 +19,8 @@ public class JobFactory extends AdaptableJobFactory {
      * @throws Exception
      */
     @Override
-    protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
+    protected Object createJobInstance(TriggerFiredBundle bundle)
+            throws Exception {
         Object jobInstance = super.createJobInstance(bundle);
         // 使用 AutowireCapableBeanFactory 将建立的实体类注入到 Spring 的 IOC 中,
         // 注入后，可以通过 Spring 对对应的任务进行操作

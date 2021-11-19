@@ -1,5 +1,6 @@
 package com.zhq.util.JobUtil;
 
+import com.aspose.cad.internal.F.P;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,53 +31,61 @@ public class JobDispatcher {
      * @param args 启动任务所需的参数, 以 <参数名, 参数>
      */
     public void addJob(String id, Date startDate, Date endDate, TimeUnit intervalTimeUnit, int interval,
-                       Class<? extends Job> clazz, Map<String, Object> args)
-            throws SchedulerException {
+                       Class<? extends Job> clazz, Map<String, Object> args) {
         // 通过 ID 拼接前缀来形成对应的编号
         String jobId = JOB_PREFIX + id;
         String triggerId = TRIGGER_PREFIX + id;
         JobKey jobKey = new JobKey(jobId);
         TriggerKey triggerKey = new TriggerKey(triggerId);
 
-        if (scheduler.checkExists(jobKey)) {
-            scheduler.deleteJob(jobKey);
-            jobKey = new JobKey(jobId);
+        try {
+            if (scheduler.checkExists(jobKey)) {
+                scheduler.deleteJob(jobKey);
+                jobKey = new JobKey(jobId);
+            }
+
+            // 建立对应的任务对象
+            // 注意设置其 duration 属性为 true, 保证在对应的触发器删除时, 任务不不删除
+            JobDetail jobDetail = JobBuilder.newJob(clazz).
+                    withIdentity(jobId).
+                    storeDurably(true).build();
+
+            // 向工作的空间中传入参数
+            if (null != args && !args.isEmpty()) {
+                jobDetail.getJobDataMap().putAll(args);
+            }
+
+            SimpleTrigger simpleTrigger =  simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
+
+            scheduler.scheduleJob(jobDetail, simpleTrigger);
+            scheduler.start();
         }
-
-        // 建立对应的任务对象
-        // 注意设置其 duration 属性为 true, 保证在对应的触发器删除时, 任务不不删除
-        JobDetail jobDetail = JobBuilder.newJob(clazz).
-                withIdentity(jobId).
-                storeDurably(true).build();
-
-        // 向工作的空间中传入参数
-        if (null != args && !args.isEmpty()) {
-            jobDetail.getJobDataMap().putAll(args);
+        catch (Exception e) {
+            e.printStackTrace();
         }
-
-        SimpleTrigger simpleTrigger =  simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
-
-        scheduler.scheduleJob(jobDetail, simpleTrigger);
-        scheduler.start();
     }
 
     /**
      * 暂停一个任务, 同时暂停其触发器
      * @param id 任务的 Id
-     * @throws SchedulerException
      */
-    public void suspendJob(String id)
-            throws SchedulerException {
+    public void suspendJob(String id) {
         String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-
         String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = new TriggerKey(triggerId);
+        JobDetail jobDetail = null;
 
-        if (null != jobDetail) {
-            scheduler.pauseTrigger(triggerKey);
-            scheduler.pauseJob(jobKey);
+        try {
+            jobDetail = scheduler.getJobDetail(jobKey);
+
+            if (null != jobDetail) {
+                scheduler.pauseTrigger(triggerKey);
+                scheduler.pauseJob(jobKey);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -86,17 +95,22 @@ public class JobDispatcher {
      * @param id 恢复任务编号
      * @throws SchedulerException
      */
-    public void resumeJob(String id)
-            throws SchedulerException {
+    public void resumeJob(String id) {
         String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-
         String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = new TriggerKey(triggerId);
+        JobDetail jobDetail = null;
 
-        if (null != jobDetail) {
-            scheduler.resumeTrigger(triggerKey);
+        try {
+            jobDetail = scheduler.getJobDetail(jobKey);
+
+            if (null != jobDetail) {
+                scheduler.resumeTrigger(triggerKey);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -108,37 +122,46 @@ public class JobDispatcher {
      * @param endDate 结束日期
      * @param intervalTimeUnit 时间间隔的颗粒度
      * @param interval 间隔大小
-     * @throws SchedulerException
      */
-    public void modifyJob(String id, Date startDate, Date endDate, TimeUnit intervalTimeUnit, int interval)
-            throws SchedulerException {
+    public void modifyJob(String id, Date startDate, Date endDate, TimeUnit intervalTimeUnit, int interval) {
         String jobId = JOB_PREFIX + id;
         JobKey jobKey = JobKey.jobKey(jobId);
-        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
         String triggerId = TRIGGER_PREFIX + id;
         TriggerKey triggerKey = TriggerKey.triggerKey(triggerId);
+        JobDetail jobDetail = null;
 
-        // 停止触发器的触发
-        // 停止当前任务的执行
-        scheduler.pauseTrigger(triggerKey);
-        scheduler.pauseJob(jobKey);
-        scheduler.unscheduleJob(triggerKey);
+        try {
+            jobDetail = scheduler.getJobDetail(jobKey);
 
-        SimpleTrigger simpleTrigger = simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
+            // 停止触发器的触发
+            // 停止当前任务的执行
+            scheduler.pauseTrigger(triggerKey);
+            scheduler.pauseJob(jobKey);
+            scheduler.unscheduleJob(triggerKey);
 
-        // 重新配置任务对应的执行器,并启动执行
-        scheduler.scheduleJob(simpleTrigger);
-        scheduler.resumeJob(jobKey);
+            SimpleTrigger simpleTrigger = simpleTriggerWithTimeUnit(jobDetail, triggerKey, startDate, endDate, intervalTimeUnit, interval);
+
+            // 重新配置任务对应的执行器,并启动执行
+            scheduler.scheduleJob(simpleTrigger);
+            scheduler.resumeJob(jobKey);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     /**
      * 清楚一个调度器下的所有任务和调度器
-     * @throws SchedulerException
      */
-    public void clearAllJob() throws SchedulerException {
-        scheduler.standby();
-        scheduler.clear();
+    public void clearAllJob() {
+        try {
+            scheduler.standby();
+            scheduler.clear();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
