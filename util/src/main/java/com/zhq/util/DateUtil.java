@@ -8,10 +8,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
-    public static final int H_M_S_MS = 0;
-    public static final int H_M_S = 1;
-    public static final int H_M = 2;
-
     /**
      * 获取特定时间之前的时间内容
      * @param objDate 时间基准对象
