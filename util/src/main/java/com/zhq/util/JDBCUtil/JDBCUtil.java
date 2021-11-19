@@ -6,7 +6,6 @@ import com.zhq.util.ResourceUtil;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
@@ -26,6 +25,9 @@ public class JDBCUtil {
     public static final String URL_MYSQL(String dbname, String ip) {
         return URL_MYSQL(dbname, ip, "3306");
     }
+    public static final String URL_MYSQL(String dbname) {
+        return URL_MYSQL(dbname, "127.0.0.1", "3306");
+    }
 
     // sqlserver
     public static final String URL_SQLSERVER(String dbname, String ip, String port) {
@@ -33,6 +35,9 @@ public class JDBCUtil {
     }
     public static final String URL_SQLSERVER(String dbname, String ip) {
         return URL_SQLSERVER(dbname, ip, "1433");
+    }
+    public static final String URL_SQLSERVER(String dbname) {
+        return URL_SQLSERVER(dbname, "127.0.0.1", "1433");
     }
 
     // oracle
@@ -42,6 +47,9 @@ public class JDBCUtil {
     public static final String URL_ORACLE(String dbname, String ip) {
         return URL_ORACLE(dbname, ip, "1521");
     }
+    public static final String URL_ORACLE(String dbname) {
+        return URL_ORACLE(dbname, "127.0.0.1", "1521");
+    }
 
     // db2
     public static final String URL_DB2(String dbname, String ip, String port) {
@@ -49,6 +57,9 @@ public class JDBCUtil {
     }
     public static final String URL_DB2(String dbname, String ip) {
         return URL_DB2(dbname, ip, "5000");
+    }
+    public static final String URL_DB2(String dbname) {
+        return URL_DB2(dbname, "127.0.0.1", "5000");
     }
 
 
@@ -58,7 +69,7 @@ public class JDBCUtil {
      * @return
      */
     public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-        Properties properties = ResourceUtil.loadPropertiesFromResources()
+
     }
 
     // 将文件插入到对应的表中(Blob 类型)
@@ -94,7 +105,7 @@ public class JDBCUtil {
     private static DataSource ds;
 
     static {
-        Properties properties = ResourceUtil.loadPropertiesFromResources("druid.properties");
+        Properties properties = ResourceUtil.loadPropertiesFromResources("jdbc/datasource/druid.properties");
 
 //        Properties prop = new Properties();
 //        InputStream is = JDBCUtil.class.getClassLoader().getResourceAsStream("druid.properties");
