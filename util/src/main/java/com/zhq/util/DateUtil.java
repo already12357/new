@@ -13,21 +13,40 @@ public class DateUtil {
     public static final int H_M = 2;
 
     /**
-     * 将当前时间加上对应小时后返回
-     * @param date 需要操作的时间
-     * @param hours 添加的小时数
+     * 获取特定时间之前的时间内容
+     * @param objDate 时间基准对象
+     * @param calendarTimeBase 日历时间单位 ( 如 Calendar.HOUR_OF_DAY )
+     * @param interval 时间间隔
      * @return
      */
-    public static Date dateAfterHours(Date date, int hours) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.HOUR_OF_DAY, hours);
+    public static Date dateBeforeTimes(Date objDate, int calendarTimeBase, int interval) {
+        Calendar calendar = calendarWithDate(objDate);
+        calendar.add(calendarTimeBase, Math.negateExact(interval));
         return calendar.getTime();
     }
 
-    public static Date dateAfterHours(int hours) {
-        return dateAfterHours(new Date(), hours);
+    public static Date nowBeforeTimes(int calendarTimeBase, int interval) {
+        return dateBeforeTimes(new Date(), calendarTimeBase, interval);
     }
+
+
+    /**
+     * 获取特定时间之后的时间内容
+     * @param objDate 时间基准对象
+     * @param calendarTimeBase 日历时间单位 ( 如 Calendar.HOUR_OF_DAY )
+     * @param interval 时间间隔
+     * @return
+     */
+    public static Date dateAfterTimes(Date objDate, int calendarTimeBase, int interval) {
+        Calendar calendar = calendarWithDate(objDate);
+        calendar.add(calendarTimeBase, interval);
+        return calendar.getTime();
+    }
+
+    public static Date nowAfterTimes(int calendarTimeBase, int interval) {
+        return dateAfterTimes(new Date(), calendarTimeBase, interval);
+    }
+
 
     /**
      * 根据提供的字符串格式, 解析为对应的日期
