@@ -1,6 +1,7 @@
 package com.zhq.util;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -62,5 +63,21 @@ public class ResourceUtil {
     public static InputStream loadFromClassPath(String filePath) {
         InputStream in = ResourceUtil.class.getClassLoader().getResourceAsStream(filePath);
         return in;
+    }
+
+    public static Properties loadPropertiesFromFile(File propFile) {
+        Properties prop = new Properties();
+
+        try {
+
+        }
+        catch (Exception e) {
+
+        }
+        finally {
+
+        }
+
+        return prop;
     }
 }

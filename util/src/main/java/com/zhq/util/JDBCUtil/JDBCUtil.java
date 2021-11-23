@@ -69,7 +69,7 @@ public class JDBCUtil {
      * @return
      */
     public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-
+        Properties prop =
     }
 
     // 将文件插入到对应的表中(Blob 类型)

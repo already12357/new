@@ -182,6 +182,16 @@ public class HttpUtil {
 
 
     /**
+     * 上传文件
+     * @param request 原生的 Http 请求方法
+     * @param response 原生的 Http 响应
+     */
+    public static void uploadFile(HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+
+    /**
      * 在处理器方法中下载对应的文件
      * @param request 处理器方法传入的 Servlet 原生请求
      * @param response 处理器方法传入的 Servlet 原生响应
