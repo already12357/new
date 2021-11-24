@@ -68,9 +68,9 @@ public class JDBCUtil {
      * @param propertyFile 配置文件
      * @return
      */
-    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-        Properties prop =
-    }
+//    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
+//        Properties prop =
+//    }
 
     // 将文件插入到对应的表中(Blob 类型)
     public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {

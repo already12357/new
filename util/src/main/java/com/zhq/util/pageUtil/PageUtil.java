@@ -1,4 +1,4 @@
-package com.zhq.util;
+package com.zhq.util.pageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +39,7 @@ public class PageUtil {
 
         // 前提需要满足
         if (currentPage * pageSize < elementSize) {
-            // 当前页是否包含了元素的最后一个数组
-            if (pageSize * nextPage - 1 < elementSize) {
-                endIndex = pageSize * nextPage;
-            }
-            else {
-                endIndex = elementSize;
-            }
+            endIndex = Math.min(pageSize * nextPage, elementSize);
         }
 
         return endIndex;
@@ -62,16 +56,8 @@ public class PageUtil {
         List<T> retList = new ArrayList<>();
         int elementSize = elements.size();
         int nextPage = currentPage + 1;
-        int beginIndex = currentPage * pageSize;
-        int endIndex = -1;
-
-        // 当前页是否包含了元素的最后一个数组
-        if (pageSize * nextPage - 1 < elementSize) {
-            endIndex = pageSize * nextPage;
-        }
-        else {
-            endIndex = elementSize;
-        }
+        int beginIndex = beginIndex(elements, currentPage, pageSize);
+        int endIndex = endIndex(elements, currentPage, pageSize);
 
         for (int i = beginIndex; i < endIndex; i++) {
             retList.add(elements.get(i));

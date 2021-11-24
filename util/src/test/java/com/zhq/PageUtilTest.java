@@ -1,6 +1,6 @@
 package com.zhq;
 
-import com.zhq.util.PageUtil;
+import com.zhq.util.pageUtil.PageUtil;
 import org.junit.Test;
 
 import java.util.ArrayList;
