@@ -1,11 +1,14 @@
 package com.zhq.util.JDBCUtil;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.zhq.util.ResourceUtil;
 
+import javax.annotation.Resources;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
@@ -63,14 +66,40 @@ public class JDBCUtil {
     }
 
 
+
+
     /**
      * 根据配置文件获取对应的数据源对象
      * @param propertyFile 配置文件
      * @return
      */
-//    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-//        Properties prop =
-//    }
+    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
+        DataSource dataSource = null;
+        Properties prop = new Properties();
+        InputStream fin = null;
+
+        try {
+            fin = new FileInputStream(propertyFile);
+            prop.load(fin);
+            dataSource = DruidDataSourceFactory.createDataSource(prop);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(fin);
+        }
+
+        return dataSource;
+    }
+
+    public static DataSource druidDataSourceWithProperties(Properties properties) {
+        DruidDataSource dataSource = new DruidDataSource();
+
+        dataSource.configFromPropety(properties);
+
+        return dataSource;
+    }
 
     // 将文件插入到对应的表中(Blob 类型)
     public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {
@@ -119,5 +148,20 @@ public class JDBCUtil {
 
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
+    }
+
+    public static Connection connectionInPool(DataSource dataSource) {
+        Connection connection = null;
+
+        try {
+            connection = dataSource.getConnection();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+
+        }
+        return dataSource.getConnection();
     }
 }
