@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.zhq.util.ResourceUtil;
 
-import javax.annotation.Resources;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,60 +12,18 @@ import java.sql.*;
 import java.util.Properties;
 
 public class JDBCUtil {
-    /**
-     * 通过函数返回不同数据库的不同驱动
-     *
-     * @param dbname 数据库名称
-     * @param ip     ip 地址
-     * @param port   端口
-     * @return
-     */
-    // mysql
-    public static final String URL_MYSQL(String dbname, String ip, String port) {
-        return "jdbc:mysql://" + ip + ":" + port + "/" + dbname + "?useSSL=false";
-    }
-    public static final String URL_MYSQL(String dbname, String ip) {
-        return URL_MYSQL(dbname, ip, "3306");
-    }
-    public static final String URL_MYSQL(String dbname) {
-        return URL_MYSQL(dbname, "127.0.0.1", "3306");
-    }
-
-    // sqlserver
-    public static final String URL_SQLSERVER(String dbname, String ip, String port) {
-        return "jdbc:sqlserver://" + ip + ":" + port + "; DatabaseName=" + dbname;
-    }
-    public static final String URL_SQLSERVER(String dbname, String ip) {
-        return URL_SQLSERVER(dbname, ip, "1433");
-    }
-    public static final String URL_SQLSERVER(String dbname) {
-        return URL_SQLSERVER(dbname, "127.0.0.1", "1433");
-    }
-
-    // oracle
-    public static final String URL_ORACLE(String dbname, String ip, String port) {
-        return "jdbc:oracle:thin:@" + ip + ":" + port + ":" + dbname;
-    }
-    public static final String URL_ORACLE(String dbname, String ip) {
-        return URL_ORACLE(dbname, ip, "1521");
-    }
-    public static final String URL_ORACLE(String dbname) {
-        return URL_ORACLE(dbname, "127.0.0.1", "1521");
-    }
-
-    // db2
-    public static final String URL_DB2(String dbname, String ip, String port) {
-        return "jdbc:db2://" + ip + ":" + port + "/" + dbname;
-    }
-    public static final String URL_DB2(String dbname, String ip) {
-        return URL_DB2(dbname, ip, "5000");
-    }
-    public static final String URL_DB2(String dbname) {
-        return URL_DB2(dbname, "127.0.0.1", "5000");
-    }
-
-
-
+    // 内置的一些数据源信息, 用于获取静态的数据类
+    // 数据库类型
+    public static String innerDbType;
+    // 连接池类型
+    public static String innerPoolType;
+    // 数据库 URL
+    public static String innerUrl;
+    // 连接数据库名称
+    public static String innerDbname;
+    // 登录数据库信息
+    public static String innerPassword;
+    public static String innerUsername;
 
     /**
      * 根据配置文件获取对应的数据源对象
@@ -141,8 +98,8 @@ public class JDBCUtil {
         try {
 //            prop.load(is);
             ds = DruidDataSourceFactory.createDataSource(properties);
-        } catch (Exception var3) {
-            var3.printStackTrace();
+        } catch (Exception e3) {
+            e3.printStackTrace();
         }
     }
 
@@ -163,5 +120,90 @@ public class JDBCUtil {
 
         }
         return dataSource.getConnection();
+    }
+
+    public static void setUrl(String url) {
+        innerUrl = url;
+    }
+
+    public static void setDbname(String dbname) {
+        innerDbname = dbname;
+    }
+
+    public static void setPassword(String password) {
+        innerPassword = password;
+    }
+
+    public static void setUsername(String username) {
+        innerUsername = username;
+    }
+
+    public static void setPoolType(String poolType) {
+        innerPoolType = poolType;
+    }
+
+    /**
+     * 根据数据库驱动返回对应的数据库类型
+     * @param url 传入的数据库驱动 url
+     * @return
+     */
+    public static String getTypeByUrl(String url) {
+        String[] urlParts = url.split(":");
+        String retType = null;
+
+        switch (urlParts[0]) {
+            // 非关系型数据库类型
+            case ConstUtil.STR_REDIS:
+            case ConstUtil.STR_MONGODB:
+                return urlParts[0];
+
+            // 关系型数据库类型
+            case ConstUtil.STR_JDBC:
+                return urlParts[2];
+
+            default:
+                return "";
+        }
+    }
+
+
+    public static DataSource dataSourceWithInnerConfig() {
+
+    }
+
+    public static DruidDataSource innerDruidDataSource() {
+        DruidDataSource innerDS = new DruidDataSource();
+
+        innerDS.setUsername(innerUsername);
+        innerDS.setPassword(innerPassword);
+        innerDS.setUrl(innerUrl);
+        innerDS.setDriver(driverWithDBType(innerDbType));
+
+        return innerDS;
+    }
+
+    /**
+     * 根据数据库类型加载对应的数据包 ( 反射  )
+     * @param dbType
+     * @return
+     */
+    public static Driver driverWithDBType(String dbType) {
+        Driver driver = null;
+        Class.forName().newInstance();
+
+        switch (dbType) {
+            case ConstUtil.MYSQL_STR:
+                break;
+
+            case ConstUtil.MYSQL_STR:
+                break;
+
+            case ConstUtil.SQLSERVER_STR:
+                break;
+
+            case ConstUtil.
+        }
+
+        return driver;
     }
 }

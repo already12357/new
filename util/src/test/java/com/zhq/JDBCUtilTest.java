@@ -1,10 +1,12 @@
 package com.zhq;
 
+import com.zhq.util.JDBCUtil.ConstUtil;
 import com.zhq.util.JDBCUtil.JDBCUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,5 +32,15 @@ public class JDBCUtilTest {
 
         fIn.close();
         connection.close();
+    }
+
+    @Test
+    public DataSource getDataBase() {
+        // JDBC 中设置一个静态的配置, 用于获取对应的数据源
+        JDBCUtil.setUrl();
+        JDBCUtil.setDbname();
+        JDBCUtil.setPassword();
+        JDBCUtil.setUsername();
+        JDBCUtil.setPoolType(ConstUtil.);
     }
 }
