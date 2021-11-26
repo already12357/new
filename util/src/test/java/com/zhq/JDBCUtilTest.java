@@ -41,7 +41,7 @@ public class JDBCUtilTest {
         JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
         JDBCUtil.setUsername("root");
         JDBCUtil.setPassword("Gepoint");
-        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
+//        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
         DataSource dataSource = JDBCUtil.dataSourceWithInnerConfig();
         Connection connection = null;
 
@@ -55,5 +55,15 @@ public class JDBCUtilTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void innerCheckTest() {
+        JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
+        JDBCUtil.setUsername("root");
+        JDBCUtil.setPassword("Gepoint");
+        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
+        JDBCUtil.dataSourceWithInnerConfig();
+        JDBCUtil.innerCheck();
     }
 }

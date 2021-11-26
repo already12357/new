@@ -12,6 +12,7 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Locale;
 import java.util.Properties;
@@ -59,9 +60,7 @@ public class JDBCUtil {
 
     public static DataSource druidDataSourceWithProperties(Properties properties) {
         DruidDataSource dataSource = new DruidDataSource();
-
         dataSource.configFromPropety(properties);
-
         return dataSource;
     }
 
@@ -143,29 +142,6 @@ public class JDBCUtil {
         innerPoolType = poolType;
     }
 
-    /**
-     * 根据数据库驱动返回对应的数据库类型
-     * @param url 传入的数据库驱动 url
-     * @return
-     */
-    public static String getTypeByUrl(String url) {
-        String[] urlParts = url.split(":");
-        String retType = null;
-
-        switch (urlParts[0]) {
-            // 非关系型数据库类型
-            case ConstUtil.REDIS_STR:
-            case ConstUtil.MONGODB_STR:
-                return urlParts[0];
-
-            // 关系型数据库类型
-            case ConstUtil.JDBC_STR:
-                return urlParts[2];
-
-            default:
-                return "";
-        }
-    }
 
 
     /**
@@ -262,7 +238,7 @@ public class JDBCUtil {
 
     /**
      * 根据数据库类型加载对应的驱动类
-     * @param dbType
+     * @param dbType 传入的数据库类型
      * @return
      */
     public static Driver driverWithDBType(String dbType) {
@@ -285,6 +261,50 @@ public class JDBCUtil {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * 根据数据库驱动返回对应的数据库类型
+     * @param url 传入的数据库驱动 url
+     * @return
+     */
+    public static String getTypeByUrl(String url) {
+        String[] urlParts = url.split(":");
+        String retType = null;
+
+        switch (urlParts[0]) {
+            // 非关系型数据库类型
+            case ConstUtil.REDIS_STR:
+            case ConstUtil.MONGODB_STR:
+                return urlParts[0];
+
+            // 关系型数据库类型
+            case ConstUtil.JDBC_STR:
+                return urlParts[2];
+
+            default:
+                return "";
+        }
+    }
+
+    /**
+     * 删除内部的数据源
+     * @return
+     */
+    public static boolean clearInnerDs() {
+        try {
+            if (null != innerDS) {
+                Class innerDSClazz = innerDS.getClass();
+                Method closeMethod = innerDSClazz.getMethod("close");
+                closeMethod.invoke(innerDS);
+            }
+
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
