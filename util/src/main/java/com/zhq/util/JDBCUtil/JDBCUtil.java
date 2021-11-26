@@ -2,16 +2,23 @@ package com.zhq.util.JDBCUtil;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.zhq.util.ResourceUtil;
+import com.mysql.jdbc.Driver;
+import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Locale;
 import java.util.Properties;
 
 public class JDBCUtil {
+    // 内部配置一个静态的数据源类, 防止多数据源问题
+    public static DataSource innerDS;
     // 内置的一些数据源信息, 用于获取静态的数据类
     // 数据库类型
     public static String innerDbType;
@@ -88,56 +95,50 @@ public class JDBCUtil {
 //    public static InputStream readFileFromTable(String tableName, String columnName, DataSource dataSource) { }
 
 
-    private static DataSource ds;
+//    private static DataSource ds;
 
-    static {
-        Properties properties = ResourceUtil.loadPropertiesFromResources("jdbc/datasource/druid.properties");
+//    static {
+//        Properties properties = ResourceUtil.loadPropertiesFromResources("jdbc/datasource/druid.properties");
 
 //        Properties prop = new Properties();
 //        InputStream is = JDBCUtil.class.getClassLoader().getResourceAsStream("druid.properties");
-        try {
+//        try {
 //            prop.load(is);
-            ds = DruidDataSourceFactory.createDataSource(properties);
-        } catch (Exception e3) {
-            e3.printStackTrace();
-        }
-    }
+//            ds = DruidDataSourceFactory.createDataSource(properties);
+//        } catch (Exception e3) {
+//            e3.printStackTrace();
+//        }
+//    }
+//
+//    public static Connection getConnection() throws SQLException {
+//        return ds.getConnection();
+//    }
 
-    public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
-    }
-
-    public static Connection connectionInPool(DataSource dataSource) {
-        Connection connection = null;
-
-        try {
-            connection = dataSource.getConnection();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-
-        }
-        return dataSource.getConnection();
-    }
+//    public static Connection connectionInPool(DataSource dataSource) {
+//        Connection connection = null;
+//
+//        try {
+//            connection = dataSource.getConnection();
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//
+//        }
+//        return dataSource.getConnection();
+//    }
 
     public static void setUrl(String url) {
         innerUrl = url;
+        innerDbType = getTypeByUrl(url);
     }
-
-    public static void setDbname(String dbname) {
-        innerDbname = dbname;
-    }
-
     public static void setPassword(String password) {
         innerPassword = password;
     }
-
     public static void setUsername(String username) {
         innerUsername = username;
     }
-
     public static void setPoolType(String poolType) {
         innerPoolType = poolType;
     }
@@ -153,12 +154,12 @@ public class JDBCUtil {
 
         switch (urlParts[0]) {
             // 非关系型数据库类型
-            case ConstUtil.STR_REDIS:
-            case ConstUtil.STR_MONGODB:
+            case ConstUtil.REDIS_STR:
+            case ConstUtil.MONGODB_STR:
                 return urlParts[0];
 
             // 关系型数据库类型
-            case ConstUtil.STR_JDBC:
+            case ConstUtil.JDBC_STR:
                 return urlParts[2];
 
             default:
@@ -167,43 +168,123 @@ public class JDBCUtil {
     }
 
 
+    /**
+     * 根据内部的配置内容获取对应的连接池
+     * @return
+     */
     public static DataSource dataSourceWithInnerConfig() {
+        switch (innerPoolType) {
+            case ConstUtil.POOL_C3P0:
+                return innerC3p0DataSource();
 
+            case ConstUtil.POOL_DBCP:
+                return innerDbcpDataSource();
+
+            // 默认返回类型为德鲁伊连接池的数据库
+            default:
+                return innerDruidDataSource();
+
+        }
     }
 
-    public static DruidDataSource innerDruidDataSource() {
-        DruidDataSource innerDS = new DruidDataSource();
+    /**
+     * 根据内部配置获取不同类型的连接池对象
+     * @return
+     */
+    public static DataSource innerDbcpDataSource() {
+        if (null == innerDS) {
+            innerDS = new BasicDataSource();
 
-        innerDS.setUsername(innerUsername);
-        innerDS.setPassword(innerPassword);
-        innerDS.setUrl(innerUrl);
-        innerDS.setDriver(driverWithDBType(innerDbType));
+            ((BasicDataSource) innerDS).setUsername(innerUsername);
+            ((BasicDataSource) innerDS).setPassword(innerPassword);
+            ((BasicDataSource) innerDS).setUrl(innerUrl);
+            ((BasicDataSource) innerDS).setDriverClassName(driverStrWithDbType(innerDbType));
+        }
+
+        return innerDS;
+    }
+    public static DataSource innerC3p0DataSource() {
+        if (null == innerDS) {
+            innerDS = new ComboPooledDataSource();
+
+            try {
+                ((ComboPooledDataSource) innerDS).setUser(innerUsername);
+                ((ComboPooledDataSource) innerDS).setPassword(innerPassword);
+                ((ComboPooledDataSource) innerDS).setJdbcUrl(innerUrl);
+                ((ComboPooledDataSource) innerDS).setDriverClass(driverStrWithDbType(innerDbType));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return innerDS;
+    }
+    public static DataSource innerDruidDataSource() {
+        if (null == innerDS) {
+            innerDS = new DruidDataSource();
+
+            ((DruidDataSource) innerDS).setUsername(innerUsername);
+            ((DruidDataSource) innerDS).setPassword(innerPassword);
+            ((DruidDataSource) innerDS).setUrl(innerUrl);
+            ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
+        }
 
         return innerDS;
     }
 
+
     /**
-     * 根据数据库类型加载对应的数据包 ( 反射  )
+     * 根据数据库类型加载对应的驱动类路径
+     * @param dbType 传入的数据库类型
+     * @return
+     */
+    public static String driverStrWithDbType(String dbType) {
+        String formatDbType = dbType.toLowerCase(Locale.ENGLISH);
+
+        switch (formatDbType) {
+            case ConstUtil.MYSQL_STR:
+                return ConstUtil.DRIVER_MYSQL_5;
+
+            case ConstUtil.ORACLE_STR:
+                return ConstUtil.DRIVER_ORACLE;
+
+            case ConstUtil.DB2_STR:
+                return ConstUtil.DRIVER_DB2;
+
+            case ConstUtil.SQLSERVER_STR:
+                return ConstUtil.DRIVER_SQLSERVER;
+
+            default:
+                return "";
+        }
+    }
+
+    /**
+     * 根据数据库类型加载对应的驱动类
      * @param dbType
      * @return
      */
     public static Driver driverWithDBType(String dbType) {
-        Driver driver = null;
-        Class.forName().newInstance();
+        String formatDbType = dbType.toLowerCase(Locale.ENGLISH);
 
-        switch (dbType) {
-            case ConstUtil.MYSQL_STR:
-                break;
+        try {
+            switch (formatDbType) {
+                case ConstUtil.DB2_STR:
+                    return (Driver) Class.forName(ConstUtil.DRIVER_DB2).newInstance();
 
-            case ConstUtil.MYSQL_STR:
-                break;
+                case ConstUtil.SQLSERVER_STR:
+                    return (Driver) Class.forName(ConstUtil.DRIVER_SQLSERVER).newInstance();
 
-            case ConstUtil.SQLSERVER_STR:
-                break;
+                case ConstUtil.ORACLE_STR:
+                    return (Driver) Class.forName(ConstUtil.DRIVER_ORACLE).newInstance();
 
-            case ConstUtil.
+                default:
+                    return (Driver) Class.forName(ConstUtil.DRIVER_MYSQL_5).newInstance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return driver;
     }
 }

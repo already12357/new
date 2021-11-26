@@ -65,16 +65,19 @@ public class ConstUtil {
     public static final String REDIS_STR = "redis";
     public static final String JDBC_STR = "jdbc";
     
-    // 数据库驱动类路径 
-    public static final String DRIVER_MYSQL = "";
+    // 数据库驱动类路径
+    public static final String DRIVER_MYSQL_5 = "com.mysql.jdbc.Driver";
+    public static final String DRIVER_MYSQL_8 = "com.mysql.cj.jdbc.Driver";
     public static final String DRIVER_DB2 = "";
     public static final String DRIVER_ORACLE = "";
     public static final String DRIVER_SQLSERVER = "";
 
 
     // 各种数据库连接池的缩写
-    public static final String DRUID_STR = "druid";
-    public static final String C3P0_STR = "c3p0";
-    public static final String DHCP_STR = "dhcp";
+    public static final String POOL_DRUID = "druid";
+    public static final String POOL_C3P0 = "c3p0";
+    public static final String POOL_DBCP = "dhcp";
+
+
 
 }
