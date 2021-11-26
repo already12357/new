@@ -42,7 +42,7 @@ public class JDBCUtilTest {
         JDBCUtil.setUsername("root");
         JDBCUtil.setPassword("Gepoint");
 //        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
-        DataSource dataSource = JDBCUtil.dataSourceWithInnerConfig();
+        DataSource dataSource = JDBCUtil.innerDsWithConfig();
         Connection connection = null;
 
         try {
@@ -62,8 +62,16 @@ public class JDBCUtilTest {
         JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
         JDBCUtil.setUsername("root");
         JDBCUtil.setPassword("Gepoint");
-        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
-        JDBCUtil.dataSourceWithInnerConfig();
-        JDBCUtil.innerCheck();
+        DataSource dataSource = JDBCUtil.innerDsWithConfig();
+        Connection connection = null;
+
+        try {
+            connection = dataSource.getConnection();
+            JDBCUtil.clearInnerDs();
+            dataSource = JDBCUtil.innerDruidDataSource();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

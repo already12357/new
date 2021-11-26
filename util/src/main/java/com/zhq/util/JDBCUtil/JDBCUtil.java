@@ -8,7 +8,6 @@ import com.mysql.jdbc.Driver;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -18,20 +17,21 @@ import java.util.Locale;
 import java.util.Properties;
 
 public class JDBCUtil {
-    // 内部配置一个静态的数据源类, 防止多数据源问题
-    public static DataSource innerDS;
+    // 内部配置一个静态的数据源类
+    private static DataSource innerDS;
     // 内置的一些数据源信息, 用于获取静态的数据类
     // 数据库类型
-    public static String innerDbType;
+    private static String innerDbType = ConstUtil.MYSQL_STR;
     // 连接池类型
-    public static String innerPoolType;
+    private static String innerPoolType = ConstUtil.POOL_DRUID;
     // 数据库 URL
-    public static String innerUrl;
+    private static String innerUrl = ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306");
     // 连接数据库名称
-    public static String innerDbname;
+    private static String innerDbname;
     // 登录数据库信息
-    public static String innerPassword;
-    public static String innerUsername;
+    private static String innerUsername = "root";
+    private static String innerPassword = "root";
+
 
     /**
      * 根据配置文件获取对应的数据源对象
@@ -148,7 +148,7 @@ public class JDBCUtil {
      * 根据内部的配置内容获取对应的连接池
      * @return
      */
-    public static DataSource dataSourceWithInnerConfig() {
+    public static DataSource innerDsWithConfig() {
         switch (innerPoolType) {
             case ConstUtil.POOL_C3P0:
                 return innerC3p0DataSource();
@@ -298,6 +298,7 @@ public class JDBCUtil {
                 Class innerDSClazz = innerDS.getClass();
                 Method closeMethod = innerDSClazz.getMethod("close");
                 closeMethod.invoke(innerDS);
+                innerDS = null;
             }
 
             return true;
