@@ -2,6 +2,7 @@ package com.zhq;
 
 import com.zhq.util.JDBCUtil.ConstUtil;
 import com.zhq.util.JDBCUtil.JDBCUtil;
+import com.zhq.util.JDBCUtil.SqlCondition;
 import com.zhq.util.ResourceUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,9 @@ public class JDBCUtilTest {
         JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
         JDBCUtil.setUsername("root");
         JDBCUtil.setPassword("Gepoint");
-//        JDBCUtil.setPoolType(ConstUtil.POOL_DRUID);
         DataSource dataSource = JDBCUtil.innerDsWithConfig();
         Connection connection = null;
+        SqlCondition sqlCondition = new SqlCondition();
 
         try {
             connection = dataSource.getConnection();
