@@ -4,6 +4,10 @@ package com.zhq;
 import com.zhq.util.HttpUtil;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,4 +21,9 @@ public class HttpUtilTest {
 //
 //        HttpUtil.receiveByteFromUrl();
 //    }
+
+    @Test
+    public void testFileSuffix() {
+
+    }
 }

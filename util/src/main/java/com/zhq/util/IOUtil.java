@@ -3,13 +3,16 @@ package com.zhq.util;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
+import org.apache.tools.ant.types.selectors.TypeSelector;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.*;
+import java.util.Base64;
 import java.util.Locale;
 
-public class FileUtil {
+public class IOUtil {
+    public static final String PNG = "png";
     public static final String DOC = "doc";
     public static final String DOCX = "docx";
     public static final String PPT = "ppt";
@@ -17,6 +20,10 @@ public class FileUtil {
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
     public static final String PDF = "pdf";
+
+//    public static String getTypeByBytes() {
+//
+//    }
 
     /**
      * 用于解析对应的文件后缀名
@@ -120,6 +127,29 @@ public class FileUtil {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
     }
 
+
+    /**
+     * 读取输入流中的字节数据
+     * @param in 包含数据的输入流
+     * @return
+     */
+    public static byte[] bytesInStream(InputStream in) {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        byte[] content = new byte[2048];
+
+        try {
+            int readLength = 0;
+            while ((readLength = in.read(content)) != -1) {
+                bao.write(content, 0, readLength);
+            }
+
+            return bao.toByteArray();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 //    /**
 //     * 读取 Excel 文件 ( .xlsx 结尾 )

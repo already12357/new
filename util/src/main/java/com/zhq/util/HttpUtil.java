@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.ByteBuffer;
+import java.util.Base64;
 import java.util.Map;
 
 public class HttpUtil {
@@ -147,7 +147,6 @@ public class HttpUtil {
 //
 //    }
 
-
     /**
      * 发送一个 GET 请求
      * @param urlStr 请求地址
@@ -178,6 +177,21 @@ public class HttpUtil {
         }
 
         return result.toString();
+    }
+
+
+    /**
+     * 从数据流中，获取赋值到前端 <img> 标签 src 属性上直接展示图片的 base64 字段
+     * <img src="data:img/png;data,....."> 用于直接显示
+     * @param imgIn
+     * @return
+     */
+    public static byte[] base64ImgData(InputStream imgIn) {
+        String imgIMMPrefix = "";
+        byte[] base64ImgBytes = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
+
+
+        return base64ImgBytes;
     }
 
 
@@ -216,7 +230,7 @@ public class HttpUtil {
      */
     public static void displayFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
         // 将文件转换为 pdf 然后在网页上在线显示
-        File pdfFile = FileUtil.toPdf(file);
+        File pdfFile = IOUtil.toPdf(file);
         // 拼接取得 contentRange 属性
         String contentRange = initContentRange(request, pdfFile);
         // 设置响应头

@@ -1,12 +1,9 @@
 package com.zhq;
 
-import com.zhq.util.FileUtil;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.zhq.util.IOUtil;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
 
 
 public class FileUtilTest {
@@ -28,6 +25,6 @@ public class FileUtilTest {
         String pdfFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test.pdf";
         String docxFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test1.xlsx";
         File docxFile = new File(docxFilePath);
-        FileUtil.toPdf(docxFile);
+        IOUtil.toPdf(docxFile);
     }
 }
