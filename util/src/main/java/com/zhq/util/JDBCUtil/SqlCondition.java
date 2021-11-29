@@ -10,83 +10,56 @@ public class SqlCondition {
     // 操作类型 ( 增删查改 )
     private String opType;
     private HashMap<String, List<String>> eqConditionMap;
+    private HashMap<String, List<String>> gtConditionMap;
+    private HashMap<String, List<String>> ltConditionMap;
 
     public SqlCondition() {
+        ltConditionMap = new HashMap<String, List<String>>();
+        gtConditionMap = new HashMap<String, List<String>>();
         eqConditionMap = new HashMap<String, List<String>>();
     }
 
     /**
-     * 将对应的大于条件添加到对象中
-     * @param columnName
-     * @param columnValue
-     */
-    public void gt(String columnName, String columnValue) {
-
-    }
-
-    /**
-     * 添加对应的等于条件到对象中
-     * @param columnName 等于条件的列
-     * @param columnValue 等于条件的值
+     * 将等式条件添加到对象中 ( 大于, 小于, 等于 )
+     * @param columnName 条件的列
+     * @param columnValue 值
      * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
      */
+    public void gt(String columnName, String columnValue, boolean or) {
+        String sign = ">";
+        String gtStr = parseEquation(columnName, columnValue, sign, or);
+        addEquation(gtConditionMap, columnName, gtStr);
+    }
     public void eq(String columnName, String columnValue, boolean or) {
         String sign = "=";
         // 解析传入的内容，转换为表达式
         String eqStr = parseEquation(columnName, columnValue, sign, or);
         addEquation(eqConditionMap, columnName, eqStr);
-
-//        if (null == eqConditionMap.get(columnName)) {
-//            List<String> eqList = new ArrayList<>();
-//            eqList.add(eqStr);
-//            eqConditionMap.put(columnName, eqList);
-//        }
-//        else {
-//            eqConditionMap.get(columnName).add(eqStr);
-//        }
     }
-
-    /**
-     * 获取查询列名称的等式判断条件
-     * @param columnName 查询等式的列名称
-     * @return
-     */
-    public List<String> getEqList(String columnName) {
-        return eqConditionMap.get(columnName);
+    public void lt(String columnName, String columnValue, boolean or) {
+        String sign = "<";
+        // 解析传入的内容，转换为表达式
+        String ltStr = parseEquation(columnName, columnValue, sign, or);
+        addEquation(eqConditionMap, columnName, ltStr);
     }
 
 
     /**
-     * 获取对应列的等式表达式
-     * @param columnName 列名
+     * 获取对应的表达式内容 ( 等式, 不等式 )
+     * @param columnName 列名称
      * @return
      */
     public String getEqStr(String columnName) {
-        List<String> eqList = eqConditionMap.get(columnName);
-        StringBuilder findSql = new StringBuilder("");
-        int startIndex = 0;
-
-        if (null != eqList && !eqList.isEmpty()) {
-            for (int i = 0; i < eqList.size(); i++) {
-                String equation = eqList.get(i);
-
-                if (equation.charAt(0) == '*') {
-                    equation = " or " + equation.substring(1);
-                }
-                else {
-                    equation = " and " + equation.substring(1);
-                }
-
-                findSql.append(equation);
-            }
-            startIndex = findSql.indexOf("(");
-
-            return findSql.substring(startIndex);
-        }
-
-        return "";
+        return getEquationStr(columnName, eqConditionMap);
     }
-
+    public String getGtStr(String columnName) {
+        return getEquationStr(columnName, gtConditionMap);
+    }
+    public String getLtStr(String columnName) {
+        return getEquationStr(columnName, ltConditionMap);
+    }
+    
+    
 
     /**
      * 将传入的条件解析为对应的表达式 ( 等式，不等式  )
@@ -105,13 +78,12 @@ public class SqlCondition {
             parsedEq.append("#");
         }
 
-        parsedEq.append(columnName);
+        parsedEq.append("(" + columnName);
         parsedEq.append(sign);
-        parsedEq.append("'" + columnValue + "'");
+        parsedEq.append("'" + columnValue + "')");
 
         return parsedEq.toString();
     }
-
 
     /**
      * 将条件语句插入到条件集合中
@@ -130,9 +102,39 @@ public class SqlCondition {
         }
     }
 
+    /**
+     * 获取对应列的表达式
+     * @param columnName 列名
+     * @param conditionMap 用于存放条件的集合
+     * @return
+     */
+    private String getEquationStr(String columnName, HashMap<String, List<String>> conditionMap) {
+        List<String> eqList = conditionMap.get(columnName);
+        StringBuilder findSql = new StringBuilder("");
+        String sqlRet = "";
+        int startIndex = 0;
 
+        if (null != eqList && !eqList.isEmpty()) {
+            for (int i = 0; i < eqList.size(); i++) {
+                String equation = eqList.get(i);
 
+                if (equation.charAt(0) == '*') {
+                    equation = " or " + equation.substring(2, equation.length() - 1);
+                }
+                else {
+                    equation = " and " + equation.substring(2, equation.length() - 1);
+                }
 
+                findSql.append(equation);
+            }
+            findSql.delete(0, 1);
+            startIndex = findSql.indexOf(" ");
+
+            return findSql.substring(startIndex);
+        }
+
+        return "";
+    }
 
 
 //    /**

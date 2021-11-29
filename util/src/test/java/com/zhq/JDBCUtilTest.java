@@ -83,8 +83,13 @@ public class JDBCUtilTest {
         sqlCondition.eq("hello", "world", true);
         sqlCondition.eq("hello", "let", true);
         sqlCondition.eq("hello", "ou", false);
+        sqlCondition.gt("we", "better", false);
+        sqlCondition.gt("we", "better", false);
+        sqlCondition.gt("we", "better", false);
+        sqlCondition.gt("we", "better", false);
+        sqlCondition.lt("hel", "we", false);
 
-        String sql = sqlCondition.getEqStr("hello");
+        String sql = sqlCondition.getGtStr("we");
         System.out.println(sql);
     }
 }
