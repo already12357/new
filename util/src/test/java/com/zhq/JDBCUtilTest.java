@@ -75,4 +75,16 @@ public class JDBCUtilTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testSqlCondition() {
+        SqlCondition sqlCondition = new SqlCondition();
+
+        sqlCondition.eq("hello", "world", true);
+        sqlCondition.eq("hello", "let", true);
+        sqlCondition.eq("hello", "ou", false);
+
+        String sql = sqlCondition.getEqStr("hello");
+        System.out.println(sql);
+    }
 }
