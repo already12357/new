@@ -196,13 +196,14 @@ public class HttpUtil {
         // 对应的图片
         String dataType = IOUtil.imgTypeInBytes(imageBytes);
 
+
         // 拼接对应的 data url 内容
         imgUrl.append("data: ");
         imgUrl.append(dataType);
         if (base64) {
-            byte[] base64ImgBytes = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
+            String base64ImgStr = Base64.getEncoder().encodeToString(imageBytes);
             imgUrl.append(";base64,");
-            imgUrl.append(base64ImgBytes);
+            imgUrl.append(base64ImgStr);
         }
         else {
             String imgStr = new String(imageBytes);

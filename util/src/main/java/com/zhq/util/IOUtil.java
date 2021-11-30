@@ -15,7 +15,7 @@ public class IOUtil {
     // 各种文件格式的二进制流对应的前缀
     public static final byte[] BMP_BIN_PREFIX = {0x42, 0x4d};
     public static final byte[] GIF_BIN_PREFIX = {0x47, 0x49, 0x46, 0x38};
-    public static final byte[] JPG_BIN_PREFIX = {(byte) 0xff, (byte) 0xd8, (byte) 0xff,(byte) 0xe0};
+    public static final byte[] JPG_BIN_PREFIX = {(byte) 0xff, (byte) 0xd8, (byte) 0xff};
     public static final byte[] PNG_BIN_PREFIX = {(byte) 0x89, 0x50, 0x4e, 0x47 };
 
     // 各种文件格式类型
