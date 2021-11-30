@@ -1,4 +1,4 @@
-package com.zhq.util.pageUtil;
+package com.zhq.util.PageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
