@@ -181,7 +181,7 @@ public class IOUtil {
      * @return
      */
     public static byte[] magicBytesInFile(byte[] fileBytes) {
-        List<byte[]> magicBytes = (List<byte[]>) MAGIC_MAPS.values();
+        Collection<byte[]> magicBytes = MAGIC_MAPS.values();
 
         // 遍历所有的文件头魔数, 对比返回对应的文件头魔数
         for (byte[] iBytes : magicBytes) {

@@ -200,9 +200,9 @@ public class HttpUtil {
         imgUrl.append("data: ");
         imgUrl.append(dataType);
         if (base64) {
-            String base64ImgStr = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn)).toString();
+            byte[] base64ImgBytes = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
             imgUrl.append(";base64,");
-            imgUrl.append(base64ImgStr);
+            imgUrl.append(base64ImgBytes);
         }
         else {
             String imgStr = new String(imageBytes);
