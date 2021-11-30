@@ -12,6 +12,8 @@ import java.util.Base64;
 import java.util.Locale;
 
 public class IOUtil {
+    public static final byte[] PNG_PREFIX = { 0x89, 0x50, 0x4e, 0x47 };
+
     public static final String PNG = "png";
     public static final String DOC = "doc";
     public static final String DOCX = "docx";

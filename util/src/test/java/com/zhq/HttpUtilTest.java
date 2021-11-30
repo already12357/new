@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashMap;
@@ -23,7 +24,23 @@ public class HttpUtilTest {
 //    }
 
     @Test
-    public void testFileSuffix() {
+    public void testFileSuffix() throws FileNotFoundException {
+        byte[] imgBytes =  HttpUtil.htmlImgSrc(new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/table_split_vertical.png")));
+        byte[] imgTypeBytes = new byte[10];
 
+        for (int i = 0; i <30; i++) {
+            System.out.printf("%02x  ", imgBytes[i]);
+        }
+
+        System.out.println("\n");
+
+
+
+
+        byte[] imgBytes2 =  HttpUtil.htmlImgSrc(new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/Picture3.png")));
+        byte[] imgTypeBytes2 = new byte[10];
+        for (int i = 0; i <30; i++) {
+            System.out.printf("%c  ", imgBytes2[i]);
+        }
     }
 }
