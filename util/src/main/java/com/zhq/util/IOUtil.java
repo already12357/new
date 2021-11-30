@@ -3,22 +3,22 @@ package com.zhq.util;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
-import org.apache.tools.ant.types.selectors.TypeSelector;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.*;
-import java.util.Base64;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class IOUtil {
-    // 各种图片的二进制流对应的前缀
+    // 各种文件格式的二进制流对应的前缀
     public static final byte[] BMP_BIN_PREFIX = {0x42, 0x4d};
     public static final byte[] GIF_BIN_PREFIX = {0x47, 0x49, 0x46, 0x38};
     public static final byte[] JPG_BIN_PREFIX = {(byte) 0xff, (byte) 0xd8, (byte) 0xff,(byte) 0xe0};
     public static final byte[] PNG_BIN_PREFIX = {(byte) 0x89, 0x50, 0x4e, 0x47 };
 
-    // 各种文件后缀类型
+    // 各种文件格式类型
     public static final String BMP = "bmp";
     public static final String DOC = "doc";
     public static final String DOCX = "docx";
@@ -32,12 +32,20 @@ public class IOUtil {
     public static final String XLSX = "xlsx";
 
     // 各种文件大类
-    public static final String TYPE_IMG = "img";
+    public static final String TYPE_IMAGE = "image";
     public static final String TYPE_TEXT = "text";
 
-//    public static String getTypeByBytes() {
-//
-//    }
+    // 文件头魔数映射
+    public static Map<String, byte[]> MAGIC_MAPS = new HashMap<String, byte[]>() {
+        {
+            put(BMP, BMP_BIN_PREFIX);
+            put(GIF, GIF_BIN_PREFIX);
+            put(PNG, PNG_BIN_PREFIX);
+            put(JPG, JPG_BIN_PREFIX);
+        }
+    };
+
+
 
     /**
      * 用于解析对应的文件后缀名
@@ -166,6 +174,38 @@ public class IOUtil {
         }
     }
 
+
+    /**
+     * 根据文件内容匹配文件头中的魔数
+     * @param fileBytes 文件内容
+     * @return
+     */
+    public static byte[] magicBytesInFile(byte[] fileBytes) {
+        List<byte[]> magicBytes = (List<byte[]>) MAGIC_MAPS.values();
+
+        // 遍历所有的文件头魔数, 对比返回对应的文件头魔数
+        for (byte[] iBytes : magicBytes) {
+            boolean matched = true;
+
+            for (int i = 0; i < iBytes.length; i++) {
+                Byte iByte = new Byte(iBytes[i]);
+                Byte fByte = new Byte(fileBytes[i]);
+
+                if (iByte.compareTo(fByte) != 0) {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched) {
+                return iBytes;
+            }
+        }
+
+        return null;
+    }
+
+
     /**
      * 根据文件流返回对应的类型
      * @param fileBytes 传入文件的二进制类型
@@ -173,6 +213,47 @@ public class IOUtil {
      * @return
      */
     public static String typeInBytes(byte[] fileBytes, String fileType) {
+        // 获取文件的魔数
+        byte[] magicBytes = magicBytesInFile(fileBytes);
+        // 根据魔数获取文件格式
+        String fileFormat = fileFormatInMagicBytes(magicBytes);
+        return fileType.concat("/").concat(fileFormat);
+    }
 
+    /**
+     * 根据魔数获取文件的格式
+     * @param magicBytes
+     * @return
+     */
+    private static String fileFormatInMagicBytes(byte[] magicBytes) {
+        for (Map.Entry<String, byte[]> magicMap : MAGIC_MAPS.entrySet()) {
+            boolean matched = true;
+            byte[] iBytes = magicMap.getValue();
+
+            for (int i = 0; i < iBytes.length; i++) {
+                if (iBytes[i] != magicBytes[i]) {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched) {
+                return magicMap.getKey();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据文件流返回不同大类的文件类型 ( 图片, 文本 )
+     * @param imageBytes
+     * @return
+     */
+    public static String imgTypeInBytes(byte[] imageBytes) {
+        return typeInBytes(imageBytes, TYPE_IMAGE);
+    }
+    public static String textTypeInBytes(byte[] textBytes) {
+        return typeInBytes(textBytes, TYPE_TEXT);
     }
 }

@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
 
@@ -193,25 +194,23 @@ public class HttpUtil {
         // 具体的二进制流
         byte[] imageBytes = IOUtil.bytesInStream(imgIn);
         // 对应的图片
-        String dataType = IOUtil.typeInBytes(imageBytes);
+        String dataType = IOUtil.imgTypeInBytes(imageBytes);
 
         // 拼接对应的 data url 内容
-        imgUrl.append("data:");
+        imgUrl.append("data: ");
         imgUrl.append(dataType);
         if (base64) {
-            Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
+            String base64ImgStr = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn)).toString();
+            imgUrl.append(";base64,");
+            imgUrl.append(base64ImgStr);
         }
         else {
-
+            String imgStr = new String(imageBytes);
+            imgUrl.append(",");
+            imgUrl.append(imgStr);
         }
 
-
-        String imgIMMPrefix = "";
-
-//        byte[] base64ImgBytes = Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
-//        return base64ImgBytes;
-
-        return IOUtil.bytesInStream(imgIn);
+        return imgUrl.toString();
     }
 
 

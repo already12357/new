@@ -25,22 +25,8 @@ public class HttpUtilTest {
 
     @Test
     public void testFileSuffix() throws FileNotFoundException {
-        byte[] imgBytes =  HttpUtil.htmlImgSrc(new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/table_split_vertical.png")));
-        byte[] imgTypeBytes = new byte[10];
-
-//        for (int i = 0; i <; i++) {
-//            System.out.printf("%02x  ", imgBytes[i]);
-//        }
-
-        System.out.println("\n");
-
-
-
-
-        byte[] imgBytes2 =  HttpUtil.htmlImgSrc(new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/Picture3.png")));
-        byte[] imgTypeBytes2 = new byte[10];
-//        for (int i = 0; i <30; i++) {
-//            System.out.printf("%c  ", imgBytes2[i]);
-//        }
+        FileInputStream imgStream = new FileInputStream("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/table_split_vertical.png");
+        String srcImg = HttpUtil.imgDataUrl(imgStream, true);
+        System.out.println(srcImg);
     }
 }
