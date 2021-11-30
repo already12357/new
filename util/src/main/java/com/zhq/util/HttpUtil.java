@@ -182,19 +182,29 @@ public class HttpUtil {
 
     /**
      * 从数据流中，获取赋值到前端 <img> 标签 src 属性上直接展示图片的 base64 字段
-     * <img src="data:img/png;data,....."> 用于直接显示
+     * 可以 <img src="data:img/png;base64,....."> 用于直接显示
      * @param imgIn 输入的图片流
+     * @param base64 是否使用 base64 编码
      * @return
      */
-    public static byte[] htmlImgSrc(InputStream imgIn) {
+    public static String imgDataUrl(InputStream imgIn, boolean base64) {
+        // 返回的流对象
+        StringBuilder imgUrl = new StringBuilder("");
+        // 具体的二进制流
         byte[] imageBytes = IOUtil.bytesInStream(imgIn);
-        byte[] imageTypeBytes = new byte[4];
+        // 对应的图片
+        String dataType = IOUtil.typeInBytes(imageBytes);
 
-        for (int i = 0; i < 4; i++) {
-            imageTypeBytes[i] = imageBytes[i];
+        // 拼接对应的 data url 内容
+        imgUrl.append("data:");
+        imgUrl.append(dataType);
+        if (base64) {
+            Base64.getEncoder().encode(IOUtil.bytesInStream(imgIn));
+        }
+        else {
+
         }
 
-        System.out.println(imageTypeBytes);
 
         String imgIMMPrefix = "";
 

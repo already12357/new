@@ -12,16 +12,28 @@ import java.util.Base64;
 import java.util.Locale;
 
 public class IOUtil {
-    public static final byte[] PNG_PREFIX = { 0x89, 0x50, 0x4e, 0x47 };
+    // 各种图片的二进制流对应的前缀
+    public static final byte[] BMP_BIN_PREFIX = {0x42, 0x4d};
+    public static final byte[] GIF_BIN_PREFIX = {0x47, 0x49, 0x46, 0x38};
+    public static final byte[] JPG_BIN_PREFIX = {(byte) 0xff, (byte) 0xd8, (byte) 0xff,(byte) 0xe0};
+    public static final byte[] PNG_BIN_PREFIX = {(byte) 0x89, 0x50, 0x4e, 0x47 };
 
-    public static final String PNG = "png";
+    // 各种文件后缀类型
+    public static final String BMP = "bmp";
     public static final String DOC = "doc";
     public static final String DOCX = "docx";
+    public static final String GIF = "gif";
+    public static final String JPG = "jpg";
+    public static final String PDF = "pdf";
+    public static final String PNG = "png";
     public static final String PPT = "ppt";
     public static final String PPTX = "pptx";
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
-    public static final String PDF = "pdf";
+
+    // 各种文件大类
+    public static final String TYPE_IMG = "img";
+    public static final String TYPE_TEXT = "text";
 
 //    public static String getTypeByBytes() {
 //
@@ -39,6 +51,7 @@ public class IOUtil {
 
         return suffix.toLowerCase(Locale.ENGLISH);
     }
+
 
     /**
      * 将一个文件从一个地点拷贝到另一个文件
@@ -153,30 +166,13 @@ public class IOUtil {
         }
     }
 
-//    /**
-//     * 读取 Excel 文件 ( .xlsx 结尾 )
-//     * @param file 表格文件
-//     */
-//    public static List<Cell> readSpreadSheet(File file) {
-//        List<Cell> sheetCells = new ArrayList<>();
-//
-//        try {
-//            Workbook exclWorkBook = WorkbookFactory.create(file);
-//
-//            // 工作簿 ==> 工作表 ==> 行 ==> 列 ( 格子 )
-//            for (Sheet sheet : exclWorkBook) {
-//                for (Row row : sheet) {
-//                    for (Cell cell : row) {
-//                        sheetCells.add(cell);
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InvalidFormatException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return sheetCells;
-//    }
+    /**
+     * 根据文件流返回对应的类型
+     * @param fileBytes 传入文件的二进制类型
+     * @param fileType 文件大类
+     * @return
+     */
+    public static String typeInBytes(byte[] fileBytes, String fileType) {
+
+    }
 }

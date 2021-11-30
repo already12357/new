@@ -30,4 +30,32 @@ public class IOUtilTest {
         }
 
     }
+
+
+    //    /**
+//     * 读取 Excel 文件 ( .xlsx 结尾 )
+//     * @param file 表格文件
+//     */
+//    public static List<Cell> readSpreadSheet(File file) {
+//        List<Cell> sheetCells = new ArrayList<>();
+//
+//        try {
+//            Workbook exclWorkBook = WorkbookFactory.create(file);
+//
+//            // 工作簿 ==> 工作表 ==> 行 ==> 列 ( 格子 )
+//            for (Sheet sheet : exclWorkBook) {
+//                for (Row row : sheet) {
+//                    for (Cell cell : row) {
+//                        sheetCells.add(cell);
+//                    }
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InvalidFormatException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return sheetCells;
+//    }
 }
