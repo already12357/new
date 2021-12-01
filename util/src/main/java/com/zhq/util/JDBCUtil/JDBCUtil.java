@@ -21,7 +21,7 @@ public class JDBCUtil {
     private static DataSource innerDS;
     // 内置的一些数据源信息, 用于获取静态的数据类
     // 数据库类型
-    private static String innerDbType = ConstUtil.MYSQL_STR;
+    private static String innerDbType = ConstUtil.DB_MYSQL;
     // 连接池类型
     private static String innerPoolType = ConstUtil.POOL_DRUID;
     // 数据库 URL
@@ -142,7 +142,14 @@ public class JDBCUtil {
         innerPoolType = poolType;
     }
 
+    // 获取内部的数据源
+    public static DataSource getInnerDS() {
+        if (null == innerDS) {
+            return innerDsWithConfig();
+        }
 
+        return innerDS;
+    }
 
     /**
      * 根据内部的配置内容获取对应的连接池
@@ -164,54 +171,60 @@ public class JDBCUtil {
     }
 
     /**
-     * 根据内部配置获取不同类型的连接池对象
+     * 获取不同类型的数据库链接池对象连接池对象
      * @return
      */
     public static DataSource innerDbcpDataSource() {
-        if (null == innerDS) {
-            innerDS = new BasicDataSource();
+        synchronized (BasicDataSource.class) {
+            if (null == innerDS) {
+                innerDS = new BasicDataSource();
 
-            ((BasicDataSource) innerDS).setUsername(innerUsername);
-            ((BasicDataSource) innerDS).setPassword(innerPassword);
-            ((BasicDataSource) innerDS).setUrl(innerUrl);
-            ((BasicDataSource) innerDS).setDriverClassName(driverStrWithDbType(innerDbType));
+                ((BasicDataSource) innerDS).setUsername(innerUsername);
+                ((BasicDataSource) innerDS).setPassword(innerPassword);
+                ((BasicDataSource) innerDS).setUrl(innerUrl);
+                ((BasicDataSource) innerDS).setDriverClassName(driverStrWithDbType(innerDbType));
+            }
+
+            return innerDS;
         }
-
-        return innerDS;
     }
     public static DataSource innerC3p0DataSource() {
-        if (null == innerDS) {
-            innerDS = new ComboPooledDataSource();
+        synchronized (BasicDataSource.class) {
+            if (null == innerDS) {
+                innerDS = new ComboPooledDataSource();
 
-            try {
-                ((ComboPooledDataSource) innerDS).setUser(innerUsername);
-                ((ComboPooledDataSource) innerDS).setPassword(innerPassword);
-                ((ComboPooledDataSource) innerDS).setJdbcUrl(innerUrl);
-                ((ComboPooledDataSource) innerDS).setDriverClass(driverStrWithDbType(innerDbType));
+                try {
+                    ((ComboPooledDataSource) innerDS).setUser(innerUsername);
+                    ((ComboPooledDataSource) innerDS).setPassword(innerPassword);
+                    ((ComboPooledDataSource) innerDS).setJdbcUrl(innerUrl);
+                    ((ComboPooledDataSource) innerDS).setDriverClass(driverStrWithDbType(innerDbType));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            return innerDS;
         }
-
-        return innerDS;
     }
     public static DataSource innerDruidDataSource() {
-        if (null == innerDS) {
-            innerDS = new DruidDataSource();
+        synchronized (BasicDataSource.class) {
+            if (null == innerDS) {
+                innerDS = new DruidDataSource();
 
-            ((DruidDataSource) innerDS).setUsername(innerUsername);
-            ((DruidDataSource) innerDS).setPassword(innerPassword);
-            ((DruidDataSource) innerDS).setUrl(innerUrl);
-            ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
+                ((DruidDataSource) innerDS).setUsername(innerUsername);
+                ((DruidDataSource) innerDS).setPassword(innerPassword);
+                ((DruidDataSource) innerDS).setUrl(innerUrl);
+                ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
+            }
+
+            return innerDS;
         }
-
-        return innerDS;
     }
 
 
     /**
-     * 根据数据库类型加载对应的驱动类路径
+     * 根据数据库类型获取对应的驱动类路径
      * @param dbType 传入的数据库类型
      * @return
      */
@@ -219,16 +232,16 @@ public class JDBCUtil {
         String formatDbType = dbType.toLowerCase(Locale.ENGLISH);
 
         switch (formatDbType) {
-            case ConstUtil.MYSQL_STR:
+            case ConstUtil.DB_MYSQL:
                 return ConstUtil.DRIVER_MYSQL_5;
 
-            case ConstUtil.ORACLE_STR:
+            case ConstUtil.DB_ORACLE:
                 return ConstUtil.DRIVER_ORACLE;
 
-            case ConstUtil.DB2_STR:
+            case ConstUtil.DB_DB2:
                 return ConstUtil.DRIVER_DB2;
 
-            case ConstUtil.SQLSERVER_STR:
+            case ConstUtil.DB_SQLSERVER:
                 return ConstUtil.DRIVER_SQLSERVER;
 
             default:
@@ -246,13 +259,13 @@ public class JDBCUtil {
 
         try {
             switch (formatDbType) {
-                case ConstUtil.DB2_STR:
+                case ConstUtil.DB_DB2:
                     return (Driver) Class.forName(ConstUtil.DRIVER_DB2).newInstance();
 
-                case ConstUtil.SQLSERVER_STR:
+                case ConstUtil.DB_SQLSERVER:
                     return (Driver) Class.forName(ConstUtil.DRIVER_SQLSERVER).newInstance();
 
-                case ConstUtil.ORACLE_STR:
+                case ConstUtil.DB_ORACLE:
                     return (Driver) Class.forName(ConstUtil.DRIVER_ORACLE).newInstance();
 
                 default:
@@ -275,8 +288,8 @@ public class JDBCUtil {
 
         switch (urlParts[0]) {
             // 非关系型数据库类型
-            case ConstUtil.REDIS_STR:
-            case ConstUtil.MONGODB_STR:
+            case ConstUtil.DB_REDIS:
+            case ConstUtil.DB_MONGODB:
                 return urlParts[0];
 
             // 关系型数据库类型
@@ -306,6 +319,27 @@ public class JDBCUtil {
         catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+
+    /**
+     * 传入自定义的 SqlCondition 对象, 使用内部的数据源进行操作
+     */
+    public static void innerOperateSql(SqlCondition sqlCondition) {
+        String sql = sqlCondition.generateSql();
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getInnerDS().getConnection();
+
+            switch (sqlCondition.getOpType()) {
+                case ConstUtil.
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

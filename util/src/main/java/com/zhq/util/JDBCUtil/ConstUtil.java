@@ -57,12 +57,12 @@ public class ConstUtil {
 
 
     // 各种数据库的标志缩写
-    public static final String MYSQL_STR = "mysql";
-    public static final String ORACLE_STR = "oracle";
-    public static final String SQLSERVER_STR = "sqlserver";
-    public static final String DB2_STR = "db2";
-    public static final String MONGODB_STR = "mongodb";
-    public static final String REDIS_STR = "redis";
+    public static final String DB_MYSQL = "mysql";
+    public static final String DB_ORACLE = "oracle";
+    public static final String DB_SQLSERVER = "sqlserver";
+    public static final String DB_DB2 = "db2";
+    public static final String DB_MONGODB = "mongodb";
+    public static final String DB_REDIS = "redis";
     public static final String JDBC_STR = "jdbc";
     
     // 数据库驱动类路径
@@ -78,4 +78,11 @@ public class ConstUtil {
     public static final String POOL_C3P0 = "c3p0";
     public static final String POOL_DBCP = "dhcp";
     public static final String POOL_HIKARI = "hikari";
+
+
+    // 数据库操作
+    public static final String OP_SELECT = "select";
+    public static final String OP_DELETE = "delete";
+    public static final String OP_UPDATE = "update";
+    public static final String OP_INSERT = "insert";
 }

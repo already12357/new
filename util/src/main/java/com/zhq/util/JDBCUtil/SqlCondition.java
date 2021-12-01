@@ -9,14 +9,34 @@ import java.util.List;
 public class SqlCondition {
     // 操作类型 ( 增删查改 )
     private String opType;
+    // where 部分的所有条件内容集合
+    private List<HashMap<String, List<String>>> whereConditionList;
+    // 大于, 小于, 等于等式存储在 HashMap 中
+    // 列
     private HashMap<String, List<String>> eqConditionMap;
     private HashMap<String, List<String>> gtConditionMap;
     private HashMap<String, List<String>> ltConditionMap;
+    // 查询信息
+    private List<String> opColumns;
 
     public SqlCondition() {
         ltConditionMap = new HashMap<String, List<String>>();
         gtConditionMap = new HashMap<String, List<String>>();
         eqConditionMap = new HashMap<String, List<String>>();
+        whereConditionList = new ArrayList<HashMap<String, List<String>>>();
+        opColumns = new ArrayList<>();
+
+        opType = ConstUtil.OP_SELECT;
+        whereConditionList.add(ltConditionMap);
+        whereConditionList.add(gtConditionMap);
+        whereConditionList.add(eqConditionMap);
+    }
+
+    public void setOpType(String opType) {
+        this.opType = opType;
+    }
+    public String getOpType() {
+        return opType;
     }
 
     /**
@@ -63,10 +83,10 @@ public class SqlCondition {
 
     /**
      * 将传入的条件解析为对应的表达式 ( 等式，不等式  )
-     * @param columnName
-     * @param columnValue
+     * @param columnName 列名称
+     * @param columnValue 列值
      * @param or 表示是采取 or 拼接, 还是采取 and 拼接 ( 前缀区分 '*'/'#' )
-     * @return
+     * @return 返回处理初次处理后的 SQL 语句
      */
     private String parseEquation(String columnName, String columnValue, String sign, boolean or) {
         StringBuilder parsedEq = new StringBuilder("");
@@ -86,7 +106,7 @@ public class SqlCondition {
     }
 
     /**
-     * 将条件语句插入到条件集合中
+     * 将处理的条件语句插入到条件集合中
      * @param conditionMap 需要传入的条件集合
      * @param columnName 对应的条件列名
      * @param condStr 条件语句
@@ -104,8 +124,8 @@ public class SqlCondition {
 
     /**
      * 获取对应列的表达式
-     * @param columnName 列名
-     * @param conditionMap 用于存放条件的集合
+     * @param columnName 查询的列名
+     * @param conditionMap 用于存放条件语句的集合
      * @return
      */
     private String getEquationStr(String columnName, HashMap<String, List<String>> conditionMap) {
@@ -137,16 +157,52 @@ public class SqlCondition {
     }
 
 
-//    /**
-//     * 根据当前的条件生成对应的 Sql 语句
-//     * @return
-//     */
-//    public String generateSql() {
-//        String sqlReturn = "";
-//
-//        if (null != eqConditionMap) {
-//
-//        }
-//
-//    }
+    /**
+     * 根据内部的配置信息生成对应的 Sql 语句, 通过操作类型分类 ( 增删查改 )
+     * @return
+     */
+    public String generateSql() {
+        switch (opType) {
+            case ConstUtil.OP_UPDATE:
+                return generateUpdateSql();
+
+            case ConstUtil.OP_INSERT:
+                return generateInsertSql();
+
+            case ConstUtil.OP_DELETE:
+                return generateDeleteSql();
+
+            default:
+                return generateSelectSql();
+        }
+    }
+
+    /**
+     * 根据内部配置生成不同的 Sql 语句
+     * @return
+     */
+    private String generateInsertSql() {
+        StringBuilder insertBuilder = new StringBuilder("");
+
+        return insertBuilder.toString();
+    }
+    private String generateSelectSql() {
+        StringBuilder selectBuilder = new StringBuilder("");
+
+
+        selectBuilder.append(opType);
+
+
+        return selectBuilder.toString();
+    }
+    private String generateDeleteSql() {
+        StringBuilder deleteBuilder = new StringBuilder("");
+
+        return deleteBuilder.toString();
+    }
+    private String generateUpdateSql() {
+        StringBuilder updateBuilder = new StringBuilder("");
+
+        return updateBuilder.toString();
+    }
 }
