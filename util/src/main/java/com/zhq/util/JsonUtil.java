@@ -56,7 +56,7 @@ public class JsonUtil {
     /**
      * 将 JSON 数组字符串转换为对应的类型 List 对象
      * @param jsonStr 传入的 JSON 数组字符串
-     * @param convertType 转换类型
+     * @param convertType 转换类型 ( 注意使用包装类  )
      * @return
      */
     public static List jArrayToList(String jsonStr, Class convertType) {
