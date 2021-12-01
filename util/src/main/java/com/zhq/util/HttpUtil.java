@@ -253,7 +253,7 @@ public class HttpUtil {
                     continue;
                 }
 
-                IOUtil.copyFile(multipartFile.getInputStream(), loadPath);
+                IOUtil.copyFile(multipartFile.getInputStream(), loadPath, multipartFile.getOriginalFilename());
             }
         }
         catch (Exception e) {
