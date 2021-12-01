@@ -239,15 +239,10 @@ public class HttpUtil {
 
     /**
      * 上传请求中的文件
-     * @param request 原生的 Http 请求方法
+     * @param multiRequest 原生的 Http 中的多段请求
      * @param inputName <input> 上传控件中的控件名称 ( 默认填入 file )
      * @param loadPath 上传到服务器的路径
      */
-    public static void uploadFile(HttpServletRequest request, String inputName, String loadPath) {
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-        uploadFile(multiRequest, inputName, loadPath);
-    }
-    
     public static void uploadFile(MultipartHttpServletRequest multiRequest, String inputName, String loadPath) {
         List<MultipartFile> multipartFiles = multiRequest.getFiles(inputName);
 
@@ -265,7 +260,16 @@ public class HttpUtil {
             e.printStackTrace();
         }
     }
-    
+
+    public static void uploadFile(HttpServletRequest request, String inputName, String loadPath) {
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+        uploadFile(multiRequest, inputName, loadPath);
+    }
+
+    public static void uploadFile(HttpServletRequest request, String inputName) {
+        uploadFile(request, inputName, getLoadPath());
+    }
+
     public static void uploadFile(MultipartHttpServletRequest multiRequest, String inputName) {
         uploadFile(multiRequest, inputName, getLoadPath());
     }
@@ -273,6 +277,7 @@ public class HttpUtil {
     public static void uploadFile(MultipartHttpServletRequest multiRequest) {
         uploadFile(multiRequest, "file", getLoadPath());
     }
+
 
 
     /**
@@ -298,7 +303,7 @@ public class HttpUtil {
      * @param response 处理器方法传入的 Servlet 原生响应
      * @param file 需要下载的文件对象
      */
-    public static void displayFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
+    public static void viewFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
         // 将文件转换为 pdf 然后在网页上在线显示
         File pdfFile = IOUtil.toPdf(file);
         // 拼接取得 contentRange 属性

@@ -3,6 +3,7 @@ package com.zhq.util;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
+import org.apache.commons.io.FileUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -62,9 +63,9 @@ public class IOUtil {
 
 
     /**
-     * 将一个文件从一个地点拷贝到另一个文件
+     * 将一个文件从一个地点拷贝到另一个位置
      * @param fromFile,fromStream 文件的出发位置 ( 路径, 流  )
-     * @param toFile,toPath 文件的目的位置 ( 路径, 流 )
+     * @param toFile,toPath 文件的拷贝目标位置  ( 路径, 流 )
      */
     public static void copyFile(File fromFile, File toFile) {
         FileInputStream fin = null;
@@ -81,18 +82,18 @@ public class IOUtil {
         }
     }
     public static void copyFile(InputStream fromStream, String toPath) {
-        File targetFile = null;
+        File targetDir = null;
         FileOutputStream fout = null;
         byte[] buffer = new byte[1024];
 
         try {
-            targetFile = new File(toPath);
+            targetDir = new File(toPath);
 
-            if (!targetFile.exists()) {
-                targetFile.createNewFile();
+            if (!targetDir.exists()) {
+                targetDir.createNewFile();
             }
 
-            fout = new FileOutputStream(targetFile);
+            fout = new FileOutputStream(targetDir);
             int readCount = 0;
 
             while ((readCount = fromStream.read(buffer)) != -1) {
@@ -107,6 +108,16 @@ public class IOUtil {
         }
     }
 
+    /**
+     * 将一个文件从一个地点拷贝到特定的文件夹下
+     * @param fromStream 文件流
+     * @param toDir 文件夹路径
+     * @param fileName 文件名称 ( 不包含后缀 )
+     */
+    public static void copyFile(InputStream fromStream, String toDir, String fileName) {
+        String filePath = toDir.concat("/").concat(fileName);
+        copyFile(fromStream, filePath);
+    }
 
 
     /**
