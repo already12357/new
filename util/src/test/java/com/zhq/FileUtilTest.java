@@ -27,4 +27,13 @@ public class FileUtilTest {
         File docxFile = new File(docxFilePath);
         IOUtil.toPdf(docxFile);
     }
+
+    @Test
+    public void IOUtilCopyTest() {
+        String filePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test1.doc";
+        File targetFile = new File(filePath);
+        String copyPath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test2.doc";
+        File copyFileTarget = new File(copyPath);
+        IOUtil.copyFile(targetFile, copyFileTarget);
+    }
 }

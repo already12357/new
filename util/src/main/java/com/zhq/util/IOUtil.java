@@ -63,29 +63,50 @@ public class IOUtil {
 
     /**
      * 将一个文件从一个地点拷贝到另一个文件
-     * @param from 文件的出发地
-     * @param to 文件的目的地
+     * @param fromFile,fromStream 文件的出发位置 ( 路径, 流  )
+     * @param toFile,toPath 文件的目的位置 ( 路径, 流 )
      */
-    public static void copyFile(File from, File to) {
+    public static void copyFile(File fromFile, File toFile) {
         FileInputStream fin = null;
+
+        try {
+            fin = new FileInputStream(fromFile);
+            copyFile(fin, toFile.getAbsolutePath());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(fin);
+        }
+    }
+    public static void copyFile(InputStream fromStream, String toPath) {
+        File targetFile = null;
         FileOutputStream fout = null;
         byte[] buffer = new byte[1024];
 
         try {
-            fin = new FileInputStream(from);
-            fout = new FileOutputStream(to);
+            targetFile = new File(toPath);
 
-            while (fin.read(buffer) != -1) {
-                fout.write(buffer);
+            if (!targetFile.exists()) {
+                targetFile.createNewFile();
+            }
+
+            fout = new FileOutputStream(targetFile);
+            int readCount = 0;
+
+            while ((readCount = fromStream.read(buffer)) != -1) {
+                fout.write(buffer, 0, readCount);
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         finally {
-            ResourceUtil.closeResources(fin, fout);
+            ResourceUtil.closeResources(fout);
         }
     }
+
 
 
     /**

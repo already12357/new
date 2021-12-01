@@ -1,5 +1,9 @@
 package com.zhq.util;
 
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -8,9 +12,27 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 public class HttpUtil {
+    // 默认的文件上传路径
+    public static final String DEFAULT_LOADPATH = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file";
+
+    // 文件上传路径
+    public static String loadPath = "";
+    public static String getLoadPath() {
+        if (!StringUtil.hasContent(loadPath)) {
+            loadPath = DEFAULT_LOADPATH;
+        }
+        return loadPath;
+    }
+    public static void setLoadPath(String loadPath) {
+        HttpUtil.loadPath = loadPath;
+    }
+
+    // 文件控件默认
+
     /**
      * 建立一个连接
      * @param urlStr 请求地址
@@ -78,7 +100,7 @@ public class HttpUtil {
      * @param paramJson 请求体参数信息，以 JSON 格式发送
      * @return
      */
-    public static String postJson(String urlStr, String paramJson) {
+    public static String post(String urlStr, String paramJson) {
         HttpURLConnection connection = null;
         BufferedReader inReader = null;
         StringBuilder result = new StringBuilder("");
@@ -111,7 +133,7 @@ public class HttpUtil {
      * @param xFormUrlEncoded 请求体参数信息, Map传入, 以参数据 ( key1=value1&key2=value2... ) 形式请求接口
      * @return
      */
-    public static String postXForm(String urlStr, Map<String, String> xFormUrlEncoded) {
+    public static String post(String urlStr, Map<String, String> xFormUrlEncoded) {
         StringBuilder result = new StringBuilder("");
         HttpURLConnection connection = null;
         String xFormParam = StringUtil.mergeMapToxFormUrlEncoded(xFormUrlEncoded);
@@ -216,12 +238,40 @@ public class HttpUtil {
 
 
     /**
-     * 上传文件
+     * 上传请求中的文件
      * @param request 原生的 Http 请求方法
-     * @param response 原生的 Http 响应
+     * @param inputName <input> 上传控件中的控件名称 ( 默认填入 file )
+     * @param loadPath 上传到服务器的路径
      */
-    public static void uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        
+    public static void uploadFile(HttpServletRequest request, String inputName, String loadPath) {
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+        uploadFile(multiRequest, inputName, loadPath);
+    }
+    
+    public static void uploadFile(MultipartHttpServletRequest multiRequest, String inputName, String loadPath) {
+        List<MultipartFile> multipartFiles = multiRequest.getFiles(inputName);
+
+        try {
+            for (MultipartFile multipartFile : multipartFiles) {
+                // 当该段请求没有文件内容时
+                if (multipartFile.isEmpty()) {
+                    continue;
+                }
+
+                IOUtil.copyFile(multipartFile.getInputStream(), loadPath);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void uploadFile(MultipartHttpServletRequest multiRequest, String inputName) {
+        uploadFile(multiRequest, inputName, getLoadPath());
+    }
+
+    public static void uploadFile(MultipartHttpServletRequest multiRequest) {
+        uploadFile(multiRequest, "file", getLoadPath());
     }
 
 
