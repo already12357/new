@@ -78,6 +78,4 @@ public class ConstUtil {
     public static final String POOL_C3P0 = "c3p0";
     public static final String POOL_DBCP = "dhcp";
     public static final String POOL_HIKARI = "hikari";
-
-
 }
