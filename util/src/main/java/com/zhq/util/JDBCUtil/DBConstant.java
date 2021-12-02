@@ -81,8 +81,8 @@ public class DBConstant {
 
 
     // 数据库操作
-    public static final String OP_SELECT = "select";
-    public static final String OP_DELETE = "delete";
-    public static final String OP_UPDATE = "update";
-    public static final String OP_INSERT = "insert";
+    public static final String OP_SELECT = "SELECT";
+    public static final String OP_DELETE = "DELETE";
+    public static final String OP_UPDATE = "UPDATE";
+    public static final String OP_INSERT = "INSERT";
 }

@@ -481,8 +481,10 @@ public class SqlCondition {
                     String columnName = entry.getKey();
                     whereStr.append(getConditionStr(columnName, part));
                 }
+                whereStr.append(" and ");
             }
 
+            whereStr.delete(whereStr.length() - 5, whereStr.length());
             return whereStr.toString().trim();
         }
 
