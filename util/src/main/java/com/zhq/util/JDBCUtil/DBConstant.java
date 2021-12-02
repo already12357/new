@@ -1,7 +1,7 @@
 package com.zhq.util.JDBCUtil;
 
 // JDBC 常量类
-public class Constant {
+public class DBConstant {
     /**
      * 通过函数返回不同数据库的不同驱动
      *

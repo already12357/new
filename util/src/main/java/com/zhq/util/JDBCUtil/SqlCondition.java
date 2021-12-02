@@ -38,7 +38,7 @@ public class SqlCondition {
         opColumns = new ArrayList<>();
         opTables = new ArrayList<>();
 
-        opType = ConstUtil.OP_SELECT;
+        opType = DBConstant.OP_SELECT;
         whereConditionList.add(ltConditionMap);
         whereConditionList.add(gtConditionMap);
         whereConditionList.add(eqConditionMap);
@@ -263,13 +263,13 @@ public class SqlCondition {
      */
     public String generateSql() {
         switch (opType) {
-            case ConstUtil.OP_UPDATE:
+            case DBConstant.OP_UPDATE:
                 return generateUpdateSql();
 
-            case ConstUtil.OP_INSERT:
+            case DBConstant.OP_INSERT:
                 return generateInsertSql();
 
-            case ConstUtil.OP_DELETE:
+            case DBConstant.OP_DELETE:
                 return generateDeleteSql();
 
             default:
@@ -320,27 +320,31 @@ public class SqlCondition {
 
 
     public String columnsInSql() {
-        StringBuilder columnsStr = new StringBuilder("");
+        if (null != opColumns && !opColumns.isEmpty()) {
+            StringBuilder columnsStr = new StringBuilder("");
 
-        for (String column : opColumns) {
-            columnsStr.append(column + ",");
+            for (String column : opColumns) {
+                columnsStr.append(column + ",");
+            }
+            columnsStr.deleteCharAt(columnsStr.length() - 1);
+            return columnsStr.toString();
         }
-        columnsStr.deleteCharAt(columnsStr.length() - 1);
 
-        return columnsStr.toString();
+        return "";
     }
 
-    private String fromInSql() {
-        StringBuilder fromStr = new StringBuilder("");
+    public String fromInSql() {
+        if (null != opTables && !opTables.isEmpty()) {
+            StringBuilder fromStr = new StringBuilder("");
+            fromStr.append("from ");
 
-        fromStr.append("from ");
-
-        for (String table : opTables) {
-            fromStr.append(table + ",");
+            for (String table : opTables) {
+                fromStr.append(table + ",");
+            }
+            fromStr.deleteCharAt(fromStr.length() - 1);
         }
-        fromStr.deleteCharAt(fromStr.length() - 1);
 
-        return fromStr.toString();
+        return "";
     }
 
     public String whereInSql() {
@@ -355,5 +359,4 @@ public class SqlCondition {
 
         return whereStr.toString();
     }
-
 }

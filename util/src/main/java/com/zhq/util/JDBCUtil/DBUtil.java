@@ -16,16 +16,16 @@ import java.sql.*;
 import java.util.Locale;
 import java.util.Properties;
 
-public class JDBCUtil {
+public class DBUtil {
     // 内部配置一个静态的数据源类
     private static DataSource innerDS;
     // 内置的一些数据源信息, 用于获取静态的数据类
     // 数据库类型
-    private static String innerDbType = ConstUtil.DB_MYSQL;
+    private static String innerDbType = DBConstant.DB_MYSQL;
     // 连接池类型
-    private static String innerPoolType = ConstUtil.POOL_DRUID;
+    private static String innerPoolType = DBConstant.POOL_DRUID;
     // 数据库 URL
-    private static String innerUrl = ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306");
+    private static String innerUrl = DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306");
     // 连接数据库名称
     private static String innerDbname;
     // 登录数据库信息
@@ -153,10 +153,10 @@ public class JDBCUtil {
      */
     public static DataSource innerDsWithConfig() {
         switch (innerPoolType) {
-            case ConstUtil.POOL_C3P0:
+            case DBConstant.POOL_C3P0:
                 return innerC3p0DataSource();
 
-            case ConstUtil.POOL_DBCP:
+            case DBConstant.POOL_DBCP:
                 return innerDbcpDataSource();
 
             // 默认返回类型为德鲁伊连接池的数据库
@@ -228,17 +228,17 @@ public class JDBCUtil {
         String formatDbType = dbType.toLowerCase(Locale.ENGLISH);
 
         switch (formatDbType) {
-            case ConstUtil.DB_MYSQL:
-                return ConstUtil.DRIVER_MYSQL_5;
+            case DBConstant.DB_MYSQL:
+                return DBConstant.DRIVER_MYSQL_5;
 
-            case ConstUtil.DB_ORACLE:
-                return ConstUtil.DRIVER_ORACLE;
+            case DBConstant.DB_ORACLE:
+                return DBConstant.DRIVER_ORACLE;
 
-            case ConstUtil.DB_DB2:
-                return ConstUtil.DRIVER_DB2;
+            case DBConstant.DB_DB2:
+                return DBConstant.DRIVER_DB2;
 
-            case ConstUtil.DB_SQLSERVER:
-                return ConstUtil.DRIVER_SQLSERVER;
+            case DBConstant.DB_SQLSERVER:
+                return DBConstant.DRIVER_SQLSERVER;
 
             default:
                 return "";
@@ -255,17 +255,17 @@ public class JDBCUtil {
 
         try {
             switch (formatDbType) {
-                case ConstUtil.DB_DB2:
-                    return (Driver) Class.forName(ConstUtil.DRIVER_DB2).newInstance();
+                case DBConstant.DB_DB2:
+                    return (Driver) Class.forName(DBConstant.DRIVER_DB2).newInstance();
 
-                case ConstUtil.DB_SQLSERVER:
-                    return (Driver) Class.forName(ConstUtil.DRIVER_SQLSERVER).newInstance();
+                case DBConstant.DB_SQLSERVER:
+                    return (Driver) Class.forName(DBConstant.DRIVER_SQLSERVER).newInstance();
 
-                case ConstUtil.DB_ORACLE:
-                    return (Driver) Class.forName(ConstUtil.DRIVER_ORACLE).newInstance();
+                case DBConstant.DB_ORACLE:
+                    return (Driver) Class.forName(DBConstant.DRIVER_ORACLE).newInstance();
 
                 default:
-                    return (Driver) Class.forName(ConstUtil.DRIVER_MYSQL_5).newInstance();
+                    return (Driver) Class.forName(DBConstant.DRIVER_MYSQL_5).newInstance();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -284,12 +284,12 @@ public class JDBCUtil {
 
         switch (urlParts[0]) {
             // 非关系型数据库类型
-            case ConstUtil.DB_REDIS:
-            case ConstUtil.DB_MONGODB:
+            case DBConstant.DB_REDIS:
+            case DBConstant.DB_MONGODB:
                 return urlParts[0];
 
             // 关系型数据库类型
-            case ConstUtil.JDBC_STR:
+            case DBConstant.JDBC_STR:
                 return urlParts[2];
 
             default:

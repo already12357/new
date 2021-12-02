@@ -1,20 +1,16 @@
 package com.zhq;
 
-import com.zhq.util.JDBCUtil.ConstUtil;
-import com.zhq.util.JDBCUtil.JDBCUtil;
+import com.zhq.util.JDBCUtil.DBConstant;
+import com.zhq.util.JDBCUtil.DBUtil;
 import com.zhq.util.JDBCUtil.SqlCondition;
-import com.zhq.util.ResourceUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
 
 public class JDBCUtilTest {
     @Autowired
@@ -40,10 +36,10 @@ public class JDBCUtilTest {
     @Test
     public void getDataBase() {
         // JDBC 中设置一个静态的配置, 用于获取对应的数据源
-        JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
-        JDBCUtil.setUsername("root");
-        JDBCUtil.setPassword("Gepoint");
-        DataSource dataSource = JDBCUtil.innerDsWithConfig();
+        DBUtil.setUrl(DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306"));
+        DBUtil.setUsername("root");
+        DBUtil.setPassword("Gepoint");
+        DataSource dataSource = DBUtil.innerDsWithConfig();
         Connection connection = null;
         SqlCondition sqlCondition = new SqlCondition();
 
@@ -61,16 +57,16 @@ public class JDBCUtilTest {
 
     @Test
     public void innerCheckTest() {
-        JDBCUtil.setUrl(ConstUtil.URL_MYSQL("sys", "127.0.0.1", "3306"));
-        JDBCUtil.setUsername("root");
-        JDBCUtil.setPassword("Gepoint");
-        DataSource dataSource = JDBCUtil.innerDsWithConfig();
+        DBUtil.setUrl(DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306"));
+        DBUtil.setUsername("root");
+        DBUtil.setPassword("Gepoint");
+        DataSource dataSource = DBUtil.innerDsWithConfig();
         Connection connection = null;
 
         try {
             connection = dataSource.getConnection();
-            JDBCUtil.clearInnerDs();
-            dataSource = JDBCUtil.innerDruidDataSource();
+            DBUtil.clearInnerDs();
+            dataSource = DBUtil.innerDruidDataSource();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -79,14 +75,17 @@ public class JDBCUtilTest {
 
     @Test
     public void testSqlCondition() {
+        DBUtil.clearInnerDs();
+        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
+        DBUtil.setUsername("root");
+        DBUtil.setPassword("Gepoint");
+        DBUtil.setPoolType(DBConstant.POOL_C3P0);
+
         SqlCondition sqlCondition = new SqlCondition();
-
         sqlCondition.onColumn("*");
-        sqlCondition.inTables("");
+        sqlCondition.inTables("sys");
 
-        JDBCUtil.setUrl("");
-        ResultSet resultSet = JDBCUtil.innerSelectSql();
 
-        System.out.println(sqlCondition.generateSql());
+        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
     }
 }
