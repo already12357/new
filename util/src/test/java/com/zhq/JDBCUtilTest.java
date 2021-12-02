@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -80,25 +81,11 @@ public class JDBCUtilTest {
     public void testSqlCondition() {
         SqlCondition sqlCondition = new SqlCondition();
 
-        sqlCondition.eq("hello", "world", true);
-        sqlCondition.eq("hello", "let", true);
-        sqlCondition.eq("hello", "ou", false);
-        sqlCondition.gt("we", "better", false);
-        sqlCondition.gt("we", "better", false);
-        sqlCondition.gt("we", "better", false);
-        sqlCondition.gt("we", "better", false);
-        sqlCondition.lt("hel", "we", false);
-        sqlCondition.between("hel", "1", "2", false);
-        sqlCondition.between("hel", "4", "4.54", false);
-        sqlCondition.between("hel", "5", "6", false);
-        sqlCondition.between("hel", "7", "10", false);
+        sqlCondition.onColumn("*");
+        sqlCondition.inTables("");
 
-        sqlCondition.onColumn("a.c");
-        sqlCondition.onColumn("b.c");
-        sqlCondition.onColumn("d.c");
-        sqlCondition.onColumn("e.c");
-
-        sqlCondition.inTables("sys", "df", "dfd", "d", "df", "sfdafd");
+        JDBCUtil.setUrl("");
+        ResultSet resultSet = JDBCUtil.innerSelectSql();
 
         System.out.println(sqlCondition.generateSql());
     }
