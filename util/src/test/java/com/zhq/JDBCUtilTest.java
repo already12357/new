@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class JDBCUtilTest {
     @Autowired
@@ -74,7 +75,7 @@ public class JDBCUtilTest {
     }
 
     @Test
-    public void testSqlCondition() {
+    public void testSqlCondition() throws SQLException {
         DBUtil.clearInnerDs();
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
         DBUtil.setUsername("root");
@@ -87,7 +88,8 @@ public class JDBCUtilTest {
         ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
 
         while (resultSet.next()) {
-
+            int read = resultSet.getInt(1);
+            System.out.println(read);
         }
 
         System.out.println(resultSet);

@@ -119,7 +119,7 @@ public class SqlCondition {
 
 
     /**
-     * 添加操作所需的列 或 表 - 链式写法
+     * 添加操作所需的列 ,表 或 值 - 链式写法
      * @param columnName 列名称 / 表名称
      */
     public SqlCondition onColumn(String columnName, String...columnNames) {
@@ -147,10 +147,16 @@ public class SqlCondition {
 
         return this;
     }
+    public SqlCondition withValue() {
+        return this;
+    }
 
-
-    public SqlCondition join(String type) {
-
+    /**
+     * 连接表时的添加字段
+     * @param from
+     * @return
+     */
+    public SqlCondition join(String from) {
 
         return this;
     }
@@ -316,12 +322,24 @@ public class SqlCondition {
      * @return
      */
     private String generateInsertSql() {
-        StringBuilder insertBuilder = new StringBuilder("");
-        insertBuilder.append(opType);
+        if (!opTables.isEmpty()) {
+            StringBuilder insertBuilder = new StringBuilder("");
+
+            insertBuilder.append(opType + " INTO ");
+            if (null != opTables && !opTables.isEmpty()) {
+                insertBuilder.append(opTables.get(0));
+            }
+            if (null != opColumns && !opColumns.isEmpty()) {
+                insertBuilder.append("(").append(columnsInSql()).append(")");
+            }
+            insertBuilder.append(" VALUES ");
 
 
 
-        return insertBuilder.toString();
+            return insertBuilder.toString();
+        }
+
+        return "";
     }
     private String generateSelectSql() {
         StringBuilder selectBuilder = new StringBuilder("");
@@ -342,6 +360,7 @@ public class SqlCondition {
         StringBuilder deleteBuilder = new StringBuilder("");
 
 
+
         return deleteBuilder.toString().trim();
     }
 
@@ -354,7 +373,7 @@ public class SqlCondition {
     }
 
     public String columnsInSql() {
-        if (null != opColumns && !opColumns.isEmpty()) {
+        if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");
 
             for (String column : opColumns) {
@@ -368,7 +387,7 @@ public class SqlCondition {
     }
 
     public String fromInSql() {
-        if (null != opTables && !opTables.isEmpty()) {
+        if (!opTables.isEmpty()) {
             StringBuilder fromStr = new StringBuilder("");
             fromStr.append("from ");
 
@@ -383,7 +402,7 @@ public class SqlCondition {
     }
 
     public String whereInSql() {
-        if (null != whereConditionList && whereConditionList.size() > 0) {
+        if (!whereConditionList.isEmpty()) {
             StringBuilder whereStr = new StringBuilder("where");
 
             for (HashMap<String, List<String>> part : whereConditionList) {
