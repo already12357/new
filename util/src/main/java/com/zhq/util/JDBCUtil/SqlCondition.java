@@ -12,7 +12,6 @@ public class SqlCondition {
     // where 部分的所有条件内容集合
     private List<HashMap<String, List<String>>> whereConditionList;
 
-
     // '>', '<', '=', between, in条件存储在 HashMap 中
     // 根据 列名 --> 列名对应的表达式集合 存储
     private HashMap<String, List<String>> eqConditionMap;
@@ -26,24 +25,48 @@ public class SqlCondition {
     // 表格名称
     private List<String> opTables;
 
-    public SqlCondition() {
-        // 优化, 使用 get + 懒加载
-        ltConditionMap = new HashMap<String, List<String>>();
-        gtConditionMap = new HashMap<String, List<String>>();
-        eqConditionMap = new HashMap<String, List<String>>();
-        betweenConditionMap = new HashMap<String, List<String>>();
-        inConditionMap = new HashMap<String, List<String>>();
-        whereConditionList = new ArrayList<HashMap<String, List<String>>>();
+    // 使用 Get 获取对应的条件内容,  并使用懒加载
+    private HashMap<String, List<String>> getLtConditionMap() {
+        if (null == ltConditionMap) {
+            ltConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(ltConditionMap);
+        }
+        return ltConditionMap;
+    }
+    private HashMap<String, List<String>> getGtConditionMap() {
+        if (null == gtConditionMap) {
+            gtConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(gtConditionMap);
+        }
+        return gtConditionMap;
+    }
+    private HashMap<String, List<String>> getEqConditionMap() {
+        if (null == eqConditionMap) {
+            eqConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(eqConditionMap);
+        }
+        return eqConditionMap;
+    }
+    private HashMap<String, List<String>> getInConditionMap() {
+        if (null == inConditionMap) {
+            inConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(inConditionMap);
+        }
+        return inConditionMap;
+    }
+    private HashMap<String, List<String>> getBetweenConditionMap() {
+        if (null == betweenConditionMap) {
+            betweenConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(betweenConditionMap);
+        }
+        return betweenConditionMap;
+    }
 
+    public SqlCondition() {
         opColumns = new ArrayList<>();
         opTables = new ArrayList<>();
 
         opType = DBConstant.OP_SELECT;
-        whereConditionList.add(ltConditionMap);
-        whereConditionList.add(gtConditionMap);
-        whereConditionList.add(eqConditionMap);
-        whereConditionList.add(betweenConditionMap);
-        whereConditionList.add(inConditionMap);
     }
 
     public void setOpType(String opType) {
@@ -62,29 +85,29 @@ public class SqlCondition {
     public void gt(String columnName, String columnValue, boolean or) {
         String sign = " > ";
         String gtStr = parseEquation(columnName, columnValue, sign, or);
-        addConditionStr(gtConditionMap, columnName, gtStr);
+        addConditionStr(getGtConditionMap(), columnName, gtStr);
     }
     public void eq(String columnName, String columnValue, boolean or) {
         String sign = " = ";
         // 解析传入的内容，转换为表达式
         String eqStr = parseEquation(columnName, columnValue, sign, or);
-        addConditionStr(eqConditionMap, columnName, eqStr);
+        addConditionStr(getEqConditionMap(), columnName, eqStr);
     }
     public void lt(String columnName, String columnValue, boolean or) {
         String sign = " < ";
         // 解析传入的内容，转换为表达式
         String ltStr = parseEquation(columnName, columnValue, sign, or);
-        addConditionStr(eqConditionMap, columnName, ltStr);
+        addConditionStr(getLtConditionMap(), columnName, ltStr);
     }
     public void between(String columnName, String bottom, String top, boolean or) {
         // 将传入内容解析为字符串
         String betweenStr = parseBetween(columnName, bottom, top, or);
         // 将解析后的 Between 语句加入到集合中
-        addConditionStr(betweenConditionMap, columnName, betweenStr);
+        addConditionStr(getBetweenConditionMap(), columnName, betweenStr);
     }
     public void in(String columnName, List<String> rangeList, boolean or) {
         String inStr = parseIn(columnName, rangeList, or);
-        addConditionStr(inConditionMap, columnName, inStr);
+        addConditionStr(getInConditionMap(), columnName, inStr);
     }
 
 
@@ -127,19 +150,19 @@ public class SqlCondition {
      * @return
      */
     public String getEqStr(String columnName) {
-        return getConditionStr(columnName, eqConditionMap);
+        return getConditionStr(columnName, getEqConditionMap());
     }
     public String getGtStr(String columnName) {
-        return getConditionStr(columnName, gtConditionMap);
+        return getConditionStr(columnName, getGtConditionMap());
     }
     public String getLtStr(String columnName) {
-        return getConditionStr(columnName, ltConditionMap);
+        return getConditionStr(columnName, getLtConditionMap());
     }
     public String getBetweenStr(String columnName) {
-        return getConditionStr(columnName, betweenConditionMap);
+        return getConditionStr(columnName, getBetweenConditionMap());
     }
     public String getInStr(String columnName) {
-        return getConditionStr(columnName, inConditionMap);
+        return getConditionStr(columnName, getInConditionMap());
     }
 
 
