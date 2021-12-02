@@ -1,5 +1,6 @@
 package com.zhq;
 
+import com.alibaba.druid.util.JdbcUtils;
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;
 import com.zhq.util.JDBCUtil.SqlCondition;
@@ -78,19 +79,18 @@ public class JDBCUtilTest {
 
     @Test
     public void testSqlCondition() throws SQLException {
-//        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
-//        DBUtil.setUsername("root");
-//        DBUtil.setPassword("Gepoint");
-//        DBUtil.setPoolType(DBConstant.POOL_C3P0);
-//
-//        DataSource innerDS = DBUtil.getInnerDS();
-//
-//        SqlCondition sqlInsert = new SqlCondition();
-//        sqlInsert.toInsert()
-//                .onColumn("c_id", "cname", "user_id")
-//                .inTables("course_1")
-//                .withValue(18, "Eddie_Zhang", 61561);
-//        DBUtil.innerInsertSql(sqlInsert);
+        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
+        DBUtil.setUsername("root");
+        DBUtil.setPassword("Gepoint");
+        DBUtil.setPoolType(DBConstant.POOL_DRUID);
+
+        DataSource innerDS = DBUtil.getInnerDS();
+
+        SqlCondition sqlInsert = new SqlCondition();
+        sqlInsert.toInsert()
+                .tables("course_1")
+                .values(7, "Eddie_Zhang", 61561, "1561");
+        DBUtil.innerInsertSql(sqlInsert);
 
 
 //        SqlCondition sqlQuery = new SqlCondition();
@@ -118,6 +118,8 @@ public class JDBCUtilTest {
         System.out.println(updateBatch);
 
         SqlCondition sqlDelete = new SqlCondition();
+        sqlDelete.toDelete().tables("course_1").eq("c_id", 7);
+        DBUtil.innerDeleteSql(sqlDelete);
 
     }
 }

@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.zhq.util.ResourceUtil;
-import com.mysql.jdbc.Driver;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
@@ -171,11 +170,11 @@ public class DBUtil {
     }
 
     /**
-     * 获取不同类型的数据库链接池对象连接池对象
+     * 获取不同类型的数据库链接池对象连接池对象 ( 通过类名反射调用 )
      * @return
      */
     public static DataSource innerDbcpDataSource() {
-        synchronized (BasicDataSource.class) {
+        synchronized (DataSource.class) {
             if (null == innerDS) {
                 innerDS = new BasicDataSource();
 
@@ -189,7 +188,7 @@ public class DBUtil {
         }
     }
     public static DataSource innerC3p0DataSource() {
-        synchronized (BasicDataSource.class) {
+        synchronized (DataSource.class) {
             if (null == innerDS) {
                 innerDS = new ComboPooledDataSource();
 
@@ -208,14 +207,33 @@ public class DBUtil {
         }
     }
     public static DataSource innerDruidDataSource() {
-        synchronized (BasicDataSource.class) {
+        synchronized (DataSource.class) {
             if (null == innerDS) {
-                innerDS = new DruidDataSource();
+                try {
+                    // 防止依赖绑定, 使用反射调用
+                    Class dsClazz = Class.forName(DBConstant.CLASS_DRUID_DS);
+                    Method userSetter = dsClazz.getMethod("setUsername", String.class);
+                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+                    Method urlSetter = dsClazz.getMethod("setUrl", String.class);
+                    Method driverSetter = dsClazz.getMethod("setDriver", Driver.class);
 
-                ((DruidDataSource) innerDS).setUsername(innerUsername);
-                ((DruidDataSource) innerDS).setPassword(innerPassword);
-                ((DruidDataSource) innerDS).setUrl(innerUrl);
-                ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
+                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
+                    userSetter.invoke(innerDS, innerUsername);
+                    passwdSetter.invoke(innerDS, innerPassword);
+                    urlSetter.invoke(innerDS, innerUrl);
+                    driverSetter.invoke(innerDS, driverWithDBType(innerDbType));
+
+
+//                    // 主动调用
+//                    innerDS = new DruidDataSource();
+//                    ((DruidDataSource) innerDS).setUsername(innerUsername);
+//                    ((DruidDataSource) innerDS).setPassword(innerPassword);
+//                    ((DruidDataSource) innerDS).setUrl(innerUrl);
+//                    ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             return innerDS;
@@ -381,7 +399,6 @@ public class DBUtil {
             ResourceUtil.closeResources(connection);
         }
     }
-
     public static boolean innerDeleteSql(SqlCondition sqlCondition) {
         String sql = sqlCondition.generateSql();
         Connection connection = null;
