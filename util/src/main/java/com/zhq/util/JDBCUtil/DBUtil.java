@@ -16,6 +16,10 @@ import java.sql.*;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * 优化，使用反射创建数据库, 减少代码引用
+ */
+
 public class DBUtil {
     // 内部配置一个静态的数据源类
     private static DataSource innerDS;
@@ -346,7 +350,7 @@ public class DBUtil {
 
         try {
             connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sql);
+            ps = connection.prepareStatement(sqlCondition.generateSql());
 
             return ps.execute();
         }
@@ -365,7 +369,7 @@ public class DBUtil {
 
         try {
             connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sql);
+            ps = connection.prepareStatement(sqlCondition.generateSql());
 
             return ps.executeUpdate();
         }
@@ -377,6 +381,7 @@ public class DBUtil {
             ResourceUtil.closeResources(connection);
         }
     }
+
     public static boolean innerDeleteSql(SqlCondition sqlCondition) {
         String sql = sqlCondition.generateSql();
         Connection connection = null;
@@ -384,7 +389,7 @@ public class DBUtil {
 
         try {
             connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sql);
+            ps = connection.prepareStatement(sqlCondition.generateSql());
 
             return ps.execute();
         }

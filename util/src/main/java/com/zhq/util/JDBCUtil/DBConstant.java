@@ -79,6 +79,11 @@ public class DBConstant {
     public static final String POOL_DBCP = "dhcp";
     public static final String POOL_HIKARI = "hikari";
 
+    // 数据库连接池类
+    public static final String CLASS_DRUID_DS = "com.alibaba.druid.pool.DruidDataSource";
+    public static final String CLASS_C3P0_DS = "com.mchange.v2.c3p0.ComboPooledDataSource";
+    public static final String CLASS_DBCP_DS = "org.apache.commons.dbcp.BasicDataSource";
+    public static final String CLASS_HIKARI_DS= "";
 
     // 数据库操作
     public static final String OP_SELECT = "SELECT";

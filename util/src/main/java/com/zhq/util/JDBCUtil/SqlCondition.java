@@ -7,9 +7,20 @@ import java.util.Map;
 
 // SQL 语句中相关的查询条件
 public class SqlCondition {
+    // =============================================
     // 优化，根据 SqlCondition 获取传入的参数信息
+    // =============================================
+    // =============================================
+    // 优化，添加表连接内容
+    // =============================================
+    // =============================================
+    // 优化，添加 exists, like, groupby, order, limit 等条件
+    // =============================================
+    // =============================================
+    // 优化，根据传入的 DataSource 对象调用
+    // =============================================
 
-
+    
 
     // 数据库类型
     private String dbType;
@@ -171,6 +182,10 @@ public class SqlCondition {
     public SqlCondition between(String columnName, Object bottom, Object top) {
         return between(columnName, bottom, top, false);
     }
+
+//    public SqlCondition like();
+//    public SqlCondition exists();
+
 
     public SqlCondition in(String columnName, List<Object> rangeList, boolean or) {
         String inStr = parseIn(columnName, rangeList, or);
@@ -401,9 +416,9 @@ public class SqlCondition {
      */
     private String generateInsertSql() {
         if (!opTables.isEmpty()) {
-            StringBuilder insertBuilder = new StringBuilder("");
+            StringBuilder insertBuilder = new StringBuilder(opType);
 
-            insertBuilder.append(opType + " INTO ")
+            insertBuilder.append(" INTO ")
                     .append(opTables.get(0));
             if (null != opColumns && !opColumns.isEmpty()) {
                 insertBuilder.append("(").
@@ -421,29 +436,33 @@ public class SqlCondition {
     }
 
     private String generateSelectSql() {
-        StringBuilder selectBuilder = new StringBuilder("");
+        StringBuilder selectBuilder = new StringBuilder(opType);
         // 逐次拼接对应的内容
-        selectBuilder.append(opType).
-                append(" ").append(columnsInSql()).
-                append(" ").append(fromInSql()).
-                append(" ").append(whereInSql());
+        selectBuilder.append(" ")
+                .append(columnsInSql())
+                .append(" ")
+                .append(fromInSql())
+                .append(" ")
+                .append(whereInSql());
         return selectBuilder.toString();
     }
 
     private String generateDeleteSql() {
-        StringBuilder deleteBuilder = new StringBuilder("");
+        StringBuilder deleteBuilder = new StringBuilder(opType);
 
         return deleteBuilder.toString();
     }
 
     private String generateUpdateSql() {
-        StringBuilder updateBuilder = new StringBuilder("");
+        StringBuilder updateBuilder = new StringBuilder(opType);
 
-        updateBuilder.append(opType);
+
 
         return updateBuilder.toString();
     }
 
+
+    // 生成整个 SQL 不同部分的函数
     public String columnsInSql() {
         if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");

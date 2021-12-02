@@ -76,16 +76,19 @@ public class JDBCUtilTest {
 
     @Test
     public void testSqlCondition() throws SQLException {
-//        DBUtil.clearInnerDs();
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
         DBUtil.setPoolType(DBConstant.POOL_C3P0);
-//        SqlCondition sqlInsert = new SqlCondition();
-//        sqlInsert.toInsert().
-//                inTables("course_1").
-//                withValue(19, "sys_19", null, "20");
-//        DBUtil.innerInsertSql(sqlInsert);
+
+        DataSource innerDS = DBUtil.getInnerDS();
+
+        SqlCondition sqlInsert = new SqlCondition();
+        sqlInsert.toInsert()
+                .onColumn("c_id", "cname", "user_id")
+                .inTables("course_1")
+                .withValue(18, "Eddie_Zhang", 61561);
+        DBUtil.innerInsertSql(sqlInsert);
 
 
         SqlCondition sqlQuery = new SqlCondition();
@@ -94,7 +97,6 @@ public class JDBCUtilTest {
                 .onColumn("c_id")
                 .eq("cstatus", null)
                 .between("c_id", 8, 11);
-
 
         ResultSet resultSet = DBUtil.innerSelectSql(sqlQuery);
 
