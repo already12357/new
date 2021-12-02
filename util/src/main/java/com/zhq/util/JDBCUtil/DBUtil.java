@@ -333,6 +333,8 @@ public class DBUtil {
             ps = connection.prepareStatement(sql);
             ResultSet resultSet = ps.executeQuery();
 
+            System.out.println(resultSet.getString(0));
+
             return resultSet;
         }
         catch (Exception e) {

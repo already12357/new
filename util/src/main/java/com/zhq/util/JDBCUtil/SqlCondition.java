@@ -67,6 +67,8 @@ public class SqlCondition {
         opTables = new ArrayList<>();
 
         opType = DBConstant.OP_SELECT;
+
+        whereConditionList = new ArrayList<HashMap<String, List<String>>>();
     }
 
     public void setOpType(String opType) {
@@ -77,45 +79,50 @@ public class SqlCondition {
     }
 
     /**
-     * 将条件添加到条件存储对象中 ( 大于, 小于, 等于, between, in )
+     * 将条件添加到条件存储对象中 ( 大于, 小于, 等于, between, in ) - 链式写法
      * @param columnName 条件的列
      * @param columnValue 值
      * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
      */
-    public void gt(String columnName, String columnValue, boolean or) {
+    public SqlCondition gt(String columnName, String columnValue, boolean or) {
         String sign = " > ";
         String gtStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(getGtConditionMap(), columnName, gtStr);
+        return this;
     }
-    public void eq(String columnName, String columnValue, boolean or) {
+    public SqlCondition eq(String columnName, String columnValue, boolean or) {
         String sign = " = ";
         // 解析传入的内容，转换为表达式
         String eqStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(getEqConditionMap(), columnName, eqStr);
+        return this;
     }
-    public void lt(String columnName, String columnValue, boolean or) {
+    public SqlCondition lt(String columnName, String columnValue, boolean or) {
         String sign = " < ";
         // 解析传入的内容，转换为表达式
         String ltStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(getLtConditionMap(), columnName, ltStr);
+        return this;
     }
-    public void between(String columnName, String bottom, String top, boolean or) {
+    public SqlCondition between(String columnName, String bottom, String top, boolean or) {
         // 将传入内容解析为字符串
         String betweenStr = parseBetween(columnName, bottom, top, or);
         // 将解析后的 Between 语句加入到集合中
         addConditionStr(getBetweenConditionMap(), columnName, betweenStr);
+        return this;
     }
-    public void in(String columnName, List<String> rangeList, boolean or) {
+    public SqlCondition in(String columnName, List<String> rangeList, boolean or) {
         String inStr = parseIn(columnName, rangeList, or);
         addConditionStr(getInConditionMap(), columnName, inStr);
+        return this;
     }
 
 
     /**
-     * 添加操作所需的列 或 表
+     * 添加操作所需的列 或 表 - 链式写法
      * @param columnName 列名称 / 表名称
      */
-    public void onColumn(String columnName, String...columnNames) {
+    public SqlCondition onColumn(String columnName, String...columnNames) {
         if (!opColumns.contains(columnName)) {
             opColumns.add(columnName);
         }
@@ -125,8 +132,9 @@ public class SqlCondition {
                 opColumns.add(columnName);
             }
         }
+        return this;
     }
-    public void inTables(String tableName, String...tableNames) {
+    public SqlCondition inTables(String tableName, String...tableNames) {
         if (!opTables.contains(tableName)) {
             opTables.add(tableName);
         }
@@ -136,11 +144,15 @@ public class SqlCondition {
                 opTables.add(extraTable);
             }
         }
+
+        return this;
     }
 
 
-    public void join(String type) {
+    public SqlCondition join(String type) {
 
+
+        return this;
     }
 
 
@@ -150,19 +162,19 @@ public class SqlCondition {
      * @return
      */
     public String getEqStr(String columnName) {
-        return getConditionStr(columnName, getEqConditionMap());
+        return getConditionStr(columnName, eqConditionMap);
     }
     public String getGtStr(String columnName) {
-        return getConditionStr(columnName, getGtConditionMap());
+        return getConditionStr(columnName, gtConditionMap);
     }
     public String getLtStr(String columnName) {
-        return getConditionStr(columnName, getLtConditionMap());
+        return getConditionStr(columnName, ltConditionMap);
     }
     public String getBetweenStr(String columnName) {
-        return getConditionStr(columnName, getBetweenConditionMap());
+        return getConditionStr(columnName, betweenConditionMap);
     }
     public String getInStr(String columnName) {
-        return getConditionStr(columnName, getInConditionMap());
+        return getConditionStr(columnName, inConditionMap);
     }
 
 
@@ -254,7 +266,6 @@ public class SqlCondition {
     private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
         List<String> condStrList = conditionMap.get(columnName);
         StringBuilder findSql = new StringBuilder("");
-        String sqlRet = "";
         int startIndex = 0;
 
         if (null != condStrList && !condStrList.isEmpty()) {
@@ -324,23 +335,23 @@ public class SqlCondition {
         selectBuilder.append(" ");
         selectBuilder.append(whereInSql());
 
-        return selectBuilder.toString();
+        return selectBuilder.toString().trim();
     }
+
     private String generateDeleteSql() {
         StringBuilder deleteBuilder = new StringBuilder("");
 
 
-        return deleteBuilder.toString();
+        return deleteBuilder.toString().trim();
     }
+
     private String generateUpdateSql() {
         StringBuilder updateBuilder = new StringBuilder("");
 
         updateBuilder.append(opType);
 
-        return updateBuilder.toString();
+        return updateBuilder.toString().trim();
     }
-
-
 
     public String columnsInSql() {
         if (null != opColumns && !opColumns.isEmpty()) {
@@ -350,7 +361,7 @@ public class SqlCondition {
                 columnsStr.append(column + ",");
             }
             columnsStr.deleteCharAt(columnsStr.length() - 1);
-            return columnsStr.toString();
+            return columnsStr.toString().trim();
         }
 
         return "";
@@ -365,21 +376,26 @@ public class SqlCondition {
                 fromStr.append(table + ",");
             }
             fromStr.deleteCharAt(fromStr.length() - 1);
+            return fromStr.toString().trim();
         }
 
         return "";
     }
 
     public String whereInSql() {
-        StringBuilder whereStr = new StringBuilder("where");
+        if (null != whereConditionList && whereConditionList.size() > 0) {
+            StringBuilder whereStr = new StringBuilder("where");
 
-        for (HashMap<String, List<String>> part : whereConditionList) {
-            for (Map.Entry<String, List<String>> entry : part.entrySet()) {
-                String columnName = entry.getKey();
-                whereStr.append(getConditionStr(columnName, part));
+            for (HashMap<String, List<String>> part : whereConditionList) {
+                for (Map.Entry<String, List<String>> entry : part.entrySet()) {
+                    String columnName = entry.getKey();
+                    whereStr.append(getConditionStr(columnName, part));
+                }
             }
+
+            return whereStr.toString().trim();
         }
 
-        return whereStr.toString();
+        return "";
     }
 }

@@ -83,9 +83,13 @@ public class JDBCUtilTest {
 
         SqlCondition sqlCondition = new SqlCondition();
         sqlCondition.onColumn("*");
-        sqlCondition.inTables("sys");
+        sqlCondition.inTables("course_1");
 
 
         ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
+
+
+
+        System.out.println(resultSet);
     }
 }
