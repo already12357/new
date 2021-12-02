@@ -82,11 +82,14 @@ public class JDBCUtilTest {
         DBUtil.setPassword("Gepoint");
         DBUtil.setPoolType(DBConstant.POOL_C3P0);
 
-        SqlCondition sqlCondition = new SqlCondition();
-        sqlCondition.onColumn("*")
-                .inTables("course_1")
-                .gt("c_id", String.valueOf(8), false)
-                .withValue("value1", 1, true);
+        SqlCondition sqlInsert = new SqlCondition();
+        sqlInsert.toInsert().
+                inTables("course_1").
+                withValue(19, "sys_19", null, "20");
+
+        DBUtil.innerInsertSql(sqlInsert);
+
+        SqlCondition sqlQuery = new SqlCondition();
 
 //        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
 

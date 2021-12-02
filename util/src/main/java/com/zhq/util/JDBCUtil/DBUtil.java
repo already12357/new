@@ -280,7 +280,6 @@ public class DBUtil {
      */
     public static String getTypeByUrl(String url) {
         String[] urlParts = url.split(":");
-        String retType = null;
 
         switch (urlParts[0]) {
             // 非关系型数据库类型
