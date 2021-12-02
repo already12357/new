@@ -131,6 +131,10 @@ public class SqlCondition {
         addConditionStr(getGtConditionMap(), columnName, gtStr);
         return this;
     }
+    public SqlCondition gt(String columnName, String columnValue) {
+        return gt(columnName, columnValue, false);
+    }
+
     public SqlCondition eq(String columnName, String columnValue, boolean or) {
         String sign = " = ";
         // 解析传入的内容，转换为表达式
@@ -138,6 +142,10 @@ public class SqlCondition {
         addConditionStr(getEqConditionMap(), columnName, eqStr);
         return this;
     }
+    public SqlCondition eq(String columnName, String columnValue) {
+        return eq(columnName, columnValue, false);
+    }
+
     public SqlCondition lt(String columnName, String columnValue, boolean or) {
         String sign = " < ";
         // 解析传入的内容，转换为表达式
@@ -145,6 +153,10 @@ public class SqlCondition {
         addConditionStr(getLtConditionMap(), columnName, ltStr);
         return this;
     }
+    public SqlCondition lt(String columnName, String columnValue) {
+        return lt(columnName, columnValue, false);
+    }
+
     public SqlCondition between(String columnName, String bottom, String top, boolean or) {
         // 将传入内容解析为字符串
         String betweenStr = parseBetween(columnName, bottom, top, or);
@@ -152,10 +164,17 @@ public class SqlCondition {
         addConditionStr(getBetweenConditionMap(), columnName, betweenStr);
         return this;
     }
+    public SqlCondition between(String columnName, String bottom, String top) {
+        return between(columnName, bottom, top, false);
+    }
+
     public SqlCondition in(String columnName, List<String> rangeList, boolean or) {
         String inStr = parseIn(columnName, rangeList, or);
         addConditionStr(getInConditionMap(), columnName, inStr);
         return this;
+    }
+    public SqlCondition in(String columnName, List<String> rangeList) {
+        return in(columnName, rangeList, false);
     }
 
 

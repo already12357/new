@@ -90,7 +90,10 @@ public class JDBCUtilTest {
         DBUtil.innerInsertSql(sqlInsert);
 
         SqlCondition sqlQuery = new SqlCondition();
-
+        sqlQuery.toSelect()
+                .inTables("course_1")
+                .onColumn("c_id")
+                .eq("")
 //        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
 
 //        while (resultSet.next()) {
