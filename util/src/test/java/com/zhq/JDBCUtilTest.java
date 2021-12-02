@@ -116,5 +116,8 @@ public class JDBCUtilTest {
         sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
         int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
         System.out.println(updateBatch);
+
+        SqlCondition sqlDelete = new SqlCondition();
+
     }
 }

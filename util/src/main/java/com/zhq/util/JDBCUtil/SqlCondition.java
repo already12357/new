@@ -249,10 +249,11 @@ public class SqlCondition {
      * @param from
      * @return
      */
-    public SqlCondition join(String from) {
-
-        return this;
-    }
+//    public SqlCondition join(String from) {
+//
+//
+//        return this;
+//    }
 
 
     /**
@@ -459,8 +460,10 @@ public class SqlCondition {
     private String generateDeleteSql() {
         if (!opTables.isEmpty()) {
             StringBuilder deleteBuilder = new StringBuilder(opType);
-
-            deleteBuilder.append(" ").append(tableInSql());
+            deleteBuilder.append(" ")
+                    .append(fromInSql())
+                    .append(" ")
+                    .append(whereInSql());
 
             return deleteBuilder.toString();
         }
