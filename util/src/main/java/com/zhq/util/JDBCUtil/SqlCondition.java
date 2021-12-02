@@ -60,18 +60,18 @@ public class SqlCondition {
      * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
      */
     public void gt(String columnName, String columnValue, boolean or) {
-        String sign = ">";
+        String sign = " > ";
         String gtStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(gtConditionMap, columnName, gtStr);
     }
     public void eq(String columnName, String columnValue, boolean or) {
-        String sign = "=";
+        String sign = " = ";
         // 解析传入的内容，转换为表达式
         String eqStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(eqConditionMap, columnName, eqStr);
     }
     public void lt(String columnName, String columnValue, boolean or) {
-        String sign = "<";
+        String sign = " < ";
         // 解析传入的内容，转换为表达式
         String ltStr = parseEquation(columnName, columnValue, sign, or);
         addConditionStr(eqConditionMap, columnName, ltStr);
@@ -89,13 +89,35 @@ public class SqlCondition {
 
 
     /**
-     * 添加操作所需的列
-     * @param columnName 列名称
+     * 添加操作所需的列 或 表
+     * @param columnName 列名称 / 表名称
      */
-    public void column(String columnName) {
+    public void onColumn(String columnName, String...columnNames) {
         if (!opColumns.contains(columnName)) {
             opColumns.add(columnName);
         }
+
+        for (String extraColumn : columnNames) {
+            if (!opColumns.contains(columnName)) {
+                opColumns.add(columnName);
+            }
+        }
+    }
+    public void inTables(String tableName, String...tableNames) {
+        if (!opTables.contains(tableName)) {
+            opTables.add(tableName);
+        }
+
+        for (String extraTable : tableNames) {
+            if (!opTables.contains(extraTable)) {
+                opTables.add(extraTable);
+            }
+        }
+    }
+
+
+    public void join(String type) {
+
     }
 
 
@@ -272,8 +294,11 @@ public class SqlCondition {
 
         // 逐次拼接对应的内容
         selectBuilder.append(opType);
+        selectBuilder.append(" ");
         selectBuilder.append(columnsInSql());
+        selectBuilder.append(" ");
         selectBuilder.append(fromInSql());
+        selectBuilder.append(" ");
         selectBuilder.append(whereInSql());
 
         return selectBuilder.toString();
@@ -294,10 +319,13 @@ public class SqlCondition {
 
 
 
-    private String columnsInSql() {
+    public String columnsInSql() {
         StringBuilder columnsStr = new StringBuilder("");
 
-
+        for (String column : opColumns) {
+            columnsStr.append(column + ",");
+        }
+        columnsStr.deleteCharAt(columnsStr.length() - 1);
 
         return columnsStr.toString();
     }
@@ -305,7 +333,12 @@ public class SqlCondition {
     private String fromInSql() {
         StringBuilder fromStr = new StringBuilder("");
 
+        fromStr.append("from ");
 
+        for (String table : opTables) {
+            fromStr.append(table + ",");
+        }
+        fromStr.deleteCharAt(fromStr.length() - 1);
 
         return fromStr.toString();
     }

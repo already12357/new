@@ -93,10 +93,13 @@ public class JDBCUtilTest {
         sqlCondition.between("hel", "5", "6", false);
         sqlCondition.between("hel", "7", "10", false);
 
-        System.out.println(sqlCondition.getBetweenStr("46454"));
-        System.out.println(sqlCondition.whereInSql());
+        sqlCondition.onColumn("a.c");
+        sqlCondition.onColumn("b.c");
+        sqlCondition.onColumn("d.c");
+        sqlCondition.onColumn("e.c");
 
-        String sql = sqlCondition.getGtStr("564454");
-        System.out.println(sql);
+        sqlCondition.inTables("sys", "df", "dfd", "d", "df", "sfdafd");
+
+        System.out.println(sqlCondition.generateSql());
     }
 }
