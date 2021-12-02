@@ -43,7 +43,7 @@ public class JDBCUtilTest {
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
-        DataSource dataSource = DBUtil.innerDsWithConfig();
+        DataSource dataSource = DBUtil.getInnerDS();
         Connection connection = null;
         SqlCondition sqlCondition = new SqlCondition();
 
@@ -64,13 +64,13 @@ public class JDBCUtilTest {
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
-        DataSource dataSource = DBUtil.innerDsWithConfig();
+        DataSource dataSource = DBUtil.getInnerDS();
         Connection connection = null;
 
         try {
             connection = dataSource.getConnection();
-            DBUtil.clearInnerDs();
-            dataSource = DBUtil.innerDruidDataSource();
+            DBUtil.resetInnerDs();
+            dataSource = DBUtil.getInnerDS();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -90,8 +90,8 @@ public class JDBCUtilTest {
         sqlInsert.toInsert()
                 .tables("course_1")
                 .values(7, "Eddie_Zhang", 61561, "1561");
-        DBUtil.innerInsertSql(sqlInsert);
-
+//        DBUtil.innerInsertSql(sqlInsert);
+        DBUtil.executeSqlCondition(sqlInsert);
 
 //        SqlCondition sqlQuery = new SqlCondition();
 //        sqlQuery.toSelect()
@@ -114,12 +114,14 @@ public class JDBCUtilTest {
         rangeList.add("4");
         rangeList.add("7");
         sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
-        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
+//        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
+        int updateBatch = (int) DBUtil.executeSqlCondition(sqlUpdate);
         System.out.println(updateBatch);
+
 
         SqlCondition sqlDelete = new SqlCondition();
         sqlDelete.toDelete().tables("course_1").eq("c_id", 7);
-        DBUtil.innerDeleteSql(sqlDelete);
-
+//        DBUtil.innerDeleteSql(sqlDelete);
+        DBUtil.executeSqlCondition(sqlDelete);
     }
 }

@@ -27,9 +27,9 @@ public class DBUtil {
     private static String innerUsername = "root";
     private static String innerPassword = "root";
 
-
-
-
+    /**
+     * 设置内部数据源的四大信息 ( username, password, url, poolType )
+     */
     public static void setUrl(String url) {
         innerUrl = url;
         innerDbType = getTypeByUrl(url);
@@ -44,16 +44,20 @@ public class DBUtil {
         innerPoolType = poolType;
     }
 
-    // 获取内部的数据源
+
+    /**
+     * 根据配置获取数据源
+     */
     public static DataSource getInnerDS() {
         return innerDsWithConfig();
     }
 
+
     /**
-     * 根据内部的配置内容获取对应的连接池
+     * 根据配置获取内部数据源
      * @return
      */
-    public static DataSource innerDsWithConfig() {
+    private static DataSource innerDsWithConfig() {
         switch (innerPoolType) {
             case DBConstant.POOL_C3P0:
                 return innerC3p0DataSource();
@@ -68,11 +72,12 @@ public class DBUtil {
         }
     }
 
+
     /**
-     * 获取不同类型的数据库链接池对象连接池对象 ( 通过类名反射调用 )
+     * 获取不同类型的数据库链接池对象 ( 通过类名反射调用 ), 如 ( dbcp, druid, c3p0.... )
      * @return
      */
-    public static DataSource innerDbcpDataSource() {
+    private static DataSource innerDbcpDataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
@@ -97,7 +102,7 @@ public class DBUtil {
             return innerDS;
         }
     }
-    public static DataSource innerC3p0DataSource() {
+    private static DataSource innerC3p0DataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
@@ -122,7 +127,7 @@ public class DBUtil {
             return innerDS;
         }
     }
-    public static DataSource innerDruidDataSource() {
+    private static DataSource innerDruidDataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
@@ -175,6 +180,7 @@ public class DBUtil {
         }
     }
 
+
     /**
      * 根据数据库类型加载对应的驱动类
      * @param dbType 传入的数据库类型
@@ -203,8 +209,9 @@ public class DBUtil {
         }
     }
 
+
     /**
-     * 根据数据库驱动返回对应的数据库类型
+     * 根据数据库 URL 提取对应的数据库类型
      * @param url 传入的数据库驱动 url
      * @return
      */
@@ -226,11 +233,12 @@ public class DBUtil {
         }
     }
 
+
     /**
-     * 删除内部的数据源
+     * 重置内部数据源
      * @return
      */
-    public static boolean clearInnerDs() {
+    public static boolean resetInnerDs() {
         try {
             if (null != innerDS) {
                 Class innerDSClazz = innerDS.getClass();
@@ -249,81 +257,33 @@ public class DBUtil {
 
 
     /**
-     * 传入自定义的 SqlCondition 对象, 使用内部的数据源进行操作, 进行数据库操作 ( select, insert, update, delete )
-     * @param sqlCondition 请求的查询条件
+     * 使用内部数据源执行对应的 SqlCondition 类
+     * @param sqlCondition
+     * @return
      */
-    public static ResultSet innerSelectSql(SqlCondition sqlCondition) {
-        String sql = sqlCondition.generateSql();
-        Connection connection = null;
-        PreparedStatement ps = null;
+    public static Object executeSqlCondition(SqlCondition sqlCondition) {
+        if (null != sqlCondition) {
+            try {
+                Connection connection = getInnerDS().getConnection();
+                PreparedStatement ps = connection.prepareStatement(sqlCondition.generateSql());
 
-        try {
-            connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sql);
-            ResultSet resultSet = ps.executeQuery();
+                switch (sqlCondition.getOpType()) {
+                    case DBConstant.OP_DELETE:
+                    case DBConstant.OP_INSERT:
+                        return ps.execute();
 
-            return resultSet;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public static boolean innerInsertSql(SqlCondition sqlCondition) {
-        String sql = sqlCondition.generateSql();
-        Connection connection = null;
-        PreparedStatement ps = null;
+                    case DBConstant.OP_UPDATE:
+                        return ps.executeUpdate();
 
-        try {
-            connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sqlCondition.generateSql());
+                    default:
+                        return ps.executeQuery();
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-            return ps.execute();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        finally {
-            ResourceUtil.closeResources(connection);
-        }
-    }
-    public static int innerUpdateSql(SqlCondition sqlCondition) {
-        String sql = sqlCondition.generateSql();
-        Connection connection = null;
-        PreparedStatement ps = null;
-
-        try {
-            connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sqlCondition.generateSql());
-
-            return ps.executeUpdate();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
-        finally {
-            ResourceUtil.closeResources(connection);
-        }
-    }
-    public static boolean innerDeleteSql(SqlCondition sqlCondition) {
-        String sql = sqlCondition.generateSql();
-        Connection connection = null;
-        PreparedStatement ps = null;
-
-        try {
-            connection = getInnerDS().getConnection();
-            ps = connection.prepareStatement(sqlCondition.generateSql());
-
-            return ps.execute();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        finally {
-            ResourceUtil.closeResources(connection);
-        }
+        return null;
     }
 }
