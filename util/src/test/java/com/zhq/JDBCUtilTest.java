@@ -86,21 +86,22 @@ public class JDBCUtilTest {
         sqlInsert.toInsert().
                 inTables("course_1").
                 withValue(19, "sys_19", null, "20");
-
         DBUtil.innerInsertSql(sqlInsert);
+
 
         SqlCondition sqlQuery = new SqlCondition();
         sqlQuery.toSelect()
                 .inTables("course_1")
                 .onColumn("c_id")
-                .eq("")
-//        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
+                .eq("cstatus", null);
 
-//        while (resultSet.next()) {
-//            int read = resultSet.getInt(1);
-//            System.out.println(read);
-//        }
+        ResultSet resultSet = DBUtil.innerSelectSql(sqlQuery);
 
-//        System.out.println(resultSet);
+        while (resultSet.next()) {
+            int read = resultSet.getInt(1);
+            System.out.println(read);
+        }
+
+        System.out.println(resultSet);
     }
 }

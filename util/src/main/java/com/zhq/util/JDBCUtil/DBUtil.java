@@ -354,6 +354,9 @@ public class DBUtil {
             e.printStackTrace();
             return false;
         }
+        finally {
+            ResourceUtil.closeResources(connection);
+        }
     }
     public static int innerUpdateSql(SqlCondition sqlCondition) {
         String sql = sqlCondition.generateSql();
@@ -370,6 +373,9 @@ public class DBUtil {
             e.printStackTrace();
             return -1;
         }
+        finally {
+            ResourceUtil.closeResources(connection);
+        }
     }
     public static boolean innerDeleteSql(SqlCondition sqlCondition) {
         String sql = sqlCondition.generateSql();
@@ -385,6 +391,9 @@ public class DBUtil {
         catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+        finally {
+            ResourceUtil.closeResources(connection);
         }
     }
 }

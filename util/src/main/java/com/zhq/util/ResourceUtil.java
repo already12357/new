@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 public class ResourceUtil {
@@ -11,15 +12,13 @@ public class ResourceUtil {
      * 关闭资源 (流, 连接 )
      * @param resources 用于关闭的资源数组
      */
-    public static void closeResources(Closeable...resources) {
+    public static void closeResources(AutoCloseable...resources) {
         try {
-            for (Closeable resource : resources) {
-                if (resource != null) {
-                    resource.close();
-                }
+            for (AutoCloseable resource : resources) {
+                resource.close();
             }
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
