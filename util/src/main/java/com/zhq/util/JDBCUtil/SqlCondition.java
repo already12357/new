@@ -7,7 +7,9 @@ import java.util.Map;
 
 /**
  * SQL 查询条件类
- * 本质是将传入的数据转化为对应的 SQL 语句 或 SQL 字句, 通过原生的 JDBC 执行
+ * 本质是将传入的数据转化为对应的 SQL 语句, 通过原生的 JDBC 执行
+ * 流程为：
+ * 1. 将传入的条件转化后存入到条件集合中 (eqConditionMap, gtConditionMap, ltConditionMap...)
  */
 public class SqlCondition {
     // =============================================
@@ -31,7 +33,9 @@ public class SqlCondition {
     // =============================================
     // 优化，增加对数据库的不同写法
     // =============================================
-
+    // =============================================
+    // 优化，支持 Spring 注入
+    // =============================================
 
     
 
@@ -146,8 +150,9 @@ public class SqlCondition {
 
 
     /**
-     * 将条件添加到条件存储对象中 ( 大于, 小于, 等于, between, in ) - 链式写法
-     * @param columnName 条件的列
+     * 将 where 部分的判断条件转换为 SQL 语句后，添加到对应的集合中, 对每个列的每种判断条件用 List 存储 ( 支持链式写法 )
+     *     如 : s_id 列的  s_id > 10, s_id > 20, s_id > 50 条件判断统一放在 gtConditionMap 对应的 List 中 )
+     * @param columnName 列
      * @param columnValue 值
      * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
      */
@@ -209,7 +214,7 @@ public class SqlCondition {
 
 
     /**
-     * 添加操作所需的列 ,表 或 值 - 链式写法
+     * 添加操作涉及的 列 表 值, 通常用在 非 select 情况下使用 ( 支持链式写法 )
      * @param columnName 列名称 / 表名称
      */
     public SqlCondition columns(String columnName, String...columnNames) {
@@ -245,11 +250,11 @@ public class SqlCondition {
         return this;
     }
 
-    /**
-     * 连接表时的添加字段
-     * @param from
-     * @return
-     */
+//    /**
+//     * 连接表时的添加字段
+//     * @param from
+//     * @return
+//     */
 //    public SqlCondition join(String from) {
 //
 //
@@ -258,33 +263,38 @@ public class SqlCondition {
 
 
     /**
-     * 获取对应的表达式内容 ( 等式, 不等式 )
+     * 获取 where 部分中与对应列相关的判断内容
+     *     如: 获取 where 中涉及 stu_1 列的所有 between 语句 (getBetweenStr("stu_1"))
      * @param columnName 列名称
      * @return
      */
     public String getEqStr(String columnName) {
         return getConditionStr(columnName, eqConditionMap);
     }
+
     public String getGtStr(String columnName) {
         return getConditionStr(columnName, gtConditionMap);
     }
+
     public String getLtStr(String columnName) {
         return getConditionStr(columnName, ltConditionMap);
     }
+
     public String getBetweenStr(String columnName) {
         return getConditionStr(columnName, betweenConditionMap);
     }
+
     public String getInStr(String columnName) {
         return getConditionStr(columnName, inConditionMap);
     }
 
 
     /**
-     * 将传入的条件解析为对应的表达式 ( 等式，不等式  )
+     * 解析传入的判断参数，将其转换为 SQL 字符串
      * @param columnName 列名称
      * @param columnValue 列值
      * @param or 表示是采取 or 拼接, 还是采取 and 拼接 ( 前缀区分 '*'/'#' )
-     * @return 返回处理初次处理后的 SQL 语句
+     * @return 处理后的 SQL 语句
      */
     private String parseEquation(String columnName, Object columnValue, String sign, boolean or) {
         StringBuilder parsedEq = new StringBuilder("");
@@ -304,6 +314,7 @@ public class SqlCondition {
 
         return parsedEq.toString();
     }
+
     private String parseBetween(String columnName, Object bottom, Object top, boolean or) {
         StringBuilder parsedBetween = new StringBuilder("");
 
@@ -324,6 +335,7 @@ public class SqlCondition {
 
         return parsedBetween.toString().trim();
     }
+
     private String parseIn(String columnName, List<Object> rangeList, boolean or) {
         StringBuilder parsedBetween = new StringBuilder("");
 
@@ -351,7 +363,7 @@ public class SqlCondition {
     }
 
     /**
-     * 将处理的条件语句插入到条件集合中
+     * 将转换后的 判断 SQL 依据列存放到对应的条件集合中
      * @param conditionMap 需要传入的条件集合
      * @param columnName 对应的条件列名
      * @param condStr 条件语句
@@ -369,7 +381,7 @@ public class SqlCondition {
 
 
     /**
-     * 获取对应列的条件内容
+     * 获取对应列的条件语句
      * @param columnName 查询的列名
      * @param conditionMap 用于存放条件语句的集合
      * @return
@@ -423,7 +435,7 @@ public class SqlCondition {
     }
 
     /**
-     * 根据内部配置生成不同的 Sql 语句
+     * 根据内部配置生成不同的 Sql 语句 ( select, update, delete, insert )
      * @return
      */
     private String generateInsertSql() {
@@ -490,8 +502,10 @@ public class SqlCondition {
     }
 
 
-    // 生成整个 SQL 不同部分的函数
-    // from, where, values, set...
+    /**
+     * 根据内部配置生成 SQL 整体语句的不同部分 ( where, from, having 等 )
+     * @return
+     */
     private String columnsInSql() {
         if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");
@@ -582,4 +596,7 @@ public class SqlCondition {
 
         return "";
     }
+
+
+
 }
