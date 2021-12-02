@@ -5,20 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// SQL 语句中相关的查询条件
+/**
+ * SQL 查询条件类
+ * 本质是将传入的数据转化为对应的 SQL 语句 或 SQL 字句, 通过原生的 JDBC 执行
+ */
 public class SqlCondition {
     // =============================================
     // 优化，根据 SqlCondition 获取传入的参数信息
     // =============================================
     // =============================================
-    // 优化，添加表连接内容
+    // 优化，添加表连接内容 ( left join .. on ....)
     // =============================================
     // =============================================
-    // 优化，添加 exists, like, groupby, order, limit 等条件
+    // 优化，添加 exists, like, group by, order, limit, having 等条件
     // =============================================
     // =============================================
     // 优化，根据传入的 DataSource 对象调用
     // =============================================
+    // =============================================
+    // 优化，子查询语句的支持
+    // =============================================
+    // =============================================
+    // 优化，添加分页查询效果
+    // =============================================
+
 
     
 
@@ -425,9 +435,8 @@ public class SqlCondition {
                         append(columnsInSql()).
                         append(")");
             }
-            insertBuilder.append(" ").
-                    append(valuesInSql());
-
+            insertBuilder.append(" ")
+                    .append(valuesInSql());
 
             return insertBuilder.toString();
         }
@@ -450,19 +459,32 @@ public class SqlCondition {
     private String generateDeleteSql() {
         StringBuilder deleteBuilder = new StringBuilder(opType);
 
+
+
         return deleteBuilder.toString();
     }
 
     private String generateUpdateSql() {
-        StringBuilder updateBuilder = new StringBuilder(opType);
+        if (!opColumns.isEmpty() && !opTables.isEmpty()) {
+            StringBuilder updateBuilder = new StringBuilder(opType);
+
+            updateBuilder.append(" ")
+                    .append(opTables.get(1))
+                    .append(" ")
+                    .append(setInSql())
+                    .append(" ")
+                    .append(whereInSql());
 
 
+            return updateBuilder.toString();
+        }
 
-        return updateBuilder.toString();
+        return "";
     }
 
 
     // 生成整个 SQL 不同部分的函数
+    // from, where, values, set...
     public String columnsInSql() {
         if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");
@@ -521,6 +543,24 @@ public class SqlCondition {
             valuesStr.append(")");
             valuesStr.deleteCharAt(valuesStr.length() - 2);
             return valuesStr.toString().trim();
+        }
+
+        return "";
+    }
+
+    public String setInSql() {
+        int setCount = Math.min(opColumns.size(), opValues.size());
+
+        if (setCount > 0) {
+            StringBuilder setStr = new StringBuilder("SET ");
+            for (int i = 0; i < setCount; i++) {
+                String expression = opColumns.get(i).concat(" = ")
+                        .concat(DBFormatter.formatObjToStr(opValues.get(i)));
+                setStr.append(expression).append(",");
+            }
+            setStr.deleteCharAt(setStr.length() - 1);
+
+            return setStr.toString().trim();
         }
 
         return "";
