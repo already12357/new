@@ -32,7 +32,7 @@ public class DBFormatter {
 
         String valueStr = String.valueOf(value);
 
-        // 判断传入的父类 value 是否为 String 类型
+        // 判断传入的父类 value 是否为 String 类型, 如果是 String 类型，则添加双引号 
         if (value.getClass().isAssignableFrom(String.class)) {
             return new String("'").concat(valueStr).concat("'");
         }
