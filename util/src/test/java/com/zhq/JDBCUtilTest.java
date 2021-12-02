@@ -88,8 +88,15 @@ public class JDBCUtilTest {
         sqlCondition.gt("we", "better", false);
         sqlCondition.gt("we", "better", false);
         sqlCondition.lt("hel", "we", false);
+        sqlCondition.between("hel", "1", "2", false);
+        sqlCondition.between("hel", "4", "4.54", false);
+        sqlCondition.between("hel", "5", "6", false);
+        sqlCondition.between("hel", "7", "10", false);
 
-        String sql = sqlCondition.getGtStr("we");
+        System.out.println(sqlCondition.getBetweenStr("46454"));
+        System.out.println(sqlCondition.whereInSql());
+
+        String sql = sqlCondition.getGtStr("564454");
         System.out.println(sql);
     }
 }

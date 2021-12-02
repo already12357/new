@@ -144,11 +144,7 @@ public class JDBCUtil {
 
     // 获取内部的数据源
     public static DataSource getInnerDS() {
-        if (null == innerDS) {
-            return innerDsWithConfig();
-        }
-
-        return innerDS;
+        return innerDsWithConfig();
     }
 
     /**
@@ -324,22 +320,72 @@ public class JDBCUtil {
 
 
     /**
-     * 传入自定义的 SqlCondition 对象, 使用内部的数据源进行操作
+     * 传入自定义的 SqlCondition 对象, 使用内部的数据源进行操作, 进行数据库操作 ( select, insert, update, delete )
+     * @param sqlCondition 请求的查询条件
      */
-    public static void innerOperateSql(SqlCondition sqlCondition) {
+    public static ResultSet innerSelectSql(SqlCondition sqlCondition) {
         String sql = sqlCondition.generateSql();
         Connection connection = null;
         PreparedStatement ps = null;
 
         try {
             connection = getInnerDS().getConnection();
+            ps = connection.prepareStatement(sql);
+            ResultSet resultSet = ps.executeQuery();
 
-            switch (sqlCondition.getOpType()) {
-                case ConstUtil.
-            }
+            return resultSet;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+    public static boolean innerInsertSql(SqlCondition sqlCondition) {
+        String sql = sqlCondition.generateSql();
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getInnerDS().getConnection();
+            ps = connection.prepareStatement(sql);
+
+            return ps.execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public static int innerUpdateSql(SqlCondition sqlCondition) {
+        String sql = sqlCondition.generateSql();
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getInnerDS().getConnection();
+            ps = connection.prepareStatement(sql);
+
+            return ps.executeUpdate();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    public static boolean innerDeleteSql(SqlCondition sqlCondition) {
+        String sql = sqlCondition.generateSql();
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getInnerDS().getConnection();
+            ps = connection.prepareStatement(sql);
+
+            return ps.execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

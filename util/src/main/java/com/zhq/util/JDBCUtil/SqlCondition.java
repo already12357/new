@@ -1,9 +1,9 @@
 package com.zhq.util.JDBCUtil;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // SQL 语句中相关的查询条件
 public class SqlCondition {
@@ -11,25 +11,39 @@ public class SqlCondition {
     private String opType;
     // where 部分的所有条件内容集合
     private List<HashMap<String, List<String>>> whereConditionList;
-    // 大于, 小于, 等于等式存储在 HashMap 中
-    // 列
+
+
+    // '>', '<', '=', between, in条件存储在 HashMap 中
+    // 根据 列名 --> 列名对应的表达式集合 存储
     private HashMap<String, List<String>> eqConditionMap;
     private HashMap<String, List<String>> gtConditionMap;
     private HashMap<String, List<String>> ltConditionMap;
-    // 查询信息
+    private HashMap<String, List<String>> betweenConditionMap;
+    private HashMap<String, List<String>> inConditionMap;
+    // 操作列对应的值
+    // 操作列
     private List<String> opColumns;
+    // 表格名称
+    private List<String> opTables;
 
     public SqlCondition() {
+        // 优化, 使用 get + 懒加载
         ltConditionMap = new HashMap<String, List<String>>();
         gtConditionMap = new HashMap<String, List<String>>();
         eqConditionMap = new HashMap<String, List<String>>();
+        betweenConditionMap = new HashMap<String, List<String>>();
+        inConditionMap = new HashMap<String, List<String>>();
         whereConditionList = new ArrayList<HashMap<String, List<String>>>();
+
         opColumns = new ArrayList<>();
+        opTables = new ArrayList<>();
 
         opType = ConstUtil.OP_SELECT;
         whereConditionList.add(ltConditionMap);
         whereConditionList.add(gtConditionMap);
         whereConditionList.add(eqConditionMap);
+        whereConditionList.add(betweenConditionMap);
+        whereConditionList.add(inConditionMap);
     }
 
     public void setOpType(String opType) {
@@ -40,7 +54,7 @@ public class SqlCondition {
     }
 
     /**
-     * 将等式条件添加到对象中 ( 大于, 小于, 等于 )
+     * 将条件添加到条件存储对象中 ( 大于, 小于, 等于, between, in )
      * @param columnName 条件的列
      * @param columnValue 值
      * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
@@ -48,19 +62,40 @@ public class SqlCondition {
     public void gt(String columnName, String columnValue, boolean or) {
         String sign = ">";
         String gtStr = parseEquation(columnName, columnValue, sign, or);
-        addEquation(gtConditionMap, columnName, gtStr);
+        addConditionStr(gtConditionMap, columnName, gtStr);
     }
     public void eq(String columnName, String columnValue, boolean or) {
         String sign = "=";
         // 解析传入的内容，转换为表达式
         String eqStr = parseEquation(columnName, columnValue, sign, or);
-        addEquation(eqConditionMap, columnName, eqStr);
+        addConditionStr(eqConditionMap, columnName, eqStr);
     }
     public void lt(String columnName, String columnValue, boolean or) {
         String sign = "<";
         // 解析传入的内容，转换为表达式
         String ltStr = parseEquation(columnName, columnValue, sign, or);
-        addEquation(eqConditionMap, columnName, ltStr);
+        addConditionStr(eqConditionMap, columnName, ltStr);
+    }
+    public void between(String columnName, String bottom, String top, boolean or) {
+        // 将传入内容解析为字符串
+        String betweenStr = parseBetween(columnName, bottom, top, or);
+        // 将解析后的 Between 语句加入到集合中
+        addConditionStr(betweenConditionMap, columnName, betweenStr);
+    }
+    public void in(String columnName, List<String> rangeList, boolean or) {
+        String inStr = parseIn(columnName, rangeList, or);
+        addConditionStr(inConditionMap, columnName, inStr);
+    }
+
+
+    /**
+     * 添加操作所需的列
+     * @param columnName 列名称
+     */
+    public void column(String columnName) {
+        if (!opColumns.contains(columnName)) {
+            opColumns.add(columnName);
+        }
     }
 
 
@@ -70,16 +105,21 @@ public class SqlCondition {
      * @return
      */
     public String getEqStr(String columnName) {
-        return getEquationStr(columnName, eqConditionMap);
+        return getConditionStr(columnName, eqConditionMap);
     }
     public String getGtStr(String columnName) {
-        return getEquationStr(columnName, gtConditionMap);
+        return getConditionStr(columnName, gtConditionMap);
     }
     public String getLtStr(String columnName) {
-        return getEquationStr(columnName, ltConditionMap);
+        return getConditionStr(columnName, ltConditionMap);
     }
-    
-    
+    public String getBetweenStr(String columnName) {
+        return getConditionStr(columnName, betweenConditionMap);
+    }
+    public String getInStr(String columnName) {
+        return getConditionStr(columnName, inConditionMap);
+    }
+
 
     /**
      * 将传入的条件解析为对应的表达式 ( 等式，不等式  )
@@ -100,9 +140,46 @@ public class SqlCondition {
 
         parsedEq.append("(" + columnName);
         parsedEq.append(sign);
-        parsedEq.append("'" + columnValue + "')");
+        parsedEq.append(columnValue + ")");
 
         return parsedEq.toString();
+    }
+    private String parseBetween(String columnName, String bottom, String top, boolean or) {
+        StringBuilder parsedBetween = new StringBuilder("");
+
+        if (or) {
+            parsedBetween.append("*");
+        }
+        else {
+            parsedBetween.append("#");
+        }
+
+        parsedBetween.append("(");
+        parsedBetween.append(columnName + " BETWEEN " + bottom + " AND " + top);
+        parsedBetween.append(")");
+
+        return parsedBetween.toString();
+    }
+    private String parseIn(String columnName, List<String> rangeList, boolean or) {
+        StringBuilder parsedBetween = new StringBuilder("");
+
+        if (or) {
+            parsedBetween.append("*");
+        }
+        else {
+            parsedBetween.append("#");
+        }
+
+        parsedBetween.append("(");
+        parsedBetween.append(columnName + " IN (");
+        for (String range : rangeList) {
+            parsedBetween.append("'" + range + "',");
+        }
+        parsedBetween.append(")");
+        parsedBetween.append(")");
+        parsedBetween.deleteCharAt(parsedBetween.length() - 3);
+
+        return parsedBetween.toString();
     }
 
     /**
@@ -111,7 +188,7 @@ public class SqlCondition {
      * @param columnName 对应的条件列名
      * @param condStr 条件语句
      */
-    private void addEquation(HashMap<String, List<String>> conditionMap, String columnName, String condStr) {
+    private void addConditionStr(HashMap<String, List<String>> conditionMap, String columnName, String condStr) {
         if (null == conditionMap.get(columnName)) {
             List<String> eqList = new ArrayList<>();
             eqList.add(condStr);
@@ -122,21 +199,22 @@ public class SqlCondition {
         }
     }
 
+
     /**
-     * 获取对应列的表达式
+     * 获取对应列的条件内容
      * @param columnName 查询的列名
      * @param conditionMap 用于存放条件语句的集合
      * @return
      */
-    private String getEquationStr(String columnName, HashMap<String, List<String>> conditionMap) {
-        List<String> eqList = conditionMap.get(columnName);
+    private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
+        List<String> condStrList = conditionMap.get(columnName);
         StringBuilder findSql = new StringBuilder("");
         String sqlRet = "";
         int startIndex = 0;
 
-        if (null != eqList && !eqList.isEmpty()) {
-            for (int i = 0; i < eqList.size(); i++) {
-                String equation = eqList.get(i);
+        if (null != condStrList && !condStrList.isEmpty()) {
+            for (int i = 0; i < condStrList.size(); i++) {
+                String equation = condStrList.get(i);
 
                 if (equation.charAt(0) == '*') {
                     equation = " or " + equation.substring(2, equation.length() - 1);
@@ -183,26 +261,66 @@ public class SqlCondition {
      */
     private String generateInsertSql() {
         StringBuilder insertBuilder = new StringBuilder("");
+        insertBuilder.append(opType);
+
+
 
         return insertBuilder.toString();
     }
     private String generateSelectSql() {
         StringBuilder selectBuilder = new StringBuilder("");
 
-
+        // 逐次拼接对应的内容
         selectBuilder.append(opType);
-
+        selectBuilder.append(columnsInSql());
+        selectBuilder.append(fromInSql());
+        selectBuilder.append(whereInSql());
 
         return selectBuilder.toString();
     }
     private String generateDeleteSql() {
         StringBuilder deleteBuilder = new StringBuilder("");
 
+
         return deleteBuilder.toString();
     }
     private String generateUpdateSql() {
         StringBuilder updateBuilder = new StringBuilder("");
 
+        updateBuilder.append(opType);
+
         return updateBuilder.toString();
     }
+
+
+
+    private String columnsInSql() {
+        StringBuilder columnsStr = new StringBuilder("");
+
+
+
+        return columnsStr.toString();
+    }
+
+    private String fromInSql() {
+        StringBuilder fromStr = new StringBuilder("");
+
+
+
+        return fromStr.toString();
+    }
+
+    public String whereInSql() {
+        StringBuilder whereStr = new StringBuilder("where");
+
+        for (HashMap<String, List<String>> part : whereConditionList) {
+            for (Map.Entry<String, List<String>> entry : part.entrySet()) {
+                String columnName = entry.getKey();
+                whereStr.append(getConditionStr(columnName, part));
+            }
+        }
+
+        return whereStr.toString();
+    }
+
 }
