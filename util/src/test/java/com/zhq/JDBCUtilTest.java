@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JDBCUtilTest {
     @Autowired
@@ -76,35 +78,43 @@ public class JDBCUtilTest {
 
     @Test
     public void testSqlCondition() throws SQLException {
-        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
-        DBUtil.setUsername("root");
-        DBUtil.setPassword("Gepoint");
-        DBUtil.setPoolType(DBConstant.POOL_C3P0);
+//        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
+//        DBUtil.setUsername("root");
+//        DBUtil.setPassword("Gepoint");
+//        DBUtil.setPoolType(DBConstant.POOL_C3P0);
+//
+//        DataSource innerDS = DBUtil.getInnerDS();
+//
+//        SqlCondition sqlInsert = new SqlCondition();
+//        sqlInsert.toInsert()
+//                .onColumn("c_id", "cname", "user_id")
+//                .inTables("course_1")
+//                .withValue(18, "Eddie_Zhang", 61561);
+//        DBUtil.innerInsertSql(sqlInsert);
 
-        DataSource innerDS = DBUtil.getInnerDS();
 
-        SqlCondition sqlInsert = new SqlCondition();
-        sqlInsert.toInsert()
-                .onColumn("c_id", "cname", "user_id")
-                .inTables("course_1")
-                .withValue(18, "Eddie_Zhang", 61561);
-        DBUtil.innerInsertSql(sqlInsert);
+//        SqlCondition sqlQuery = new SqlCondition();
+//        sqlQuery.toSelect()
+//                .inTables("course_1")
+//                .onColumn("c_id")
+//                .eq("cstatus", null)
+//                .between("c_id", 8, 11);
+//
+//        ResultSet resultSet = DBUtil.innerSelectSql(sqlQuery);
+//
+//        while (resultSet.next()) {
+//            int read = resultSet.getInt(1);
+//            System.out.println(read);
+//        }
+//
+//        System.out.println(resultSet);
 
-
-        SqlCondition sqlQuery = new SqlCondition();
-        sqlQuery.toSelect()
-                .inTables("course_1")
-                .onColumn("c_id")
-                .eq("cstatus", null)
-                .between("c_id", 8, 11);
-
-        ResultSet resultSet = DBUtil.innerSelectSql(sqlQuery);
-
-        while (resultSet.next()) {
-            int read = resultSet.getInt(1);
-            System.out.println(read);
-        }
-
-        System.out.println(resultSet);
+        SqlCondition sqlUpdate = new SqlCondition();
+        List<Object> rangeList = new ArrayList<>();
+        rangeList.add("4");
+        rangeList.add("7");
+        sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
+        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
+        System.out.println(updateBatch);
     }
 }

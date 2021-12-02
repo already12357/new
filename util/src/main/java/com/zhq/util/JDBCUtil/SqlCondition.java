@@ -211,7 +211,7 @@ public class SqlCondition {
      * 添加操作所需的列 ,表 或 值 - 链式写法
      * @param columnName 列名称 / 表名称
      */
-    public SqlCondition onColumn(String columnName, String...columnNames) {
+    public SqlCondition columns(String columnName, String...columnNames) {
         if (!opColumns.contains(columnName)) {
             opColumns.add(columnName);
         }
@@ -223,7 +223,7 @@ public class SqlCondition {
         }
         return this;
     }
-    public SqlCondition inTables(String tableName, String...tableNames) {
+    public SqlCondition tables(String tableName, String...tableNames) {
         if (!opTables.contains(tableName)) {
             opTables.add(tableName);
         }
@@ -236,7 +236,7 @@ public class SqlCondition {
 
         return this;
     }
-    public SqlCondition withValue(Object value, Object...valueContents) {
+    public SqlCondition values(Object value, Object...valueContents) {
         opValues.add(value);
         for (Object extraValue : valueContents) {
             opValues.add(extraValue);
@@ -457,11 +457,15 @@ public class SqlCondition {
     }
 
     private String generateDeleteSql() {
-        StringBuilder deleteBuilder = new StringBuilder(opType);
+        if (!opTables.isEmpty()) {
+            StringBuilder deleteBuilder = new StringBuilder(opType);
 
+            deleteBuilder.append(" ").append(tableInSql());
 
+            return deleteBuilder.toString();
+        }
 
-        return deleteBuilder.toString();
+        return "";
     }
 
     private String generateUpdateSql() {
@@ -469,12 +473,11 @@ public class SqlCondition {
             StringBuilder updateBuilder = new StringBuilder(opType);
 
             updateBuilder.append(" ")
-                    .append(opTables.get(1))
+                    .append(tableInSql())
                     .append(" ")
                     .append(setInSql())
                     .append(" ")
                     .append(whereInSql());
-
 
             return updateBuilder.toString();
         }
@@ -485,7 +488,7 @@ public class SqlCondition {
 
     // 生成整个 SQL 不同部分的函数
     // from, where, values, set...
-    public String columnsInSql() {
+    private String columnsInSql() {
         if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");
 
@@ -499,9 +502,19 @@ public class SqlCondition {
         return "";
     }
 
-    public String fromInSql() {
+    private String fromInSql() {
         if (!opTables.isEmpty()) {
             StringBuilder fromStr = new StringBuilder("FROM ");
+            fromStr.append(tableInSql());
+            return fromStr.toString().trim();
+        }
+
+        return "";
+    }
+
+    private String tableInSql() {
+        if (!opTables.isEmpty()) {
+            StringBuilder fromStr = new StringBuilder("");
 
             for (String table : opTables) {
                 fromStr.append(table + ",");
@@ -513,7 +526,7 @@ public class SqlCondition {
         return "";
     }
 
-    public String whereInSql() {
+    private String whereInSql() {
         if (!whereConditionList.isEmpty()) {
             StringBuilder whereStr = new StringBuilder("WHERE ");
 
@@ -532,7 +545,7 @@ public class SqlCondition {
         return "";
     }
 
-    public String valuesInSql() {
+    private String valuesInSql() {
         if (!opValues.isEmpty()) {
             StringBuilder valuesStr = new StringBuilder("VALUES").append("(");
 
@@ -548,7 +561,7 @@ public class SqlCondition {
         return "";
     }
 
-    public String setInSql() {
+    private String setInSql() {
         int setCount = Math.min(opColumns.size(), opValues.size());
 
         if (setCount > 0) {
@@ -558,8 +571,8 @@ public class SqlCondition {
                         .concat(DBFormatter.formatObjToStr(opValues.get(i)));
                 setStr.append(expression).append(",");
             }
-            setStr.deleteCharAt(setStr.length() - 1);
 
+            setStr.deleteCharAt(setStr.length() - 1);
             return setStr.toString().trim();
         }
 
