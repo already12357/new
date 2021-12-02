@@ -24,6 +24,8 @@ public class SqlCondition {
     private List<String> opColumns;
     // 表格名称
     private List<String> opTables;
+    // 操作中需要用到的值
+    private List<String> opValues;
 
     // 使用 Get 获取对应的条件内容,  并使用懒加载
     private HashMap<String, List<String>> getLtConditionMap() {
@@ -63,8 +65,9 @@ public class SqlCondition {
     }
 
     public SqlCondition() {
-        opColumns = new ArrayList<>();
-        opTables = new ArrayList<>();
+        opColumns = new ArrayList<String>();
+        opTables = new ArrayList<String>();
+        opValues = new ArrayList<String>();
 
         opType = DBConstant.OP_SELECT;
 
@@ -147,7 +150,13 @@ public class SqlCondition {
 
         return this;
     }
-    public SqlCondition withValue() {
+    public SqlCondition withValue(Object value, Object...valueContents) {
+
+
+        for (Object extraValue : valueContents) {
+
+        }
+
         return this;
     }
 
@@ -325,16 +334,12 @@ public class SqlCondition {
         if (!opTables.isEmpty()) {
             StringBuilder insertBuilder = new StringBuilder("");
 
-            insertBuilder.append(opType + " INTO ");
-            if (null != opTables && !opTables.isEmpty()) {
-                insertBuilder.append(opTables.get(0));
-            }
+            insertBuilder.append(opType + " INTO ")
+                    .append(opTables.get(0));
             if (null != opColumns && !opColumns.isEmpty()) {
                 insertBuilder.append("(").append(columnsInSql()).append(")");
             }
             insertBuilder.append(" VALUES ");
-
-
 
             return insertBuilder.toString();
         }
@@ -343,23 +348,16 @@ public class SqlCondition {
     }
     private String generateSelectSql() {
         StringBuilder selectBuilder = new StringBuilder("");
-
         // 逐次拼接对应的内容
-        selectBuilder.append(opType);
-        selectBuilder.append(" ");
-        selectBuilder.append(columnsInSql());
-        selectBuilder.append(" ");
-        selectBuilder.append(fromInSql());
-        selectBuilder.append(" ");
-        selectBuilder.append(whereInSql());
-
+        selectBuilder.append(opType).
+                append(" ").append(columnsInSql()).
+                append(" ").append(fromInSql()).
+                append(" ").append(whereInSql());
         return selectBuilder.toString().trim();
     }
 
     private String generateDeleteSql() {
         StringBuilder deleteBuilder = new StringBuilder("");
-
-
 
         return deleteBuilder.toString().trim();
     }

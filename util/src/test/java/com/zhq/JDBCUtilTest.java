@@ -83,15 +83,18 @@ public class JDBCUtilTest {
         DBUtil.setPoolType(DBConstant.POOL_C3P0);
 
         SqlCondition sqlCondition = new SqlCondition();
-        sqlCondition.onColumn("*").inTables("course_1").gt("c_id", String.valueOf(8), false);
+        sqlCondition.onColumn("*")
+                .inTables("course_1")
+                .gt("c_id", String.valueOf(8), false)
+                .withValue("value1", 1, true);
 
-        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
+//        ResultSet resultSet = DBUtil.innerSelectSql(sqlCondition);
 
-        while (resultSet.next()) {
-            int read = resultSet.getInt(1);
-            System.out.println(read);
-        }
+//        while (resultSet.next()) {
+//            int read = resultSet.getInt(1);
+//            System.out.println(read);
+//        }
 
-        System.out.println(resultSet);
+//        System.out.println(resultSet);
     }
 }
