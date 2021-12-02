@@ -1,19 +1,11 @@
 package com.zhq.util.JDBCUtil;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.zhq.util.ResourceUtil;
-import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Locale;
-import java.util.Properties;
 
 /**
  * 优化，使用反射创建数据库, 减少代码引用
@@ -36,61 +28,61 @@ public class DBUtil {
     private static String innerPassword = "root";
 
 
-    /**
-     * 根据配置文件获取对应的数据源对象
-     * @param propertyFile 配置文件
-     * @return
-     */
-    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
-        DataSource dataSource = null;
-        Properties prop = new Properties();
-        InputStream fin = null;
+//    /**
+//     * 根据配置文件获取对应的数据源对象
+//     * @param propertyFile 配置文件
+//     * @return
+//     */
+//    public static DataSource druidDataSourceWithPropertiesFile(File propertyFile) {
+//        DataSource dataSource = null;
+//        Properties prop = new Properties();
+//        InputStream fin = null;
+//
+//        try {
+//            fin = new FileInputStream(propertyFile);
+//            prop.load(fin);
+//            dataSource = DruidDataSourceFactory.createDataSource(prop);
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//            ResourceUtil.closeResources(fin);
+//        }
+//
+//        return dataSource;
+//    }
+//
+//    public static DataSource druidDataSourceWithProperties(Properties properties) {
+//        DruidDataSource dataSource = new DruidDataSource();
+//        dataSource.configFromPropety(properties);
+//        return dataSource;
+//    }
 
-        try {
-            fin = new FileInputStream(propertyFile);
-            prop.load(fin);
-            dataSource = DruidDataSourceFactory.createDataSource(prop);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            ResourceUtil.closeResources(fin);
-        }
-
-        return dataSource;
-    }
-
-    public static DataSource druidDataSourceWithProperties(Properties properties) {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.configFromPropety(properties);
-        return dataSource;
-    }
-
-    // 将文件插入到对应的表中(Blob 类型)
-    public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {
-        String sql = "insert into " + tableName + "(`" + columnName + "`) values(?)";
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        FileInputStream fIn = null;
-        boolean inserted = false;
-
-        try {
-            connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-
-            fIn = new FileInputStream(file);
-            preparedStatement.setBlob(1, fIn);
-            inserted = preparedStatement.execute();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            ResourceUtil.closeResources(fIn);
-        }
-
-        return inserted;
-    }
+//    // 将文件插入到对应的表中(Blob 类型)
+//    public static boolean insertFileToTable(File file, String tableName, String columnName, DataSource dataSource) {
+//        String sql = "insert into " + tableName + "(`" + columnName + "`) values(?)";
+//        Connection connection = null;
+//        PreparedStatement preparedStatement = null;
+//        FileInputStream fIn = null;
+//        boolean inserted = false;
+//
+//        try {
+//            connection = dataSource.getConnection();
+//            preparedStatement = connection.prepareStatement(sql);
+//
+//            fIn = new FileInputStream(file);
+//            preparedStatement.setBlob(1, fIn);
+//            inserted = preparedStatement.execute();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            ResourceUtil.closeResources(fIn);
+//        }
+//
+//        return inserted;
+//    }
 
 
 //    // 从表中读取对应的二进制数据(Blob 类型)
@@ -176,12 +168,23 @@ public class DBUtil {
     public static DataSource innerDbcpDataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
-                innerDS = new BasicDataSource();
+                try {
+                    // 使用反射调用, 减少依赖引入
+                    Class dsClazz = Class.forName(DBConstant.CLASS_DBCP_DS);
+                    Method userSetter = dsClazz.getMethod("setUsername", String.class);
+                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+                    Method urlSetter = dsClazz.getMethod("setUrl", String.class);
+                    Method driverSetter = dsClazz.getMethod("setDriverClassName", String.class);
 
-                ((BasicDataSource) innerDS).setUsername(innerUsername);
-                ((BasicDataSource) innerDS).setPassword(innerPassword);
-                ((BasicDataSource) innerDS).setUrl(innerUrl);
-                ((BasicDataSource) innerDS).setDriverClassName(driverStrWithDbType(innerDbType));
+                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
+                    userSetter.invoke(innerDS, innerUsername);
+                    passwdSetter.invoke(innerDS, innerPassword);
+                    urlSetter.invoke(innerDS, innerUrl);
+                    driverSetter.invoke(innerDS, driverStrWithDbType(innerDbType));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             return innerDS;
@@ -190,13 +193,19 @@ public class DBUtil {
     public static DataSource innerC3p0DataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
-                innerDS = new ComboPooledDataSource();
-
                 try {
-                    ((ComboPooledDataSource) innerDS).setUser(innerUsername);
-                    ((ComboPooledDataSource) innerDS).setPassword(innerPassword);
-                    ((ComboPooledDataSource) innerDS).setJdbcUrl(innerUrl);
-                    ((ComboPooledDataSource) innerDS).setDriverClass(driverStrWithDbType(innerDbType));
+                    // 使用反射调用, 减少依赖引入
+                    Class dsClazz = Class.forName(DBConstant.CLASS_C3P0_DS);
+                    Method userSetter = dsClazz.getMethod("setUser", String.class);
+                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+                    Method urlSetter = dsClazz.getMethod("setJdbcUrl", String.class);
+                    Method driverSetter = dsClazz.getMethod("setDriverClass", String.class);
+
+                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
+                    userSetter.invoke(innerDS, innerUsername);
+                    passwdSetter.invoke(innerDS, innerPassword);
+                    urlSetter.invoke(innerDS, innerUrl);
+                    driverSetter.invoke(innerDS, driverStrWithDbType(innerDbType));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -210,7 +219,7 @@ public class DBUtil {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
-                    // 防止依赖绑定, 使用反射调用
+                    // 使用反射调用, 减少依赖引入
                     Class dsClazz = Class.forName(DBConstant.CLASS_DRUID_DS);
                     Method userSetter = dsClazz.getMethod("setUsername", String.class);
                     Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
@@ -222,16 +231,8 @@ public class DBUtil {
                     passwdSetter.invoke(innerDS, innerPassword);
                     urlSetter.invoke(innerDS, innerUrl);
                     driverSetter.invoke(innerDS, driverWithDBType(innerDbType));
-
-
-//                    // 主动调用
-//                    innerDS = new DruidDataSource();
-//                    ((DruidDataSource) innerDS).setUsername(innerUsername);
-//                    ((DruidDataSource) innerDS).setPassword(innerPassword);
-//                    ((DruidDataSource) innerDS).setUrl(innerUrl);
-//                    ((DruidDataSource) innerDS).setDriver(driverWithDBType(innerDbType));
-
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             }
