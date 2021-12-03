@@ -1,7 +1,10 @@
 package com.zhq.util.JDBCUtil;
 
+import java.sql.ResultSet;
+
 /**
- * 用于处理不同种类 SQL 语言中的格式问题
+ * 用于处理不同种类 SQL 语言中的 格式 和 转化 问题
+ * @author Eddie Zhang
  */
 public class DBFormatter {
     /**
@@ -29,4 +32,13 @@ public class DBFormatter {
         return valueStr;
     }
 
+
+    /**
+     * 将传入的数据库查询结果, 通过返回
+     * @param queryResult
+     * @return
+     */
+    public static String formatResultSetToJson(ResultSet queryResult) {
+
+    }
 }

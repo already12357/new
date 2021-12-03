@@ -1,16 +1,15 @@
 package com.zhq.util.JDBCUtil;
 
-import com.zhq.util.ResourceUtil;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Locale;
 
-/**
- * 优化，使用反射创建数据库, 减少代码引用
- */
 
+/**
+ * 数据库的帮助类，可以快速生成静态数据源对象, 并执行查询语句
+ * @author Eddie Zhang
+ */
 public class DBUtil {
     // 内部配置一个静态的数据源类
     private static DataSource innerDS;

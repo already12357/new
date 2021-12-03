@@ -83,7 +83,6 @@ public class JDBCUtilTest {
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
         DBUtil.setPoolType(DBConstant.POOL_DRUID);
-
         DataSource innerDS = DBUtil.getInnerDS();
 
         // 增
@@ -96,7 +95,9 @@ public class JDBCUtilTest {
         SqlCondition selectCondition = new SqlCondition();
         selectCondition.select_col("*")
                 .from("course_1")
-                .where().eq("cname", "p999").eq(DBConstant.SQL_AND, "c_id", 15);
+                .where()
+                .eq("cname", "p999")
+                .like(DBConstant.SQL_AND, "cstatus", "%14%");
 
         ResultSet resultSet = null;
 
@@ -117,7 +118,9 @@ public class JDBCUtilTest {
 
         // 改
         SqlCondition updateCondition = new SqlCondition();
-        updateCondition.update_table("course_1").set_col("cname").values("p999").where().lt("c_id", 11);
+        updateCondition.update_table("course_1").set_col("cname").values("p999")
+                .where()
+                .lt("c_id", 11);
         System.out.println(updateCondition.executedBy(innerDS));
 
 
@@ -143,7 +146,6 @@ public class JDBCUtilTest {
         catch (Exception e) {
             e.printStackTrace();
         }
-
 
         SqlCondition deleteCondition = new SqlCondition();
         deleteCondition.delete_from("course_1").where().eq("c_id", 7);

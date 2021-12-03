@@ -14,7 +14,9 @@ import java.util.Map;
  * SQL 查询条件类
  * 本质是将传入的数据转化为对应的 SQL 语句, 通过原生的 JDBC 执行
  * 流程为：
- * 1. 将传入的条件转化后存入到条件集合中 (eqConditionMap, gtConditionMap, ltConditionMap...)
+ * 1. 将传入的条件转化后存入到条件集合 (eqConditionMap, gtConditionMap, ltConditionMap...), 操作相关的 表集合，值集合，列集合
+ * 2. 解析集合中的内容，将其通过部分转化的形式 ( where, from 等部分 )， 转化后拼接成完整的 SQL 字符串
+ * 3. 通过解析解析拼接的字符串，来调用执行对应的 SQL 操作 
  */
 public class SqlCondition {
     // =============================================
@@ -24,7 +26,7 @@ public class SqlCondition {
     // 优化，添加表连接内容 ( left join .. on ....)
     // =============================================
     // =============================================
-    // 优化，添加 exists, like, group by, order, limit, having 等条件
+    // 优化，添加 exists, group by, order, limit, having 等条件
     // =============================================
     // =============================================
     // 优化，根据传入的 DataSource 对象调用
@@ -45,10 +47,6 @@ public class SqlCondition {
     // 优化，Json 执行格式返回
     // =============================================
 
-    
-
-    // 数据库类型
-    private String dbType;
 
     // where 部分的所有条件内容集合
     private List<HashMap<String, List<String>>> whereConditionList;
@@ -71,6 +69,9 @@ public class SqlCondition {
     private List<Object> opValues;
     // 操作类型 ( 增删查改 )
     private String opType;
+    // 数据库类型
+    private String dbType;
+
 
     // 使用 Get 获取对应的条件内容,  并使用懒加载
     // clearCondition 清楚相关的数据内容
@@ -184,7 +185,7 @@ public class SqlCondition {
     }
 
     /**
-     * select 语句组, 可以用于生成对应的 select 语句
+     * delete 语句组, 可以用于生成对应的 delete 语句
      * @return
      */
     public SqlCondition delete_from(String tableName, String...tableNames) {
@@ -300,11 +301,11 @@ public class SqlCondition {
 
     public SqlCondition like(String append, String columnName, String columnValue) {
         String likeStr = parseEquation(append, columnName, columnValue, " LIKE ");
-        addConditionStr(likeConditionMap, columnName, likeStr);
+        addConditionStr(getLikeConditionMap(), columnName, likeStr);
         return this;
     }
-    public SqlCondition like(String columnName, String likeStr) {
-        return like(DBConstant.SQL_AND, columnName, likeStr);
+    public SqlCondition like(String columnName, String columnValue) {
+        return like(DBConstant.SQL_AND, columnName, columnValue);
     }
 
 //    public SqlCondition exists();
