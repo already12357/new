@@ -203,7 +203,8 @@ public class DBUtil {
                 default:
                     return (Driver) Class.forName(DBConstant.DRIVER_MYSQL_5).newInstance();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }

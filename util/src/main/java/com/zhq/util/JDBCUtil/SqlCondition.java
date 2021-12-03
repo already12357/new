@@ -60,6 +60,7 @@ public class SqlCondition {
     private HashMap<String, List<String>> ltConditionMap;
     private HashMap<String, List<String>> betweenConditionMap;
     private HashMap<String, List<String>> inConditionMap;
+    private HashMap<String, List<String>> likeConditionMap;
 
     // 操作列对应的值
     // 当前操作列
@@ -107,6 +108,13 @@ public class SqlCondition {
             whereConditionList.add(betweenConditionMap);
         }
         return betweenConditionMap;
+    }
+    private HashMap<String, List<String>> getLikeConditionMap() {
+        if (null == likeConditionMap) {
+            likeConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(likeConditionMap);
+        }
+        return likeConditionMap;
     }
 
     public SqlCondition() {
@@ -290,7 +298,9 @@ public class SqlCondition {
         return between(DBConstant.SQL_AND, columnName, bottom, top);
     }
 
-    public SqlCondition like(String append, String columnName, String likeStr) {
+    public SqlCondition like(String append, String columnName, String columnValue) {
+        String likeStr = parseEquation(append, columnName, columnValue, " LIKE ");
+        addConditionStr(likeConditionMap, columnName, likeStr);
         return this;
     }
     public SqlCondition like(String columnName, String likeStr) {
@@ -393,6 +403,7 @@ public class SqlCondition {
      * @param append 拼接方式, 使用 and / or ( 通过前缀 * / # 区分 ), 对应常量 DBConstant.SQL_AND, DBConstant.SQL_OR
      * @param columnName 列名称
      * @param columnValue 列值
+     * @param sign 连接两者的操作符 ( '=', ' > ', ' < ', 'like' ... )
      * @return 处理后的 SQL 语句
      */
     private String parseEquation(String append, String columnName, Object columnValue, String sign) {
@@ -754,5 +765,6 @@ public class SqlCondition {
         eqConditionMap = null;
         betweenConditionMap = null;
         inConditionMap = null;
+        likeConditionMap = null;
     }
 }
