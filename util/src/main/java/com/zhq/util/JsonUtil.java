@@ -3,8 +3,11 @@ package com.zhq.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zhq.util.JDBCUtil.DBFormatter;
 
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +84,44 @@ public class JsonUtil {
         return retArray;
     }
 
+
+
+    /**
+     * 将数据库查询的 ResultSet 对象转换为对应的 JSONString 对象,
+     * 使用 JSONObject 对象获取
+     * @param queryResult
+     * @return
+     */
+    public static String jResultSetToJson(ResultSet queryResult) {
+        try {
+            JSONArray jResultSet = new JSONArray();
+            ResultSetMetaData metaData = queryResult.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (queryResult.next()) {
+                JSONObject jElement = new JSONObject();
+
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    Object columnValue = queryResult.getObject(i);
+                    jElement.put(columnName, columnValue);
+                }
+
+                jResultSet.add(jElement);
+            }
+
+            return jResultSet.toJSONString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+
+
 //      根据传入的泛型将 JSONArray 转换为对应的原生数组 ( 暂时无法实现 )
 //      由于泛型在 Java 存在泛型擦除问题，即在加载时会将除类上标记的泛型全部擦除，所以无法获得泛型的类
 //    public static <T> T[] jArrayToNativeArray(String jsonStr) {}
+
 }

@@ -4,6 +4,7 @@ import com.alibaba.druid.util.JdbcUtils;
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;
 import com.zhq.util.JDBCUtil.SqlCondition;
+import com.zhq.util.JsonUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -103,6 +104,7 @@ public class JDBCUtilTest {
 
         try {
             resultSet = (ResultSet) selectCondition.executedBy(innerDS);
+            System.out.println(JsonUtil.jResultSetToJson(resultSet));
 
             while (resultSet.next()) {
                 System.out.print(resultSet.getInt(1));

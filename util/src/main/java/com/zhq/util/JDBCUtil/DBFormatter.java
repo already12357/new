@@ -1,6 +1,11 @@
 package com.zhq.util.JDBCUtil;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
 /**
  * 用于处理不同种类 SQL 语言中的 格式 和 转化 问题
@@ -39,6 +44,26 @@ public class DBFormatter {
      * @return
      */
     public static String formatResultSetToJson(ResultSet queryResult) {
+        try {
+            JSONArray jResultSet = new JSONArray();
+            ResultSetMetaData metaData = queryResult.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
+            while (queryResult.next()) {
+                for (int i = 0; i < columnCount; i++) {
+                    JSONObject jElement = new JSONObject();
+                    String columnName = metaData.getColumnLabel(i);
+                    String columnValue = DBFormatter.formatObjToStr(queryResult.getObject(i));
+                    jElement.put(columnName, columnValue);
+                    jResultSet.add(jElement);
+                }
+            }
+
+            return jResultSet.toJSONString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
