@@ -478,9 +478,10 @@ public class SqlCondition {
      * 获取对应列的条件语句
      * @param columnName 查询的列名
      * @param conditionMap 用于存放条件语句的集合
+     * @param append 在返回语句时, 是否携带连接词 ( and, or)
      * @return
      */
-    private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
+    private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap, boolean append) {
         if (null != conditionMap && !conditionMap.isEmpty()) {
             List<String> condStrList = conditionMap.get(columnName);
             StringBuilder findSql = new StringBuilder("");
@@ -499,8 +500,12 @@ public class SqlCondition {
 
                     findSql.append(equation);
                 }
-                findSql.delete(0, 1);
-                startIndex = findSql.indexOf(" ") + 1;
+
+                // 不需要添加连接词 ( and, or )
+                if (!append) {
+                    findSql.delete(0, 1);
+                    startIndex = findSql.indexOf(" ") + 1;
+                }
 
                 return findSql.substring(startIndex);
             }
@@ -508,9 +513,12 @@ public class SqlCondition {
 
         return "";
     }
-    // 在原有基础上拼接现有的条件
-    private String appendConditionStr(String str, String columnName, HashMap<String, List<String>> conditionMap) {
+    private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
+        if (null != conditionMap && !conditionMap.isEmpty()) {
+            return getConditionStr(columnName, conditionMap, false);
+        }
 
+        return "";
     }
 
     /**
@@ -645,18 +653,20 @@ public class SqlCondition {
 
     public String whereInSql() {
         if (!whereConditionList.isEmpty()) {
+            int startIndex = 0;
             StringBuilder whereStr = new StringBuilder("WHERE ");
+            StringBuilder conditionPart = new StringBuilder("");
 
             for (HashMap<String, List<String>> columnCondition : whereConditionList) {
                 for (Map.Entry<String, List<String>> conditionEntry : columnCondition.entrySet()) {
-                    // error
                     String columnName = conditionEntry.getKey();
-                    whereStr.append(getConditionStr(columnName, columnCondition));
+                    conditionPart.append(getConditionStr(columnName, columnCondition, true));
                 }
-                whereStr.append(" and ");
             }
 
-            whereStr.delete(whereStr.length() - 5, whereStr.length());
+            conditionPart.delete(0, 1);
+            startIndex = conditionPart.indexOf(" ") + 1;
+            whereStr.append(conditionPart.substring(startIndex));
             return whereStr.toString().trim();
         }
 
