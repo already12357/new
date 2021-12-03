@@ -268,11 +268,11 @@ public class DBUtil {
                 PreparedStatement ps = connection.prepareStatement(sqlCondition.generateSql());
 
                 switch (sqlCondition.getOpType()) {
-                    case DBConstant.OP_DELETE:
-                    case DBConstant.OP_INSERT:
+                    case DBConstant.SQL_DELETE:
+                    case DBConstant.SQL_INSERT:
                         return ps.execute();
 
-                    case DBConstant.OP_UPDATE:
+                    case DBConstant.SQL_UPDATE:
                         return ps.executeUpdate();
 
                     default:

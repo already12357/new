@@ -86,50 +86,6 @@ public class JDBCUtilTest {
 
         DataSource innerDS = DBUtil.getInnerDS();
 
-//        SqlCondition sqlInsert = new SqlCondition();
-//
-//        sqlInsert.toInsert()
-//                .tables("course_1")
-//                .values(7, "Eddie_Zhang", 61561, "1561");
-//
-//        sqlInsert.insert_into("course_1").values(7, "Eddie_Zhang", 61561, "1561");
-//        String sql = sqlInsert.generateSql();
-
-//        DBUtil.innerInsertSql(sqlInsert);
-//        DBUtil.executeSqlCondition(sqlInsert);
-
-//        SqlCondition sqlQuery = new SqlCondition();
-//        sqlQuery.toSelect()
-//                .inTables("course_1")
-//                .onColumn("c_id")
-//                .eq("cstatus", null)
-//                .between("c_id", 8, 11);
-//
-//        ResultSet resultSet = DBUtil.innerSelectSql(sqlQuery);
-//
-//        while (resultSet.next()) {
-//            int read = resultSet.getInt(1);
-//            System.out.println(read);
-//        }
-//
-//        System.out.println(resultSet);
-
-//        SqlCondition sqlUpdate = new SqlCondition();
-//        List<Object> rangeList = new ArrayList<>();
-//        rangeList.add("4");
-//        rangeList.add("7");
-//        sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
-////        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
-//        int updateBatch = (int) DBUtil.executeSqlCondition(sqlUpdate);
-//        System.out.println(updateBatch);
-
-
-//        SqlCondition sqlDelete = new SqlCondition();
-//        sqlDelete.toDelete().tables("course_1").eq("c_id", 7);
-//        DBUtil.innerDeleteSql(sqlDelete);
-//        DBUtil.executeSqlCondition(sqlDelete);
-
-
         // 增
         SqlCondition insertCondition = new SqlCondition();
         insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
@@ -140,7 +96,7 @@ public class JDBCUtilTest {
         SqlCondition selectCondition = new SqlCondition();
         selectCondition.select_col("*")
                 .from("course_1")
-                .where().between("c_id", 9, 14);
+                .where().eq("cname", "p999").eq(DBConstant.SQL_AND, "c_id", 15);
 
         ResultSet resultSet = null;
 
@@ -169,9 +125,11 @@ public class JDBCUtilTest {
         SqlCondition select2Condition = new SqlCondition();
         select2Condition.select_col("*")
                 .from("course_1")
-                .where().between("c_id", 9, 14);
-
+                .where()
+                .between("c_id", 9, 14)
+                .eq("c_id", "select c2.c_id from course_1 c2 where c2.c_id=9");
         ResultSet resultSet2 = null;
+
         try {
             resultSet2 = (ResultSet) select2Condition.executedBy(innerDS);
 

@@ -114,7 +114,7 @@ public class SqlCondition {
         opTables = new ArrayList<String>();
         opValues = new ArrayList<Object>();
 
-        opType = DBConstant.OP_SELECT;
+        opType = DBConstant.SQL_SELECT;
 
         whereConditionList = new ArrayList<HashMap<String, List<String>>>();
     }
@@ -142,22 +142,22 @@ public class SqlCondition {
      */
     public SqlCondition toInsert() {
         clearCondition();
-        opType = DBConstant.OP_INSERT;
+        opType = DBConstant.SQL_INSERT;
         return this;
     }
     public SqlCondition toUpdate() {
         clearCondition();
-        opType = DBConstant.OP_UPDATE;
+        opType = DBConstant.SQL_UPDATE;
         return this;
     }
     public SqlCondition toSelect() {
         clearCondition();
-        opType = DBConstant.OP_SELECT;
+        opType = DBConstant.SQL_SELECT;
         return this;
     }
     public SqlCondition toDelete() {
         clearCondition();
-        opType = DBConstant.OP_DELETE;
+        opType = DBConstant.SQL_DELETE;
         return this;
     }
 
@@ -245,38 +245,38 @@ public class SqlCondition {
      *     如 : s_id 列的  s_id > 10, s_id > 20, s_id > 50 条件判断统一放在 gtConditionMap 对应的 List 中 )
      * @param columnName 列
      * @param columnValue 值
-     * @param or 是否使用 or 拼接, 否则使用 and ( 通过前缀 * / # 区分 )
+     * @param append 拼接方式, 使用 and / or ( 通过前缀 * / # 区分 ), 对应常量 DBConstant.SQL_AND, DBConstant.SQL_OR
      */
-    public SqlCondition gt(String columnName, Object columnValue, boolean or) {
+    public SqlCondition gt(String append, String columnName, Object columnValue) {
         String sign = " > ";
-        String gtStr = parseEquation(columnName, columnValue, sign, or);
+        String gtStr = parseEquation(append, columnName, columnValue, sign);
         addConditionStr(getGtConditionMap(), columnName, gtStr);
         return this;
     }
     public SqlCondition gt(String columnName, Object columnValue) {
-        return gt(columnName, columnValue, false);
+        return gt(DBConstant.SQL_AND, columnName, columnValue);
     }
 
-    public SqlCondition eq(String columnName, Object columnValue, boolean or) {
+    public SqlCondition eq(String append, String columnName, Object columnValue) {
         String sign = " = ";
         // 解析传入的内容，转换为表达式
-        String eqStr = parseEquation(columnName, columnValue, sign, or);
+        String eqStr = parseEquation(append, columnName, columnValue, sign);
         addConditionStr(getEqConditionMap(), columnName, eqStr);
         return this;
     }
     public SqlCondition eq(String columnName, Object columnValue) {
-        return eq(columnName, columnValue, false);
+        return eq(DBConstant.SQL_AND, columnName, columnValue);
     }
 
-    public SqlCondition lt(String columnName, Object columnValue, boolean or) {
+    public SqlCondition lt(String append, String columnName, Object columnValue) {
         String sign = " < ";
         // 解析传入的内容，转换为表达式
-        String ltStr = parseEquation(columnName, columnValue, sign, or);
+        String ltStr = parseEquation(append, columnName, columnValue, sign);
         addConditionStr(getLtConditionMap(), columnName, ltStr);
         return this;
     }
     public SqlCondition lt(String columnName, Object columnValue) {
-        return lt(columnName, columnValue, false);
+        return lt(DBConstant.SQL_AND, columnName, columnValue);
     }
 
     public SqlCondition between(String columnName, Object bottom, Object top, boolean or) {
@@ -384,15 +384,16 @@ public class SqlCondition {
 
     /**
      * 解析传入的判断参数，将其转换为 SQL 字符串
+     * @param append 拼接方式, 使用 and / or ( 通过前缀 * / # 区分 ), 对应常量 DBConstant.SQL_AND, DBConstant.SQL_OR
      * @param columnName 列名称
      * @param columnValue 列值
-     * @param or 表示是采取 or 拼接, 还是采取 and 拼接 ( 前缀区分 '*'/'#' )
      * @return 处理后的 SQL 语句
      */
-    private String parseEquation(String columnName, Object columnValue, String sign, boolean or) {
+    private String parseEquation(String append, String columnName, Object columnValue, String sign) {
         StringBuilder parsedEq = new StringBuilder("");
 
-        if (or) {
+//        if (or) {
+        if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
             parsedEq.append("*");
         }
         else {
@@ -507,7 +508,10 @@ public class SqlCondition {
 
         return "";
     }
+    // 在原有基础上拼接现有的条件
+    private String appendConditionStr(String str, String columnName, HashMap<String, List<String>> conditionMap) {
 
+    }
 
     /**
      * 根据内部的配置信息生成对应的 Sql 语句, 通过操作类型分类 ( 增删查改 )
@@ -515,13 +519,13 @@ public class SqlCondition {
      */
     public String generateSql() {
         switch (opType) {
-            case DBConstant.OP_UPDATE:
+            case DBConstant.SQL_UPDATE:
                 return generateUpdateSql();
 
-            case DBConstant.OP_INSERT:
+            case DBConstant.SQL_INSERT:
                 return generateInsertSql();
 
-            case DBConstant.OP_DELETE:
+            case DBConstant.SQL_DELETE:
                 return generateDeleteSql();
 
             default:
@@ -645,6 +649,7 @@ public class SqlCondition {
 
             for (HashMap<String, List<String>> columnCondition : whereConditionList) {
                 for (Map.Entry<String, List<String>> conditionEntry : columnCondition.entrySet()) {
+                    // error
                     String columnName = conditionEntry.getKey();
                     whereStr.append(getConditionStr(columnName, columnCondition));
                 }
@@ -701,14 +706,14 @@ public class SqlCondition {
             connection = dataSource.getConnection();
             ps = connection.prepareStatement(generateSql());
             switch (opType) {
-                case DBConstant.OP_DELETE:
-                case DBConstant.OP_INSERT:
+                case DBConstant.SQL_DELETE:
+                case DBConstant.SQL_INSERT:
                     return ps.execute();
 
-                case DBConstant.OP_UPDATE:
+                case DBConstant.SQL_UPDATE:
                     return ps.executeUpdate();
 
-                case DBConstant.OP_SELECT:
+                case DBConstant.SQL_SELECT:
                     return ps.executeQuery();
             }
 
@@ -722,7 +727,7 @@ public class SqlCondition {
 
 
     /**
-     * 清空该 SqlCondition 中存储的所有条件数据
+     * 清空该 SqlCondition 中存储的所有条件数据, 用于重置 SqlCondition
      */
     public void clearCondition() {
         opValues.clear();

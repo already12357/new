@@ -72,7 +72,6 @@ public class DBConstant {
     public static final String DRIVER_ORACLE = "";
     public static final String DRIVER_SQLSERVER = "";
 
-
     // 各种数据库连接池的缩写
     public static final String POOL_DRUID = "druid";
     public static final String POOL_C3P0 = "c3p0";
@@ -85,9 +84,11 @@ public class DBConstant {
     public static final String CLASS_DBCP_DS = "org.apache.commons.dbcp.BasicDataSource";
     public static final String CLASS_HIKARI_DS= "";
 
-    // 数据库操作
-    public static final String OP_SELECT = "SELECT";
-    public static final String OP_DELETE = "DELETE";
-    public static final String OP_UPDATE = "UPDATE";
-    public static final String OP_INSERT = "INSERT";
+    // 数据库常用词
+    public static final String SQL_SELECT = "SELECT";
+    public static final String SQL_DELETE = "DELETE";
+    public static final String SQL_UPDATE = "UPDATE";
+    public static final String SQL_INSERT = "INSERT";
+    public static final String SQL_AND = "AND";
+    public static final String SQL_OR = "OR";
 }
