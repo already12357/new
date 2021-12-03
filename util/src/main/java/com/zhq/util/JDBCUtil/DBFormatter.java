@@ -23,9 +23,10 @@ public class DBFormatter {
 
         // 判断传入的类型是否为 SqlCondition 对象, 是的话，进行子查询的转换
         if (value.getClass().isAssignableFrom(SqlCondition.class)) {
-            return ((SqlCondition) value).toSelect().generateSql();
+            return ((SqlCondition) value).generateSql();
         }
 
         return valueStr;
     }
+
 }

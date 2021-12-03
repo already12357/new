@@ -175,12 +175,29 @@ public class SqlCondition {
         return this;
     }
 
+    /**
+     * select 语句组, 可以用于生成对应的 select 语句
+     * @return
+     */
     public SqlCondition delete_from(String tableName, String...tableNames) {
         toDelete();
         tables(tableName, tableNames);
         return this;
     }
 
+    /**
+     * select 语句组, 可以用于生成对应的 select 语句
+     * 如 :
+     *      SQL : select * from course_1 where c_id between 9 and 14
+     *                    and c_id=(select c2.c_id from course_1 c2 where c2.c_id=9)
+     *
+     *      Java :
+     *      SqlCondition sql = new SqlCondition();
+     *      sql.select_col("*").from("course_1").where().between("c_id", 9, 14);
+     *      // 通过对象的数据源来执行对应的 SqlCondition 对象
+     *      sql.executedBy(customDataSource);
+     * @return
+     */
     public SqlCondition select_col(String columnName, String...columnNames) {
         toSelect();
         columns(columnName, columnNames);
@@ -192,12 +209,20 @@ public class SqlCondition {
         return this;
     }
 
+    /**
+     * insert 语句组, 可以用于生成对应的 insert 语句
+     * @return
+     */
     public SqlCondition insert_into(String tableName) {
         toInsert();
         tables(tableName);
         return this;
     }
 
+
+    /**
+     * update 语句组, 可以用于生成对应的 update 语句
+     */
     public SqlCondition update_table(String tableName, String...tableNames) {
         toUpdate();
         tables(tableName, tableNames);
