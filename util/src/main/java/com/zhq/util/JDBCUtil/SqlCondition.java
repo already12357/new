@@ -1,5 +1,10 @@
 package com.zhq.util.JDBCUtil;
 
+import com.zhq.util.ResourceUtil;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -201,7 +206,6 @@ public class SqlCondition {
 
 //    public SqlCondition like();
 //    public SqlCondition exists();
-
 
     public SqlCondition in(String columnName, List<Object> rangeList, boolean or) {
         String inStr = parseIn(columnName, rangeList, or);
@@ -506,7 +510,7 @@ public class SqlCondition {
      * 根据内部配置生成 SQL 整体语句的不同部分 ( where, from, having 等 )
      * @return
      */
-    private String columnsInSql() {
+    public String columnsInSql() {
         if (!opColumns.isEmpty()) {
             StringBuilder columnsStr = new StringBuilder("");
 
@@ -520,7 +524,7 @@ public class SqlCondition {
         return "";
     }
 
-    private String fromInSql() {
+    public String fromInSql() {
         if (!opTables.isEmpty()) {
             StringBuilder fromStr = new StringBuilder("FROM ");
             fromStr.append(tableInSql());
@@ -530,7 +534,7 @@ public class SqlCondition {
         return "";
     }
 
-    private String tableInSql() {
+    public String tableInSql() {
         if (!opTables.isEmpty()) {
             StringBuilder fromStr = new StringBuilder("");
 
@@ -544,7 +548,7 @@ public class SqlCondition {
         return "";
     }
 
-    private String whereInSql() {
+    public String whereInSql() {
         if (!whereConditionList.isEmpty()) {
             StringBuilder whereStr = new StringBuilder("WHERE ");
 
@@ -563,7 +567,7 @@ public class SqlCondition {
         return "";
     }
 
-    private String valuesInSql() {
+    public String valuesInSql() {
         if (!opValues.isEmpty()) {
             StringBuilder valuesStr = new StringBuilder("VALUES").append("(");
 
@@ -579,7 +583,7 @@ public class SqlCondition {
         return "";
     }
 
-    private String setInSql() {
+    public String setInSql() {
         int setCount = Math.min(opColumns.size(), opValues.size());
 
         if (setCount > 0) {
@@ -598,5 +602,27 @@ public class SqlCondition {
     }
 
 
+    public Object executedBy(DataSource dataSource) {
+        Connection connection = null;
+        PreparedStatement ps = null;
 
+        try {
+            connection = dataSource.getConnection();
+            switch (opType) {
+                case DBConstant.OP_DELETE:
+                case DBConstant.OP_INSERT:
+                case DBConstant.OP_UPDATE:
+                    return ps.execute();
+
+                case DBConstant.OP_SELECT:
+                    return ps.executeQuery();
+            }
+
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
