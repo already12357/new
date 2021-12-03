@@ -279,27 +279,27 @@ public class SqlCondition {
         return lt(DBConstant.SQL_AND, columnName, columnValue);
     }
 
-    public SqlCondition between(String columnName, Object bottom, Object top, boolean or) {
+    public SqlCondition between(String append, String columnName, Object bottom, Object top) {
         // 将传入内容解析为字符串
-        String betweenStr = parseBetween(columnName, bottom, top, or);
+        String betweenStr = parseBetween(append, columnName, bottom, top);
         // 将解析后的 Between 语句加入到集合中
         addConditionStr(getBetweenConditionMap(), columnName, betweenStr);
         return this;
     }
     public SqlCondition between(String columnName, Object bottom, Object top) {
-        return between(columnName, bottom, top, false);
+        return between(DBConstant.SQL_AND, columnName, bottom, top);
     }
 
 //    public SqlCondition like();
 //    public SqlCondition exists();
 
-    public SqlCondition in(String columnName, List<Object> rangeList, boolean or) {
-        String inStr = parseIn(columnName, rangeList, or);
+    public SqlCondition in(String append, String columnName, List<Object> rangeList) {
+        String inStr = parseIn(append, columnName, rangeList);
         addConditionStr(getInConditionMap(), columnName, inStr);
         return this;
     }
     public SqlCondition in(String columnName, List<Object> rangeList) {
-        return in(columnName, rangeList, false);
+        return in(DBConstant.SQL_AND, columnName, rangeList);
     }
 
 
@@ -392,7 +392,6 @@ public class SqlCondition {
     private String parseEquation(String append, String columnName, Object columnValue, String sign) {
         StringBuilder parsedEq = new StringBuilder("");
 
-//        if (or) {
         if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
             parsedEq.append("*");
         }
@@ -409,10 +408,10 @@ public class SqlCondition {
         return parsedEq.toString();
     }
 
-    private String parseBetween(String columnName, Object bottom, Object top, boolean or) {
+    private String parseBetween(String append, String columnName, Object bottom, Object top) {
         StringBuilder parsedBetween = new StringBuilder("");
 
-        if (or) {
+        if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
             parsedBetween.append("*");
         }
         else {
@@ -430,10 +429,10 @@ public class SqlCondition {
         return parsedBetween.toString().trim();
     }
 
-    private String parseIn(String columnName, List<Object> rangeList, boolean or) {
+    private String parseIn(String append, String columnName, List<Object> rangeList) {
         StringBuilder parsedBetween = new StringBuilder("");
 
-        if (or) {
+        if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
             parsedBetween.append("*");
         }
         else {
