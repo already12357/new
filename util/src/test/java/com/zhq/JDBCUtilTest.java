@@ -133,37 +133,10 @@ public class JDBCUtilTest {
         // 增
         SqlCondition insertCondition = new SqlCondition();
         insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
-        insertCondition.executedBy(innerDS);
+        System.out.println(insertCondition.executedBy(innerDS));
 
 
         // 查
-
-
-
-        // 改
-
-
-
-        // 查
-
-
-
-        // 删
-
-
-
-
-
-
-        SqlCondition deleteCondition = new SqlCondition();
-        deleteCondition.delete_from("course_1");
-
-
-        SqlCondition updateCondition = new SqlCondition();
-        updateCondition.update_table("course_1").set_col("cname").values("p999").where().lt("c_id", 11);
-        System.out.println(updateCondition.executedBy(innerDS));
-
-
         SqlCondition selectCondition = new SqlCondition();
         selectCondition.select_col("*")
                 .from("course_1")
@@ -175,12 +148,42 @@ public class JDBCUtilTest {
             resultSet = (ResultSet) selectCondition.executedBy(innerDS);
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getString(1));
+                System.out.print(resultSet.getString(1));
+                System.out.print(resultSet.getInt(2));
+                System.out.print(resultSet.getString(3));
+                System.out.println(resultSet.getInt(4));
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        // 改
+        SqlCondition updateCondition = new SqlCondition();
+        updateCondition.update_table("course_1").set_col("cname").values("p999").where().lt("c_id", 11);
+        System.out.println(updateCondition.executedBy(innerDS));
+
+
+        // 查
+
+
+
+        // 删
+        SqlCondition deleteCondition = new SqlCondition();
+        deleteCondition.delete_from("course_1").where().eq("c_id", 7);
+        System.out.println(deleteCondition.executedBy(innerDS));;
+
+
+
+
+
+
+
+
+
+
+
 
 //        chCondition.insert_into().columns("", "", false).values();
 //        chCondition.update_table().set_values().where();
