@@ -290,7 +290,13 @@ public class SqlCondition {
         return between(DBConstant.SQL_AND, columnName, bottom, top);
     }
 
-//    public SqlCondition like();
+    public SqlCondition like(String append, String columnName, String likeStr) {
+        return this;
+    }
+    public SqlCondition like(String columnName, String likeStr) {
+        return like(DBConstant.SQL_AND, columnName, likeStr);
+    }
+
 //    public SqlCondition exists();
 
     public SqlCondition in(String append, String columnName, List<Object> rangeList) {

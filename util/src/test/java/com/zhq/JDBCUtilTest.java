@@ -145,7 +145,6 @@ public class JDBCUtilTest {
         }
 
 
-        // 删
         SqlCondition deleteCondition = new SqlCondition();
         deleteCondition.delete_from("course_1").where().eq("c_id", 7);
         System.out.println(deleteCondition.executedBy(innerDS));
