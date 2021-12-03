@@ -41,6 +41,9 @@ public class SqlCondition {
     // =============================================
     // 优化，支持 Spring 注入
     // =============================================
+    // =============================================
+    // 优化，Json 执行格式返回
+    // =============================================
 
     
 
@@ -59,16 +62,17 @@ public class SqlCondition {
     private HashMap<String, List<String>> inConditionMap;
 
     // 操作列对应的值
-    // 操作列
+    // 当前操作列
     private List<String> opColumns;
-    // 表格名称
+    // 当前操作表
     private List<String> opTables;
-    // 操作中需要用到的值
+    // 当前操作值
     private List<Object> opValues;
     // 操作类型 ( 增删查改 )
     private String opType;
 
     // 使用 Get 获取对应的条件内容,  并使用懒加载
+    // clearCondition 清楚相关的数据内容
     private HashMap<String, List<String>> getLtConditionMap() {
         if (null == ltConditionMap) {
             ltConditionMap = new HashMap<String, List<String>>();
@@ -133,26 +137,83 @@ public class SqlCondition {
     }
 
     /**
-     * 链式调用快速的设置操作方式
+     * 链式调用快速切换操作类型, 注意切换时会清空数据
      * @return
      */
     public SqlCondition toInsert() {
+        clearCondition();
         opType = DBConstant.OP_INSERT;
         return this;
     }
     public SqlCondition toUpdate() {
+        clearCondition();
         opType = DBConstant.OP_UPDATE;
         return this;
     }
     public SqlCondition toSelect() {
+        clearCondition();
         opType = DBConstant.OP_SELECT;
         return this;
     }
     public SqlCondition toDelete() {
+        clearCondition();
         opType = DBConstant.OP_DELETE;
         return this;
     }
 
+
+    /**
+     * 增强链式调用时的语句可读性, 没有实际处理作用
+     */
+    public SqlCondition where() {
+        return this;
+    }
+    public SqlCondition or() {
+        return this;
+    }
+    public SqlCondition and() {
+        return this;
+    }
+
+    public SqlCondition delete_from(String tableName, String...tableNames) {
+        toDelete();
+        tables(tableName, tableNames);
+        return this;
+    }
+
+    public SqlCondition select_col(String columnName, String...columnNames) {
+        toSelect();
+        columns(columnName, columnNames);
+
+        return this;
+    }
+    public SqlCondition from(String tableName, String...tableNames) {
+        tables(tableName, tableNames);
+        return this;
+    }
+
+    public SqlCondition insert_into(String tableName) {
+        toInsert();
+        tables(tableName);
+        return this;
+    }
+
+    public SqlCondition update_table(String tableName, String...tableNames) {
+        toUpdate();
+        tables(tableName, tableNames);
+        return this;
+    }
+    public SqlCondition set_col(String columnName, String...columnNames) {
+        columns(columnName, columnNames);
+        return this;
+    }
+
+//    // 多表打印
+//    public SqlCondition insert_all() {
+//
+//
+//        return this;
+//    }
 
     /**
      * 将 where 部分的判断条件转换为 SQL 语句后，添加到对应的集合中, 对每个列的每种判断条件用 List 存储 ( 支持链式写法 )
@@ -217,26 +278,26 @@ public class SqlCondition {
     }
 
 
+    
     /**
-     * 添加操作涉及的 列 表 值, 通常用在 非 select 情况下使用 ( 支持链式写法 )
+     * 添加操作涉及的 列 表 值, 会清空原有数据，通常用在 非 select 情况下使用 ( 支持链式写法 )
      * @param columnName 列名称 / 表名称
      */
     public SqlCondition columns(String columnName, String...columnNames) {
-        if (!opColumns.contains(columnName)) {
-            opColumns.add(columnName);
-        }
+        opColumns.clear();
+        opColumns.add(columnName);
 
         for (String extraColumn : columnNames) {
             if (!opColumns.contains(columnName)) {
                 opColumns.add(columnName);
             }
         }
+
         return this;
     }
     public SqlCondition tables(String tableName, String...tableNames) {
-        if (!opTables.contains(tableName)) {
-            opTables.add(tableName);
-        }
+        opTables.clear();
+        opTables.add(tableName);
 
         for (String extraTable : tableNames) {
             if (!opTables.contains(extraTable)) {
@@ -247,6 +308,7 @@ public class SqlCondition {
         return this;
     }
     public SqlCondition values(Object value, Object...valueContents) {
+        opValues.clear();
         opValues.add(value);
         for (Object extraValue : valueContents) {
             opValues.add(extraValue);
@@ -264,6 +326,8 @@ public class SqlCondition {
 //
 //        return this;
 //    }
+
+
 
 
     /**
@@ -391,27 +455,29 @@ public class SqlCondition {
      * @return
      */
     private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
-        List<String> condStrList = conditionMap.get(columnName);
-        StringBuilder findSql = new StringBuilder("");
-        int startIndex = 0;
+        if (null != conditionMap && !conditionMap.isEmpty()) {
+            List<String> condStrList = conditionMap.get(columnName);
+            StringBuilder findSql = new StringBuilder("");
+            int startIndex = 0;
 
-        if (null != condStrList && !condStrList.isEmpty()) {
-            for (int i = 0; i < condStrList.size(); i++) {
-                String equation = condStrList.get(i);
+            if (null != condStrList && !condStrList.isEmpty()) {
+                for (int i = 0; i < condStrList.size(); i++) {
+                    String equation = condStrList.get(i);
 
-                if (equation.charAt(0) == '*') {
-                    equation = " or " + equation.substring(2, equation.length() - 1);
+                    if (equation.charAt(0) == '*') {
+                        equation = " or " + equation.substring(2, equation.length() - 1);
+                    }
+                    else {
+                        equation = " and " + equation.substring(2, equation.length() - 1);
+                    }
+
+                    findSql.append(equation);
                 }
-                else {
-                    equation = " and " + equation.substring(2, equation.length() - 1);
-                }
+                findSql.delete(0, 1);
+                startIndex = findSql.indexOf(" ") + 1;
 
-                findSql.append(equation);
+                return findSql.substring(startIndex);
             }
-            findSql.delete(0, 1);
-            startIndex = findSql.indexOf(" ") + 1;
-
-            return findSql.substring(startIndex);
         }
 
         return "";
@@ -552,10 +618,10 @@ public class SqlCondition {
         if (!whereConditionList.isEmpty()) {
             StringBuilder whereStr = new StringBuilder("WHERE ");
 
-            for (HashMap<String, List<String>> part : whereConditionList) {
-                for (Map.Entry<String, List<String>> entry : part.entrySet()) {
-                    String columnName = entry.getKey();
-                    whereStr.append(getConditionStr(columnName, part));
+            for (HashMap<String, List<String>> columnCondition : whereConditionList) {
+                for (Map.Entry<String, List<String>> conditionEntry : columnCondition.entrySet()) {
+                    String columnName = conditionEntry.getKey();
+                    whereStr.append(getConditionStr(columnName, columnCondition));
                 }
                 whereStr.append(" and ");
             }
@@ -608,11 +674,13 @@ public class SqlCondition {
 
         try {
             connection = dataSource.getConnection();
+            ps = connection.prepareStatement(generateSql());
             switch (opType) {
                 case DBConstant.OP_DELETE:
                 case DBConstant.OP_INSERT:
-                case DBConstant.OP_UPDATE:
                     return ps.execute();
+                case DBConstant.OP_UPDATE:
+                    return ps.executeUpdate();
 
                 case DBConstant.OP_SELECT:
                     return ps.executeQuery();
@@ -624,5 +692,21 @@ public class SqlCondition {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     * 清空该 SqlCondition 中存储的所有条件数据
+     */
+    public void clearCondition() {
+        opValues.clear();
+        opColumns.clear();
+        opTables.clear();
+        whereConditionList.clear();
+        gtConditionMap = null;
+        ltConditionMap = null;
+        eqConditionMap = null;
+        betweenConditionMap = null;
+        inConditionMap = null;
     }
 }

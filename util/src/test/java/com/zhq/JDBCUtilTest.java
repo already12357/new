@@ -86,12 +86,17 @@ public class JDBCUtilTest {
 
         DataSource innerDS = DBUtil.getInnerDS();
 
-        SqlCondition sqlInsert = new SqlCondition();
-        sqlInsert.toInsert()
-                .tables("course_1")
-                .values(7, "Eddie_Zhang", 61561, "1561");
+//        SqlCondition sqlInsert = new SqlCondition();
+//
+//        sqlInsert.toInsert()
+//                .tables("course_1")
+//                .values(7, "Eddie_Zhang", 61561, "1561");
+//
+//        sqlInsert.insert_into("course_1").values(7, "Eddie_Zhang", 61561, "1561");
+//        String sql = sqlInsert.generateSql();
+
 //        DBUtil.innerInsertSql(sqlInsert);
-        DBUtil.executeSqlCondition(sqlInsert);
+//        DBUtil.executeSqlCondition(sqlInsert);
 
 //        SqlCondition sqlQuery = new SqlCondition();
 //        sqlQuery.toSelect()
@@ -109,19 +114,79 @@ public class JDBCUtilTest {
 //
 //        System.out.println(resultSet);
 
-        SqlCondition sqlUpdate = new SqlCondition();
-        List<Object> rangeList = new ArrayList<>();
-        rangeList.add("4");
-        rangeList.add("7");
-        sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
-//        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
-        int updateBatch = (int) DBUtil.executeSqlCondition(sqlUpdate);
-        System.out.println(updateBatch);
+//        SqlCondition sqlUpdate = new SqlCondition();
+//        List<Object> rangeList = new ArrayList<>();
+//        rangeList.add("4");
+//        rangeList.add("7");
+//        sqlUpdate.toUpdate().tables("course_1").columns("cname").values("c_name_change").in("cstatus", rangeList);
+////        int updateBatch = DBUtil.innerUpdateSql(sqlUpdate);
+//        int updateBatch = (int) DBUtil.executeSqlCondition(sqlUpdate);
+//        System.out.println(updateBatch);
 
 
-        SqlCondition sqlDelete = new SqlCondition();
-        sqlDelete.toDelete().tables("course_1").eq("c_id", 7);
+//        SqlCondition sqlDelete = new SqlCondition();
+//        sqlDelete.toDelete().tables("course_1").eq("c_id", 7);
 //        DBUtil.innerDeleteSql(sqlDelete);
-        DBUtil.executeSqlCondition(sqlDelete);
+//        DBUtil.executeSqlCondition(sqlDelete);
+
+
+        // 增
+        SqlCondition insertCondition = new SqlCondition();
+        insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
+        insertCondition.executedBy(innerDS);
+
+
+        // 查
+
+
+
+        // 改
+
+
+
+        // 查
+
+
+
+        // 删
+
+
+
+
+
+
+        SqlCondition deleteCondition = new SqlCondition();
+        deleteCondition.delete_from("course_1");
+
+
+        SqlCondition updateCondition = new SqlCondition();
+        updateCondition.update_table("course_1").set_col("cname").values("p999").where().lt("c_id", 11);
+        System.out.println(updateCondition.executedBy(innerDS));
+
+
+        SqlCondition selectCondition = new SqlCondition();
+        selectCondition.select_col("*")
+                .from("course_1")
+                .where().between("c_id", 9, 14);
+
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = (ResultSet) selectCondition.executedBy(innerDS);
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        chCondition.insert_into().columns("", "", false).values();
+//        chCondition.update_table().set_values().where();
+//        chCondition.select_col().from().where().groupby().having().orderBy().pageSize();
+//        chCondition.delete_from().where();
+
+//        pCondition.toSelect().columns("*").from().tables("course_1 c").in("c.c_id", );
     }
 }
