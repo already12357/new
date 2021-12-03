@@ -679,6 +679,7 @@ public class SqlCondition {
                 case DBConstant.OP_DELETE:
                 case DBConstant.OP_INSERT:
                     return ps.execute();
+
                 case DBConstant.OP_UPDATE:
                     return ps.executeUpdate();
 

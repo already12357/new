@@ -148,10 +148,10 @@ public class JDBCUtilTest {
             resultSet = (ResultSet) selectCondition.executedBy(innerDS);
 
             while (resultSet.next()) {
-                System.out.print(resultSet.getString(1));
-                System.out.print(resultSet.getInt(2));
-                System.out.print(resultSet.getString(3));
-                System.out.println(resultSet.getInt(4));
+                System.out.print(resultSet.getInt(1));
+                System.out.print(resultSet.getString(2));
+                System.out.print(resultSet.getInt(3));
+                System.out.println(resultSet.getString(4));
             }
         }
         catch (Exception e) {
@@ -166,30 +166,30 @@ public class JDBCUtilTest {
 
 
         // 查
+        SqlCondition select2Condition = new SqlCondition();
+        select2Condition.select_col("*")
+                .from("course_1")
+                .where().between("c_id", 9, 14);
 
+        ResultSet resultSet2 = null;
+        try {
+            resultSet2 = (ResultSet) select2Condition.executedBy(innerDS);
+
+            while (resultSet2.next()) {
+                System.out.print(resultSet2.getInt(1));
+                System.out.print(resultSet2.getString(2));
+                System.out.print(resultSet2.getInt(3));
+                System.out.println(resultSet2.getString(4));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         // 删
         SqlCondition deleteCondition = new SqlCondition();
         deleteCondition.delete_from("course_1").where().eq("c_id", 7);
-        System.out.println(deleteCondition.executedBy(innerDS));;
-
-
-
-
-
-
-
-
-
-
-
-
-//        chCondition.insert_into().columns("", "", false).values();
-//        chCondition.update_table().set_values().where();
-//        chCondition.select_col().from().where().groupby().having().orderBy().pageSize();
-//        chCondition.delete_from().where();
-
-//        pCondition.toSelect().columns("*").from().tables("course_1 c").in("c.c_id", );
+        System.out.println(deleteCondition.executedBy(innerDS));
     }
 }
