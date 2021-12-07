@@ -91,4 +91,38 @@ public class DBConstant {
     public static final String SQL_INSERT = "INSERT";
     public static final String SQL_AND = "AND";
     public static final String SQL_OR = "OR";
+
+
+    // 数据库函数, 需要区分不同的数据库类型, 默认为 mysql
+    public static final String FUNCTION_CONCAT(String dbType, String...params) {
+        StringBuilder contactStr = new StringBuilder("");
+
+        if (params.length > 0) {
+            switch (dbType) {
+                case DBConstant.DB_MYSQL:
+                    contactStr.append("CONCAT(");
+                    for (String param : params) {
+                        contactStr.append("'")
+                                .append(param)
+                                .append("',");
+                    }
+                    contactStr.append(")");
+                    contactStr.deleteCharAt(contactStr.length() - 2);
+                    break;
+
+                case DBConstant.DB_ORACLE:
+                    for (String param : params) {
+                        contactStr.append("'")
+                                .append(param)
+                                .append("'")
+                                .append("||");
+                    }
+                    break;
+
+            }
+
+        }
+
+        return contactStr.toString().trim();
+    }
 }

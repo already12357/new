@@ -16,7 +16,7 @@ import java.util.Map;
  * 流程为：
  * 1. 将传入的条件转化后存入到条件集合 (eqConditionMap, gtConditionMap, ltConditionMap...), 操作相关的 表集合，值集合，列集合
  * 2. 解析集合中的内容，将其通过部分转化的形式 ( where, from 等部分 )， 转化后拼接成完整的 SQL 字符串
- * 3. 通过解析解析拼接的字符串，来调用执行对应的 SQL 操作 
+ * 3. 通过解析解析拼接的字符串，来调用执行对应的 SQL 操作
  */
 public class SqlCondition {
     // =============================================
@@ -59,6 +59,8 @@ public class SqlCondition {
     private HashMap<String, List<String>> betweenConditionMap;
     private HashMap<String, List<String>> inConditionMap;
     private HashMap<String, List<String>> likeConditionMap;
+    private HashMap<String, List<String>> existsConditionMap;
+
 
     // 操作列对应的值
     // 当前操作列
@@ -116,6 +118,13 @@ public class SqlCondition {
             whereConditionList.add(likeConditionMap);
         }
         return likeConditionMap;
+    }
+    private HashMap<String, List<String>> getExistsConditionMap() {
+        if (null == existsConditionMap) {
+            existsConditionMap = new HashMap<String, List<String>>();
+            whereConditionList.add(existsConditionMap);
+        }
+        return existsConditionMap;
     }
 
     public SqlCondition() {
@@ -308,7 +317,14 @@ public class SqlCondition {
         return like(DBConstant.SQL_AND, columnName, columnValue);
     }
 
-//    public SqlCondition exists();
+    public SqlCondition exists(String append, String columnName, Object columnValue) {
+        String existsStr = parseExists(append, columnName, columnValue);
+        addConditionStr(getExistsConditionMap(), columnName, existsStr);
+        return this;
+    }
+    public SqlCondition exists(String columnName, Object columnValue) {
+        return exists(DBConstant.SQL_AND, columnName, columnValue);
+    }
 
     public SqlCondition in(String append, String columnName, List<Object> rangeList) {
         String inStr = parseIn(append, columnName, rangeList);
@@ -471,6 +487,24 @@ public class SqlCondition {
                 .deleteCharAt(parsedBetween.length() - 3);
 
         return parsedBetween.toString().trim();
+    }
+
+    private String parseExists(String append, String columnName, Object columnValue) {
+        StringBuilder parsedExists = new StringBuilder();
+
+        if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
+            parsedExists.append("*");
+        }
+        else {
+            parsedExists.append("#");
+        }
+
+        parsedExists.append("(")
+                .append(columnName)
+                .append(" EXISTS ")
+                .append(")");
+
+        return parsedExists.toString().trim();
     }
 
     /**
@@ -767,5 +801,6 @@ public class SqlCondition {
         betweenConditionMap = null;
         inConditionMap = null;
         likeConditionMap = null;
+        existsConditionMap = null;
     }
 }
