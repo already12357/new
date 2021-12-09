@@ -129,8 +129,6 @@ public class DBConstant {
     public static final String FUNCTION_POW(String dbType, Integer pow, Integer x) {
         StringBuilder contactStr = new StringBuilder("");
 
-
-
         return contactStr.toString().trim();
     }
     public static final String FUNCTION_CASE() {

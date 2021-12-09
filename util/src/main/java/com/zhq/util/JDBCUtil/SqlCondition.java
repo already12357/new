@@ -62,6 +62,7 @@ public class SqlCondition {
     private HashMap<String, List<String>> existsConditionMap;
 
 
+
     // 操作列对应的值
     // 当前操作列
     private List<String> opColumns;

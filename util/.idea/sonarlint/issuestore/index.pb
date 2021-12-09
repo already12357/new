@@ -13,5 +13,3 @@ _
 /src/main/java/com/zhq/util/JDBCUtil/DBUtil.java,d\b\dbc447fa9f3d664930fccc0c17ab458b233e8001
 \
 ,src/main/java/com/zhq/util/ResourceUtil.java,1\0\10dbd159eaf845781b9d15bb0c403fff734eec99
-W
-'src/test/java/com/zhq/JDBCUtilTest.java,8\a\8a77b912961ecff2da4118e0d4777e2510b9f90d
