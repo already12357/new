@@ -24,13 +24,13 @@ public class StringUtilTest {
 //        nameList.add("");
 //        nameList.add(null);
 //        nameList.add("zhaoliu");
-        System.out.println(StringUtil.mergeListToString(nameList, "[,]"));
+        System.out.println(StringUtil.mergeList(nameList, "[,]"));
 
         Map<String, String> contentType = new HashMap<>();
 //        contentType.put("param1", null);
 //        contentType.put("param2", "");
 //        contentType.put("param3", "123");
-        System.out.println(StringUtil.mergeMapToxFormUrlEncoded(contentType));
+        System.out.println(StringUtil.mergeMapToUrlParams(contentType));
 
         String text = "Hellow, this is a string by byte presentation";
         byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);

@@ -11,6 +11,7 @@ public class StringUtil {
     public static final String REGEX_MAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     public static final String REGEX_IPv4 = "(((\\d{1,2})|(1\\d{2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{2})|(2[0-4]\\d)|(25[0-5]))";
 
+
     /**
      * 根据正则表达式判断字符串是否有效
      */
@@ -21,6 +22,7 @@ public class StringUtil {
         return Pattern.matches(REGEX_IPv4, ipv4);
     }
 
+
     /**
      * 判断字符串是否有内容
      * @param str 判断的字符串
@@ -28,8 +30,7 @@ public class StringUtil {
      */
     public static boolean hasContent(String str) {
         // 为空 或 字符串只有空格 时，视为没有内容
-        boolean hasContent = !(null == str || str.trim().length() == 0);
-        return hasContent;
+        return !(null == str || str.trim().length() == 0);
     }
 
 
@@ -39,12 +40,12 @@ public class StringUtil {
      * @param name 需要的参数名称
      * @return
      */
-    public static String paramFromURLStringByName(String url, String name) {
-        int paramValueIndex = url.indexOf(name + '=') + name.length() + 1;
-        String valueWithOtherParamExpressions = url.substring(paramValueIndex);
-        String[] urlParamExpressionsWithValue = valueWithOtherParamExpressions.split("&");
+    public static String extractUrlParam(String url, String name) {
+        int valueStart = url.indexOf(name + '=') + name.length() + 1;
+        String paramParts = url.substring(valueStart);
+        String[] values = paramParts.split("&");
 
-        return urlParamExpressionsWithValue[0];
+        return values[0];
     }
 
 
@@ -55,7 +56,7 @@ public class StringUtil {
      * @param <T>
      * @return
      */
-    public static <T> String mergeListToString(List<T> list, String regex) {
+    public static <T> String mergeList(List<T> list, String regex) {
         String mergeStr = "";
 
         if (null != list && !list.isEmpty()) {
@@ -83,15 +84,15 @@ public class StringUtil {
 
     /**
      * 将 Map 数据结构转化为参数据的形式
-     * @param xFormUrlEncodedMap 对应的数据对
+     * @param urlParamMap 对应的数据对
      * @return 返回转化的参数据形式
      */
-    public static String mergeMapToxFormUrlEncoded(Map<String, String> xFormUrlEncodedMap) {
+    public static String mergeMapToUrlParams(Map<String, String> urlParamMap) {
         StringBuilder xFormUrlStrBuilder = new StringBuilder("");
         String xFormUrlStr = new String("");
 
-        if (null != xFormUrlEncodedMap && !xFormUrlEncodedMap.isEmpty()) {
-            for (Map.Entry<String, String> xForm : xFormUrlEncodedMap.entrySet()) {
+        if (null != urlParamMap && !urlParamMap.isEmpty()) {
+            for (Map.Entry<String, String> xForm : urlParamMap.entrySet()) {
                 if (hasContent(xForm.getKey())) {
                     xFormUrlStrBuilder.append(xForm.getKey() + "=" + xForm.getValue() + "&");
                 }
@@ -102,5 +103,29 @@ public class StringUtil {
         }
 
         return xFormUrlStr;
+    }
+
+
+    /**
+     * 替换字符串中的特定字符，并且使用空格在两边隔开
+     * @param sourceStr 需要替换的源字符串
+     * @param targetChar 字符串中对应的替换字符串
+     * @param replaceContent 需要替换的内容
+     * @param index 替换第几个字符串
+     * @return
+     */
+    public static String replaceWithGap(String sourceStr, Character targetChar, String replaceContent, int index) {
+        // 当字符串没有内容时
+        if (!hasContent(sourceStr)) {
+            return "";
+        }
+
+        String fullReplaceContent = new String(" ").concat(replaceContent).concat(" ");
+        StringBuilder retStr = new StringBuilder(sourceStr);
+        int replaceIndex = sourceStr.indexOf(targetChar, index);
+
+        retStr.replace(replaceIndex, replaceIndex + 1, fullReplaceContent);
+
+        return retStr.toString();
     }
 }

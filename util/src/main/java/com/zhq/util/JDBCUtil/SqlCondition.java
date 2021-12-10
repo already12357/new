@@ -60,7 +60,8 @@ public class SqlCondition {
     private HashMap<String, List<String>> inConditionMap;
     private HashMap<String, List<String>> likeConditionMap;
     private HashMap<String, List<String>> existsConditionMap;
-
+    // 表连接的内容
+    private HashMap<String, List<String>> joinConditionMap;
 
 
     // 操作列对应的值
@@ -127,6 +128,15 @@ public class SqlCondition {
         }
         return existsConditionMap;
     }
+
+    // 用于存储对应的表连接内容 ( 被连接表的名称 - 相关的表达式  )
+    private HashMap<String, List<String>> getJoinConditionMap() {
+        if (null == joinConditionMap) {
+            joinConditionMap = new HashMap<String, List<String>>();
+        }
+        return joinConditionMap;
+    }
+
 
     public SqlCondition() {
         opColumns = new ArrayList<String>();
@@ -225,6 +235,30 @@ public class SqlCondition {
     }
     public SqlCondition from(String tableName, String...tableNames) {
         tables(tableName, tableNames);
+        return this;
+    }
+
+    public SqlCondition left_join(String joinTable, Object joinOn) {
+        if (null != opTables && !opTables.isEmpty()) {
+            join(opTables.get(opTables.size() - 1), DBConstant.SQL_LEFT, joinTable, joinOn);
+        }
+        return this;
+    }
+    public SqlCondition left_join(String joinTable) {
+        return left_join(joinTable, "");
+    }
+
+    public SqlCondition right_join(String joinTable, Object joinOn) {
+        if (null != opTables && !opTables.isEmpty()) {
+            join(opTables.get(opTables.size() - 1), DBConstant.SQL_RIGHT, joinTable, joinOn);
+        }
+        return this;
+    }
+
+    public SqlCondition inner_join(String joinTable, Object joinOn) {
+        if (null != opTables && !opTables.isEmpty()) {
+            join(opTables.get(opTables.size() - 1), DBConstant.SQL_INNER, joinTable, joinOn);
+        }
         return this;
     }
 
@@ -336,6 +370,14 @@ public class SqlCondition {
         return in(DBConstant.SQL_AND, columnName, rangeList);
     }
 
+    public SqlCondition join(String opTable, String joinType, String joinTable, Object on) {
+        String joinStr = parseJoin(opTable, joinType, joinTable, on);
+        addConditionStr(getJoinConditionMap(), opTable, joinStr);
+        return this;
+    }
+    public SqlCondition join(String opTable, String joinTable, Object on) {
+        return join(opTable, DBConstant.SQL_LEFT, joinTable, on);
+    }
 
     
     /**
@@ -389,6 +431,7 @@ public class SqlCondition {
 
 
 
+
     /**
      * 获取 where 部分中与对应列相关的判断内容
      *     如: 获取 where 中涉及 stu_1 列的所有 between 语句 (getBetweenStr("stu_1"))
@@ -414,7 +457,6 @@ public class SqlCondition {
     public String getInStr(String columnName) {
         return getConditionStr(columnName, inConditionMap);
     }
-
 
     /**
      * 解析传入的判断参数，将其转换为 SQL 字符串
@@ -508,6 +550,42 @@ public class SqlCondition {
         return parsedExists.toString().trim();
     }
 
+    private String parseJoin(String opTable, String joinType, String joinTable, Object on) {
+        if ((null != opTable && !opTable.isEmpty()) ||
+                (null != joinTable && !joinTable.isEmpty())) {
+            // 每次都要连接最近添加进去的表
+            StringBuilder parsedJoin = new StringBuilder(opTable);
+            String onStr = DBFormatter.formatObjToStr(on, false, false);
+
+            // opTable L(joinTable, .....)
+            switch (joinType) {
+                case DBConstant.SQL_RIGHT:
+                    parsedJoin.append(" R");
+                    break;
+                case DBConstant.SQL_INNER:
+                    parsedJoin.append(" I");
+                    break;
+                default:
+                    parsedJoin.append(" L");
+                    break;
+            }
+
+            parsedJoin.append("(")
+                    .append(joinTable);
+
+            if (null != onStr && !onStr.isEmpty()) {
+                parsedJoin.append(",").append(onStr);
+            }
+
+            parsedJoin.append(")");
+
+            return parsedJoin.toString().trim();
+        }
+
+        return "";
+    }
+
+
     /**
      * 将转换后的 判断 SQL 依据列存放到对应的条件集合中
      * @param conditionMap 需要传入的条件集合
@@ -515,13 +593,16 @@ public class SqlCondition {
      * @param condStr 条件语句
      */
     private void addConditionStr(HashMap<String, List<String>> conditionMap, String columnName, String condStr) {
-        if (null == conditionMap.get(columnName)) {
-            List<String> eqList = new ArrayList<>();
-            eqList.add(condStr);
-            conditionMap.put(columnName, eqList);
-        }
-        else {
-            conditionMap.get(columnName).add(condStr);
+        if ((null != condStr && !condStr.isEmpty()) ||
+                (null != columnName && !columnName.isEmpty())) {
+            if (null == conditionMap.get(columnName)) {
+                List<String> eqList = new ArrayList<>();
+                eqList.add(condStr);
+                conditionMap.put(columnName, eqList);
+            }
+            else {
+                conditionMap.get(columnName).add(condStr);
+            }
         }
     }
 
@@ -568,6 +649,53 @@ public class SqlCondition {
     private String getConditionStr(String columnName, HashMap<String, List<String>> conditionMap) {
         if (null != conditionMap && !conditionMap.isEmpty()) {
             return getConditionStr(columnName, conditionMap, false);
+        }
+
+        return "";
+    }
+
+    private String getJoinStr(String opTable, HashMap<String, List<String>> conditionMap) {
+        if (null != conditionMap && !conditionMap.isEmpty()) {
+            StringBuilder joinSql = new StringBuilder("");
+            List<String> opJoinStrList = conditionMap.get(opTable);
+
+            // opTable L(joinTable, .....)
+            if (null != opJoinStrList && !opJoinStrList.isEmpty()) {
+                for (String onJoinStr : opJoinStrList) {
+                    StringBuilder tableJoinStr = new StringBuilder(onJoinStr);
+
+                    int typeCharIndex = onJoinStr.indexOf(" ") + 1;
+                    Character typeChar = onJoinStr.charAt(typeCharIndex);
+                    switch (typeChar) {
+                        case 'R':
+                            tableJoinStr.replace(typeCharIndex, typeCharIndex + 1, DBConstant.SQL_RIGHT);
+                            break;
+
+                        case 'I':
+                            tableJoinStr.replace(typeCharIndex, typeCharIndex + 1, DBConstant.SQL_INNER);
+                            break;
+
+                        default:
+                            tableJoinStr.replace(typeCharIndex, typeCharIndex + 1, DBConstant.SQL_LEFT);
+                            break;
+                    }
+
+                    tableJoinStr.replace(tableJoinStr.indexOf("("), tableJoinStr.indexOf("(") + 1, DBFormatter.gapStrWithBlank(DBConstant.SQL_JOIN));
+
+                    if (tableJoinStr.indexOf(",") != -1) {
+                        tableJoinStr.replace(tableJoinStr.indexOf(","), tableJoinStr.indexOf(",") + 1, DBFormatter.gapStrWithBlank(DBConstant.SQL_ON));
+                    }
+
+                    tableJoinStr.delete(tableJoinStr.lastIndexOf(")"), tableJoinStr.lastIndexOf(")") + 1);
+
+                    joinSql.append(tableJoinStr);
+                    joinSql.append(",");
+                }
+
+                joinSql.deleteCharAt(joinSql.length() - 1);
+            }
+
+            return joinSql.toString().trim();
         }
 
         return "";
@@ -682,7 +810,13 @@ public class SqlCondition {
     public String fromInSql() {
         if (!opTables.isEmpty()) {
             StringBuilder fromStr = new StringBuilder("FROM ");
-            fromStr.append(tableInSql());
+            if (null != joinConditionMap) {
+                fromStr.append(tableJoinInSql());
+            }
+            else {
+                fromStr.append(tableInSql());
+            }
+
             return fromStr.toString().trim();
         }
 
@@ -698,6 +832,24 @@ public class SqlCondition {
             }
             fromStr.deleteCharAt(fromStr.length() - 1);
             return fromStr.toString().trim();
+        }
+
+        return "";
+    }
+
+    public String tableJoinInSql() {
+        // opTable L(joinTable, .....)
+        if (!opTables.isEmpty()) {
+            StringBuilder tableJoinStr = new StringBuilder("");
+
+            for (String opTable : opTables) {
+                List<String> opTableJoins = joinConditionMap.get(opTable);
+                tableJoinStr.append(getJoinStr(opTable, getJoinConditionMap()));
+                tableJoinStr.append(",");
+            }
+            tableJoinStr.deleteCharAt(tableJoinStr.length() - 1);
+
+            return tableJoinStr.toString().trim();
         }
 
         return "";
@@ -803,5 +955,6 @@ public class SqlCondition {
         inConditionMap = null;
         likeConditionMap = null;
         existsConditionMap = null;
+        joinConditionMap = null;
     }
 }

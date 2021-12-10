@@ -99,6 +99,7 @@ public class JDBCUtilTest {
                 .where()
                 .eq("cname", "p999")
                 .like(DBConstant.SQL_AND, "cstatus", "%14%");
+        System.out.println(selectCondition.generateSql());
 
         ResultSet resultSet = null;
 
@@ -152,5 +153,17 @@ public class JDBCUtilTest {
         SqlCondition deleteCondition = new SqlCondition();
         deleteCondition.delete_from("course_1").where().eq("c_id", 7);
         System.out.println(deleteCondition.executedBy(innerDS));
+
+
+
+
+
+
+        SqlCondition selectTestLeftJoinTable = new SqlCondition();
+        selectTestLeftJoinTable.select_col("*")
+                .from("course_1").left_join("course_2").left_join("course_3", "course_3.c_id=course_3.c_id")
+                .where().eq("cname", "p999")
+                .like(DBConstant.SQL_AND, "cstatus", "%14%");
+        System.out.println(selectTestLeftJoinTable.generateSql());
     }
 }

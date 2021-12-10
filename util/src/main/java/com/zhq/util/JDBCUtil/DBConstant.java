@@ -91,7 +91,11 @@ public class DBConstant {
     public static final String SQL_INSERT = "INSERT";
     public static final String SQL_AND = "AND";
     public static final String SQL_OR = "OR";
-
+    public static final String SQL_ON = "ON";
+    public static final String SQL_LEFT = "LEFT";
+    public static final String SQL_RIGHT = "RIGHT";
+    public static final String SQL_INNER = "INNER";
+    public static final String SQL_JOIN = "JOIN";
 
     // 数据库函数, 需要区分不同的数据库类型, 默认为 mysql
     // 待完成

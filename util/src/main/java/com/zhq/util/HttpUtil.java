@@ -136,7 +136,7 @@ public class HttpUtil {
     public static String post(String urlStr, Map<String, String> xFormUrlEncoded) {
         StringBuilder result = new StringBuilder("");
         HttpURLConnection connection = null;
-        String xFormParam = StringUtil.mergeMapToxFormUrlEncoded(xFormUrlEncoded);
+        String xFormParam = StringUtil.mergeMapToUrlParams(xFormUrlEncoded);
         BufferedReader inReader = null;
 
         try {

@@ -15,18 +15,30 @@ public class DBFormatter {
     /**
      * 对传入的 Object 对象进行字符串的格式化
      * @param value 参数对象
+     * @param nullStr 为空时是否显示 null 字符串
+     * @param strQuot 传入对象为字符串时, 返回内容是否要添加引号
      * @return
      */
-    public static String formatObjToStr(Object value) {
+    public static String formatObjToStr(Object value, boolean nullStr, boolean strQuot) {
         if (null == value) {
-            return "null";
+            if (nullStr) {
+                return "null";
+            }
+            else {
+                return "";
+            }
         }
 
         String valueStr = String.valueOf(value);
 
         // 判断传入的父类 value 是否为 String 类型, 如果是 String 类型，则添加双引号
         if (value.getClass().isAssignableFrom(String.class)) {
-            return new String("'").concat(valueStr).concat("'");
+            if (strQuot) {
+                return new String("'").concat(valueStr).concat("'");
+            }
+            else {
+                return new String(valueStr);
+            }
         }
 
         // 判断传入的类型是否为 SqlCondition 对象, 是的话，进行子查询的转换
@@ -37,9 +49,37 @@ public class DBFormatter {
         return valueStr;
     }
 
+    public static String formatObjToStr(Object value) {
+        return formatObjToStr(value, true, true);
+    }
+
 
     /**
-     * 将传入的数据库查询结果, 通过返回
+     * 对传入的 Str 字符串左右添加空格隔开
+     * @param value 传入用于分隔的字符串对象
+     * @param nullStr 为空时是否返回 null 字符串
+     * @return
+     */
+    public static String gapStrWithBlank(String value, boolean nullStr) {
+        if (null == value) {
+            if (nullStr) {
+                return "null";
+            }
+            else {
+                return "";
+            }
+        }
+
+        return new String(" ").concat(value).concat(" ");
+    }
+
+    public static String gapStrWithBlank(String value) {
+        return gapStrWithBlank(value, false);
+    }
+
+
+    /**
+     * 将传入的 JDBC 查询结果, 返回为 JSON 字符串
      * @param queryResult
      * @return
      */
