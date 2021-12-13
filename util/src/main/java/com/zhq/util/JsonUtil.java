@@ -3,7 +3,6 @@ package com.zhq.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.zhq.util.JDBCUtil.DBFormatter;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -85,7 +84,6 @@ public class JsonUtil {
     }
 
 
-
     /**
      * 将数据库查询的 ResultSet 对象转换为对应的 JSONString 对象,
      * 使用 JSONObject 对象获取
@@ -117,6 +115,7 @@ public class JsonUtil {
             return "";
         }
     }
+
 
 
 
