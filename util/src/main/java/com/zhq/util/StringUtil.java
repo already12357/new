@@ -122,7 +122,12 @@ public class StringUtil {
 
         String fullReplaceContent = new String(" ").concat(replaceContent).concat(" ");
         StringBuilder retStr = new StringBuilder(sourceStr);
-        int replaceIndex = sourceStr.indexOf(targetChar, index);
+        int replaceIndex = 0;
+
+        // 遍历找寻第 n 个替换的内容
+        for (int i = 0; i < index; i++) {
+            replaceIndex = replaceContent.indexOf(targetChar, replaceIndex);
+        }
 
         retStr.replace(replaceIndex, replaceIndex + 1, fullReplaceContent);
 
