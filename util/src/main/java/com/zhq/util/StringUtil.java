@@ -133,4 +133,51 @@ public class StringUtil {
 
         return retStr.toString();
     }
+
+
+    /**
+     * 给对应的字符串打上单引号
+     * @param str 目标字符串
+     * @param isNullStr 为空时是否显示 null 字符串
+     * @return
+     */
+    public static String quoted(String str, boolean isNullStr) {
+        if (null == str) {
+            if (isNullStr) {
+                return "null";
+            }
+            else {
+                return "";
+            }
+        }
+
+        return new String("'").concat(str).concat("'");
+    }
+
+    public static String quoted(String str) {
+        return quoted(str, false);
+    }
+
+    /**
+     * 给所有字符串打上双引号
+     * @param str 目标字符串
+     * @param isNullStr 为空时是否显示 null 字符串
+     * @return
+     */
+    public static String dQuoted(String str, boolean isNullStr) {
+        if (null == str) {
+            if (isNullStr) {
+                return "null";
+            }
+            else {
+                return "";
+            }
+        }
+
+        return new String("\"").concat(str).concat("\"");
+    }
+
+    public static String dQuoted(String str) {
+        return dQuoted(str, false);
+    }
 }
