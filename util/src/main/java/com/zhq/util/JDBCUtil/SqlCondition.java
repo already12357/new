@@ -918,7 +918,17 @@ public class SqlCondition {
 
         try {
             connection = dataSource.getConnection();
-            ps = connection.prepareStatement(generateSql());
+            return executedBy(connection);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Object executedBy(Connection connection) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(generateSql());
             switch (opType) {
                 case DBConstant.SQL_DELETE:
                 case DBConstant.SQL_INSERT:
@@ -938,6 +948,7 @@ public class SqlCondition {
             return null;
         }
     }
+
 
 
     /**

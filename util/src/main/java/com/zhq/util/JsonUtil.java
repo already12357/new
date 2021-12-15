@@ -117,8 +117,6 @@ public class JsonUtil {
     }
 
 
-
-
 //      根据传入的泛型将 JSONArray 转换为对应的原生数组 ( 暂时无法实现 )
 //      由于泛型在 Java 存在泛型擦除问题，即在加载时会将除类上标记的泛型全部擦除，所以无法获得泛型的类
 //    public static <T> T[] jArrayToNativeArray(String jsonStr) {}

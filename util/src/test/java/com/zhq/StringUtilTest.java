@@ -37,7 +37,10 @@ public class StringUtilTest {
         System.out.println("textBytes" + textBytes);
         System.out.println(new String(textBytes));
 
-        String replacedContent = StringUtil.replaceWithGap("Hellow,world with gap and pain without,happiness", ',', "ON", 1);
+        String replacedContent = StringUtil.replaceWithGap("Hellow,world with gap and pain without,happiness", ',', "ON", 0);
         System.out.println(replacedContent);
+
+        String beTrimedChar = "'a', 'b', 'c', 'a',";
+        System.out.println(StringUtil.trimTailQuote(beTrimedChar));
     }
 }

@@ -233,7 +233,6 @@ public class IOUtil {
         return null;
     }
 
-
     /**
      * 根据文件流返回对应的类型
      * @param fileBytes 传入文件的二进制类型
@@ -284,4 +283,5 @@ public class IOUtil {
     public static String textTypeInBytes(byte[] textBytes) {
         return typeInBytes(textBytes, TYPE_TEXT);
     }
+
 }

@@ -81,7 +81,6 @@ public class StringUtil {
     }
 
 
-
     /**
      * 将 Map 数据结构转化为参数据的形式
      * @param urlParamMap 对应的数据对
@@ -123,14 +122,21 @@ public class StringUtil {
         String fullReplaceContent = new String(" ").concat(replaceContent).concat(" ");
         StringBuilder retStr = new StringBuilder(sourceStr);
         int replaceIndex = 0;
+        int tempIndex = 0;
 
         // 遍历找寻第 n 个替换的内容
-        for (int i = 0; i < index; i++) {
-            replaceIndex = replaceContent.indexOf(targetChar, replaceIndex);
+        for (int i = 0; i <= index; i++) {
+            tempIndex = retStr.toString().indexOf(targetChar, tempIndex + 1);
+
+            if (replaceIndex == -1) {
+                retStr.replace(replaceIndex, replaceIndex + 1, fullReplaceContent);
+                return retStr.toString();
+            }
+
+            replaceIndex = tempIndex;
         }
 
         retStr.replace(replaceIndex, replaceIndex + 1, fullReplaceContent);
-
         return retStr.toString();
     }
 
@@ -179,5 +185,36 @@ public class StringUtil {
 
     public static String dQuoted(String str) {
         return dQuoted(str, false);
+    }
+
+
+    /**
+     * 截去字符串末尾的字符 ( 逗号, 空格等 )
+     * @param str 需要操作的字符
+     * @param trimChar 需要取出的尾部字符
+     * @return
+     */
+    public static String trimTailChar(String str, char trimChar) {
+        if (!hasContent(str.trim())) {
+            return "";
+        }
+
+        String trimStr = str.trim();
+
+        if (trimStr.charAt(trimStr.length() - 1) == trimChar) {
+            StringBuilder retStr = new StringBuilder(trimStr);
+            retStr.deleteCharAt(trimStr.length() - 1);
+            return retStr.toString();
+        }
+
+        return trimStr;
+    }
+
+    public static String trimTailQuote(String str) {
+        return trimTailChar(str, ',');
+    }
+
+    public static String trimTailBlank(String str) {
+        return trimTailChar(str, ' ');
     }
 }
