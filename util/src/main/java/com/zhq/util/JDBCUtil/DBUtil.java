@@ -8,39 +8,58 @@ import java.util.Locale;
 
 /**
  * 数据库的帮助类，可以快速生成静态数据源对象, 并执行查询语句
+ * 使用单例模式？
  * @author Eddie Zhang
  */
 public class DBUtil {
+    // 内部的单例对象
+    private static DBUtil instance = null;
     // 内部配置一个静态的数据源类
-    private static DataSource innerDS;
+    private DataSource innerDS;
     // 内置的一些数据源信息, 用于获取静态的数据类
     // 数据库类型
-    private static String innerDbType = DBConstant.DB_MYSQL;
+    private String innerDbType = DBConstant.DB_MYSQL;
     // 连接池类型
-    private static String innerPoolType = DBConstant.POOL_DRUID;
+    private String innerPoolType = DBConstant.POOL_DRUID;
     // 数据库 URL
-    private static String innerUrl = DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306");
+    private String innerUrl = DBConstant.URL_MYSQL("sys", "127.0.0.1", "3306");
     // 连接数据库名称
-    private static String innerDbname;
+    private String innerDbname;
     // 登录数据库信息
-    private static String innerUsername = "root";
-    private static String innerPassword = "root";
+    private String innerUsername = "root";
+    private String innerPassword = "root";
 
+    // 私有化构造函数
+    private DBUtil() {}
+    
+    // 对外部的开放函数
+    private static DBUtil getInstance() {
+        if (null == instance) {
+            synchronized (DBUtil.class) {
+                if (null == instance) {
+                    instance = new DBUtil();
+                }
+            }
+        }
+
+        return instance;
+    }
+    
     /**
      * 设置内部数据源的四大信息 ( username, password, url, poolType )
      */
     public static void setUrl(String url) {
-        innerUrl = url;
-        innerDbType = getTypeByUrl(url);
+        getInstance().innerUrl = url;
+        getInstance().innerDbType = getTypeByUrl(url);
     }
     public static void setPassword(String password) {
-        innerPassword = password;
+        getInstance().innerPassword = password;
     }
     public static void setUsername(String username) {
-        innerUsername = username;
+        getInstance().innerUsername = username;
     }
     public static void setPoolType(String poolType) {
-        innerPoolType = poolType;
+        getInstance().innerPoolType = poolType;
     }
 
 
@@ -48,7 +67,7 @@ public class DBUtil {
      * 根据配置获取数据源
      */
     public static DataSource getInnerDS() {
-        return innerDsWithConfig();
+        return getInstance().innerDsWithConfig();
     }
 
 
@@ -56,42 +75,30 @@ public class DBUtil {
      * 根据配置获取内部数据源
      * @return
      */
-    private static DataSource innerDsWithConfig() {
-        switch (innerPoolType) {
+    private DataSource innerDsWithConfig() {
+        switch (getInstance().innerPoolType) {
             case DBConstant.POOL_C3P0:
-                return innerC3p0DataSource();
+                return getInstance().innerC3p0DataSource();
 
             case DBConstant.POOL_DBCP:
-                return innerDbcpDataSource();
+                return getInstance().innerDbcpDataSource();
 
             // 默认返回类型为德鲁伊连接池的数据库
             default:
-                return innerDruidDataSource();
+                return getInstance().innerDruidDataSource();
 
         }
     }
-
 
     /**
      * 获取不同类型的数据库链接池对象 ( 通过类名反射调用 ), 如 ( dbcp, druid, c3p0.... )
      * @return
      */
-    private static DataSource innerDbcpDataSource() {
+    private DataSource innerDbcpDataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
-                    // 使用反射调用, 减少依赖引入
-                    Class dsClazz = Class.forName(DBConstant.CLASS_DBCP_DS);
-                    Method userSetter = dsClazz.getMethod("setUsername", String.class);
-                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
-                    Method urlSetter = dsClazz.getMethod("setUrl", String.class);
-                    Method driverSetter = dsClazz.getMethod("setDriverClassName", String.class);
-
-                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
-                    userSetter.invoke(innerDS, innerUsername);
-                    passwdSetter.invoke(innerDS, innerPassword);
-                    urlSetter.invoke(innerDS, innerUrl);
-                    driverSetter.invoke(innerDS, driverStrWithDbType(innerDbType));
+                    innerDS = dbcpDataSource(innerUrl, innerUsername, innerPassword, innerDbType);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -101,22 +108,12 @@ public class DBUtil {
             return innerDS;
         }
     }
-    private static DataSource innerC3p0DataSource() {
+
+    private DataSource innerC3p0DataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
-                    // 使用反射调用, 减少依赖引入
-                    Class dsClazz = Class.forName(DBConstant.CLASS_C3P0_DS);
-                    Method userSetter = dsClazz.getMethod("setUser", String.class);
-                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
-                    Method urlSetter = dsClazz.getMethod("setJdbcUrl", String.class);
-                    Method driverSetter = dsClazz.getMethod("setDriverClass", String.class);
-
-                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
-                    userSetter.invoke(innerDS, innerUsername);
-                    passwdSetter.invoke(innerDS, innerPassword);
-                    urlSetter.invoke(innerDS, innerUrl);
-                    driverSetter.invoke(innerDS, driverStrWithDbType(innerDbType));
+                    innerDS = c3p0DataSource(innerUrl, innerUsername, innerPassword, innerDbType);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -126,22 +123,12 @@ public class DBUtil {
             return innerDS;
         }
     }
-    private static DataSource innerDruidDataSource() {
+
+    private DataSource innerDruidDataSource() {
         synchronized (DataSource.class) {
             if (null == innerDS) {
                 try {
-                    // 使用反射调用, 减少依赖引入
-                    Class dsClazz = Class.forName(DBConstant.CLASS_DRUID_DS);
-                    Method userSetter = dsClazz.getMethod("setUsername", String.class);
-                    Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
-                    Method urlSetter = dsClazz.getMethod("setUrl", String.class);
-                    Method driverSetter = dsClazz.getMethod("setDriver", Driver.class);
-
-                    innerDS = (DataSource) dsClazz.cast(dsClazz.newInstance());
-                    userSetter.invoke(innerDS, innerUsername);
-                    passwdSetter.invoke(innerDS, innerPassword);
-                    urlSetter.invoke(innerDS, innerUrl);
-                    driverSetter.invoke(innerDS, driverWithDBType(innerDbType));
+                    innerDS = druidDataSource(innerUrl, innerUsername, innerPassword, innerDbType);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -151,6 +138,79 @@ public class DBUtil {
             return innerDS;
         }
     }
+
+
+
+    public static DataSource dbcpDataSource(String url, String username, String password, String dbType) {
+        try {
+            DataSource ds = null;
+            Class dsClazz = Class.forName(DBConstant.CLASS_DBCP_DS);
+            Method userSetter = dsClazz.getMethod("setUsername", String.class);
+            Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+            Method urlSetter = dsClazz.getMethod("setUrl", String.class);
+            Method driverSetter = dsClazz.getMethod("setDriverClassName", String.class);
+
+            ds = (DataSource) dsClazz.cast(dsClazz.newInstance());
+            userSetter.invoke(ds, username);
+            passwdSetter.invoke(ds, password);
+            urlSetter.invoke(ds, url);
+            driverSetter.invoke(ds, driverStrWithDbType(dbType));
+
+            return ds;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public static DataSource c3p0DataSource(String url, String username, String password, String dbType) {
+        try {
+            // 使用反射调用, 减少依赖引入
+            DataSource ds = null;
+            Class dsClazz = Class.forName(DBConstant.CLASS_C3P0_DS);
+            Method userSetter = dsClazz.getMethod("setUser", String.class);
+            Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+            Method urlSetter = dsClazz.getMethod("setJdbcUrl", String.class);
+            Method driverSetter = dsClazz.getMethod("setDriverClass", String.class);
+
+            ds = (DataSource) dsClazz.cast(dsClazz.newInstance());
+            userSetter.invoke(ds, username);
+            passwdSetter.invoke(ds, password);
+            urlSetter.invoke(ds, url);
+            driverSetter.invoke(ds, driverStrWithDbType(dbType));
+            return ds;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static DataSource druidDataSource(String url, String username, String password, String dbType) {
+        try {
+            DataSource ds = null;
+            // 使用反射调用, 减少依赖引入
+            Class dsClazz = Class.forName(DBConstant.CLASS_DRUID_DS);
+            Method userSetter = dsClazz.getMethod("setUsername", String.class);
+            Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
+            Method urlSetter = dsClazz.getMethod("setUrl", String.class);
+            Method driverSetter = dsClazz.getMethod("setDriver", Driver.class);
+
+            ds = (DataSource) dsClazz.cast(dsClazz.newInstance());
+            userSetter.invoke(ds, username);
+            passwdSetter.invoke(ds, password);
+            urlSetter.invoke(ds, url);
+            driverSetter.invoke(ds, driverWithDBType(dbType));
+            return ds;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
     /**
@@ -240,11 +300,11 @@ public class DBUtil {
      */
     public static boolean resetInnerDs() {
         try {
-            if (null != innerDS) {
-                Class innerDSClazz = innerDS.getClass();
+            if (null != getInstance().innerDS) {
+                Class innerDSClazz = getInstance().innerDS.getClass();
                 Method closeMethod = innerDSClazz.getMethod("close");
-                closeMethod.invoke(innerDS);
-                innerDS = null;
+                closeMethod.invoke(getInstance().innerDS);
+                getInstance().innerDS = null;
             }
 
             return true;
@@ -286,6 +346,4 @@ public class DBUtil {
 
         return null;
     }
-
-
 }

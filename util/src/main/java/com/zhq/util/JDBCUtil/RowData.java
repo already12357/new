@@ -2,49 +2,63 @@ package com.zhq.util.JDBCUtil;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * 用于存储数据库查询下来的数据, 核心通过 Map 存储
- * 注意，存储单条数据
+ * 注意，存储单条数据, 或对应表示多条扩展的数据
  */
 public class RowData {
     private Map<String, Object> data;
 
-    public RowData() {
-        data = new HashMap<String, Object>();
+    public RowData(Map<String, Object> data) {
+        this.data = data;
     }
 
+    public RowData() {
+        this(new HashMap<String, Object>());
+    }
 
+    /**
+     * 将原生数据库查询的结果转化为 RowData 类
+     * @param queryResult
+     * @return
+     */
+    public static List<RowData> valueOf(ResultSet queryResult) {
+        if (null == queryResult) {
+            return null;
+        }
 
-//    /**
-//     * 将外部的结果转化为对应的内部类
-//     */
-//    public static RowData valueOf(ResultSet queryResult) {
-//        if (null == queryResult) {
-//            return null;
-//        }
-//
-//        try {
-//            RowData dataRow = new RowData();
-//            ResultSetMetaData metaData = queryResult.getMetaData();
-//
-//            // 1. 取出对应的查询列
-//
-//            // 2. 取出查询列对应的信息
-//
-//            // 3. 以键值对的形式存储到哈希表中
-//
-//
-//            return dataRow;
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+        List<RowData> rowData = new ArrayList<RowData>();
 
+        try {
+            ResultSetMetaData metaData = queryResult.getMetaData();
+
+            queryResult.first();
+            // 遍历行
+            while (queryResult.next()) {
+                RowData row = new RowData();
+                // 遍历每行中的每列
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    Object columnValue = queryResult.getObject(i);
+                    row.set(columnName, columnValue);
+                }
+
+                rowData.add(row);
+            }
+
+            return rowData;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return rowData;
+        }
+
+    }
 
 
     public void set(String column, Object value) {
@@ -62,7 +76,6 @@ public class RowData {
     public void setLong(String column, Long value) {
         data.put(column, value);
     }
-
 
     public Object get(String column) {
         return data.get(column);

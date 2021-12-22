@@ -3,6 +3,7 @@ package com.zhq;
 import com.alibaba.druid.util.JdbcUtils;
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;
+import com.zhq.util.JDBCUtil.RowData;
 import com.zhq.util.JDBCUtil.SqlCondition;
 import com.zhq.util.JsonUtil;
 import org.junit.Test;
@@ -112,6 +113,13 @@ public class JDBCUtilTest {
                 System.out.print(resultSet.getString(2));
                 System.out.print(resultSet.getInt(3));
                 System.out.println(resultSet.getString(4));
+            }
+
+            resultSet.first();
+
+            List<RowData> rowDatas = RowData.valueOf(resultSet);
+            for (RowData rowData : rowDatas) {
+                System.out.println(rowData.get("c_id"));
             }
         }
         catch (Exception e) {
