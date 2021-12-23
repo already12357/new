@@ -121,11 +121,31 @@ public class DBFormatter {
         String dbTypeCase = dbType.toLowerCase(Locale.ENGLISH);
 
         // 根据不同的操作类型，生成不同的子查询外部 SQL
+        // 通过外部子查询，实现分页
         switch (dbTypeCase) {
+            // 拼接对应的操作类型
             case DBConstant.DB_ORACLE:
+                frameSql.append("SELECT")
+                        .append(" * ")
+                        .append("FROM")
+                        .append(" ( ")
+                            .append("SELECT")
+                            .append(" sqlcontent.*, rownum rn ")
+                            .append("FROM")
+                            .append(" ( ")
+                            .append(sqlContent)
+                            .append(" ) sqlcontent")
+                        .append(" ) page_outer")
+                        .append(" WHERE ")
+                        .append("page_outer.rn>=")
+                        .append(String.valueOf(pageSize * pageIndex + 1))
+                        .append(" AND ")
+                        .append("page_outer.rn<=")
+                        .append(String.valueOf(pageSize * (pageIndex + 1)));
                 break;
 
             case DBConstant.DB_SQLSERVER:
+
                 break;
 
             case DBConstant.DB_DB2:

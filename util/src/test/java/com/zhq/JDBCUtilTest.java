@@ -81,96 +81,106 @@ public class JDBCUtilTest {
 
     @Test
     public void testSqlCondition() throws SQLException {
-        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
+        DBUtil.setUrl(DBConstant.URL_MYSQL("shefan_back"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
         DBUtil.setPoolType(DBConstant.POOL_DRUID);
         DataSource innerDS = DBUtil.getInnerDS();
 
-        // 增
-        SqlCondition insertCondition = new SqlCondition();
-        insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
-        System.out.println(insertCondition.executedBy(innerDS));
+        SqlCondition pageSelectCondition = new SqlCondition();
+        pageSelectCondition.select_col("IS_HASCALL", "Flowno", "HallGuid", "CenterGuid", "HandleWindowNo", "CallTime")
+                .from("audit_queue")
+                .where().eq("identitycardnum", "511681199811034574").page(0, 2);
+        System.out.println(pageSelectCondition.generateSql());
+        List<RowData> rowDatas = RowData.valueOf((ResultSet) pageSelectCondition.executedBy(innerDS));
+        System.out.println(rowDatas);
 
-        // 查
-        // 分页语法错误
-        // error .......
-        // ...........
-        SqlCondition selectCondition = new SqlCondition();
-        selectCondition.select_col("*")
-                .from("sys.course_1").page(0, 8);
-        System.out.println(selectCondition.generateSql());
-
-        ResultSet resultSet = null;
-
-        try {
-            resultSet = (ResultSet) selectCondition.executedBy(innerDS);
-            System.out.println(JsonUtil.jResultSetToJson(resultSet));
-
-            while (resultSet.next()) {
-                System.out.print(resultSet.getInt(1));
-                System.out.print(resultSet.getString(2));
-                System.out.print(resultSet.getInt(3));
-                System.out.println(resultSet.getString(4));
-            }
-
-            resultSet.first();
-
-            List<RowData> rowDatas = RowData.valueOf(resultSet);
-            for (RowData rowData : rowDatas) {
-                System.out.println(rowData.get("c_id"));
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+//        // 增
+//        SqlCondition insertCondition = new SqlCondition();
+//        insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
+//        System.out.println(insertCondition.executedBy(innerDS));
 
 
-        // 改
-        SqlCondition updateCondition = new SqlCondition();
-        updateCondition.update_table("course_1").set_col("cname").values("p999")
-                .where()
-                .lt("c_id", 11);
-        System.out.println(updateCondition.executedBy(innerDS));
+//        // 查
+//        // 分页语法错误
+//        // error .......
+//        // ...........
+//        SqlCondition selectCondition = new SqlCondition();
+//        selectCondition.setDbType(DBConstant.DB_ORACLE);
+//        selectCondition.select_col("*")
+//                .from("sys.course_1").page(0, 8);
+//        System.out.println(selectCondition.generateSql());
+//
+//        ResultSet resultSet = null;
+//
+//        try {
+//            resultSet = (ResultSet) selectCondition.executedBy(innerDS);
+//            System.out.println(JsonUtil.jResultSetToJson(resultSet));
+//
+//            while (resultSet.next()) {
+//                System.out.print(resultSet.getInt(1));
+//                System.out.print(resultSet.getString(2));
+//                System.out.print(resultSet.getInt(3));
+//                System.out.println(resultSet.getString(4));
+//            }
+//
+//            resultSet.first();
+//
+//            List<RowData> rowDatas = RowData.valueOf(resultSet);
+//            for (RowData rowData : rowDatas) {
+//                System.out.println(rowData.get("c_id"));
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
-        // 查
-        SqlCondition select2Condition = new SqlCondition();
-        select2Condition.select_col("*")
-                .from("course_1")
-                .where()
-                .between("c_id", 9, 14)
-                .eq("c_id", "select c2.c_id from course_1 c2 where c2.c_id=9");
-        ResultSet resultSet2 = null;
-
-        try {
-            resultSet2 = (ResultSet) select2Condition.executedBy(innerDS);
-
-            while (resultSet2.next()) {
-                System.out.print(resultSet2.getInt(1));
-                System.out.print(resultSet2.getString(2));
-                System.out.print(resultSet2.getInt(3));
-                System.out.println(resultSet2.getString(4));
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SqlCondition deleteCondition = new SqlCondition();
-        deleteCondition.delete_from("course_1").where().eq("c_id", 7);
-        System.out.println(deleteCondition.executedBy(innerDS));
+//        // 改
+//        SqlCondition updateCondition = new SqlCondition();
+//        updateCondition.update_table("course_1").set_col("cname").values("p999")
+//                .where()
+//                .lt("c_id", 11);
+//        System.out.println(updateCondition.executedBy(innerDS));
 
 
+//        // 查
+//        SqlCondition select2Condition = new SqlCondition();
+//        select2Condition.select_col("*")
+//                .from("course_1")
+//                .where()
+//                .between("c_id", 9, 14)
+//                .eq("c_id", "select c2.c_id from course_1 c2 where c2.c_id=9");
+//        ResultSet resultSet2 = null;
+
+//        try {
+//            resultSet2 = (ResultSet) select2Condition.executedBy(innerDS);
+//
+//            while (resultSet2.next()) {
+//                System.out.print(resultSet2.getInt(1));
+//                System.out.print(resultSet2.getString(2));
+//                System.out.print(resultSet2.getInt(3));
+//                System.out.println(resultSet2.getString(4));
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+//        SqlCondition deleteCondition = new SqlCondition();
+//        deleteCondition.delete_from("course_1").where().eq("c_id", 7);
+//        System.out.println(deleteCondition.executedBy(innerDS));
 
 
 
 
-        SqlCondition selectTestLeftJoinTable = new SqlCondition();
-        selectTestLeftJoinTable.select_col("*")
-                .from("course_1").left_join("course_2").left_join("course_3", "course_3.c_id=course_3.c_id")
-                .where().eq("cname", "p999")
-                .like(DBConstant.SQL_AND, "cstatus", "%14%");
-        System.out.println(selectTestLeftJoinTable.generateSql());
+
+
+//        SqlCondition selectTestLeftJoinTable = new SqlCondition();
+//        selectTestLeftJoinTable.select_col("*")
+//                .from("course_1").left_join("course_2").left_join("course_3", "course_3.c_id=course_3.c_id")
+//                .where().eq("cname", "p999")
+//                .like(DBConstant.SQL_AND, "cstatus", "%14%");
+//        System.out.println(selectTestLeftJoinTable.generateSql());
     }
 }

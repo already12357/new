@@ -1,7 +1,5 @@
 package com.zhq.util.JDBCUtil;
 
-import com.zhq.util.ResourceUtil;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -393,8 +391,8 @@ public class SqlCondition {
         opColumns.add(columnName);
 
         for (String extraColumn : columnNames) {
-            if (!opColumns.contains(columnName)) {
-                opColumns.add(columnName);
+            if (!opColumns.contains(extraColumn)) {
+                opColumns.add(extraColumn);
             }
         }
 
@@ -765,7 +763,7 @@ public class SqlCondition {
 
     /**
      * 分页解析，未完成 !!!!!!!!!!!!!!!!!!!!!!!!
-     * 解析 pageConditionMap 数据结构，拼接对应的分页内容
+     * 解析 pageConditionMap 数据结构，拼接对应的分页内容, 修改 DBFormatter.pageQuerySql
      * @return
      */
     private String generateSelectSql() {

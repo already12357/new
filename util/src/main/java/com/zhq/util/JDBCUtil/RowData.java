@@ -1,5 +1,7 @@
 package com.zhq.util.JDBCUtil;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class RowData {
         try {
             ResultSetMetaData metaData = queryResult.getMetaData();
 
-            queryResult.first();
+            queryResult.beforeFirst();
             // 遍历行
             while (queryResult.next()) {
                 RowData row = new RowData();
@@ -61,7 +63,7 @@ public class RowData {
     }
 
 
-    
+
     public void set(String column, Object value) {
         data.put(column, value);
     }
@@ -75,6 +77,10 @@ public class RowData {
     }
 
     public void setLong(String column, Long value) {
+        data.put(column, value);
+    }
+
+    public void setBoolean(String column, Boolean value) {
         data.put(column, value);
     }
 
@@ -92,5 +98,46 @@ public class RowData {
 
     public Long getLong(String column) {
         return (Long) data.get(column);
+    }
+
+    public Boolean getBoolean(String column) {
+        return (Boolean) data.get(column);
+    }
+
+
+    // 以 json 格式答应
+    @Override
+    public String toString() {
+        if (!data.isEmpty()) {
+            StringBuilder jsonBuilder = new StringBuilder("");
+
+            jsonBuilder.append("{");
+            for (Map.Entry<String, Object> dataEntry : data.entrySet()) {
+                jsonBuilder.append("\"").append(dataEntry.getKey()).append("\"");
+                jsonBuilder.append(":");
+                Object valueObject = dataEntry.getValue();
+
+
+                if (null != valueObject) {
+                    // 字符串类型对象添加对应的双引号
+                    if (Integer.class.isAssignableFrom(valueObject.getClass())) {
+                        jsonBuilder.append(String.valueOf(dataEntry.getValue()));
+                    }
+                    else {
+                        jsonBuilder.append("\"").append(String.valueOf(valueObject)).append("\"");
+                    }
+                }
+                else {
+                    jsonBuilder.append("\"\"");
+                }
+
+                jsonBuilder.append(",");
+            }
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+            jsonBuilder.append("}");
+            return jsonBuilder.toString();
+        }
+
+        return "";
     }
 }

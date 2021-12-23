@@ -4,6 +4,7 @@ public class User {
     private String name;
     private String password;
     private Integer money;
+    private Cat cat;
 
     public User(String name, String password, Integer money) {
         this.name = name;
