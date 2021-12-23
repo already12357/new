@@ -283,5 +283,4 @@ public class IOUtil {
     public static String textTypeInBytes(byte[] textBytes) {
         return typeInBytes(textBytes, TYPE_TEXT);
     }
-
 }

@@ -29,9 +29,6 @@ public class SqlCondition {
     // 优化，添加 exists, group by, order, limit, having 等条件
     // =============================================
     // =============================================
-    // 优化，根据传入的 DataSource 对象调用
-    // =============================================
-    // =============================================
     // 优化，子查询语句的支持
     // =============================================
     // =============================================
@@ -62,7 +59,10 @@ public class SqlCondition {
     private HashMap<String, List<String>> existsConditionMap;
     // 表连接的内容
     private HashMap<String, List<String>> joinConditionMap;
-
+    // 分页信息存储 ( 注意需要指定数据库类型  )
+    // pageIndex <--> 0 当前页号 
+    // pageSize <--> 10 当前页的大小
+    private HashMap<String, Integer> pageConditionMap;
 
     // 操作列对应的值
     // 当前操作列
@@ -136,7 +136,12 @@ public class SqlCondition {
         }
         return joinConditionMap;
     }
-
+    public HashMap<String, Integer> getPageConditionMap() {
+        if (null == pageConditionMap) {
+            pageConditionMap = new HashMap<String, Integer>();
+        }
+        return pageConditionMap;
+    }
 
     public SqlCondition() {
         opColumns = new ArrayList<String>();
@@ -254,7 +259,6 @@ public class SqlCondition {
         }
         return this;
     }
-
     public SqlCondition inner_join(String joinTable, Object joinOn) {
         if (null != opTables && !opTables.isEmpty()) {
             join(opTables.get(opTables.size() - 1), DBConstant.SQL_INNER, joinTable, joinOn);
@@ -414,6 +418,20 @@ public class SqlCondition {
         for (Object extraValue : valueContents) {
             opValues.add(extraValue);
         }
+        return this;
+    }
+
+    /**
+     * 用于分页
+     * @param pageIndex 当前页号
+     * @param pageSize 当前页的大小
+     */
+    public SqlCondition page(int pageIndex, int pageSize) {
+        if (pageIndex >= 0 && pageSize > 0) {
+            getPageConditionMap().put("pageIndex", Integer.valueOf(pageIndex));
+            getPageConditionMap().put("pageSize", Integer.valueOf(pageSize));
+        }
+
         return this;
     }
 
@@ -745,15 +763,31 @@ public class SqlCondition {
         return "";
     }
 
+    /**
+     * 分页解析，未完成 !!!!!!!!!!!!!!!!!!!!!!!!
+     * 解析 pageConditionMap 数据结构，拼接对应的分页内容
+     * @return
+     */
     private String generateSelectSql() {
         StringBuilder selectBuilder = new StringBuilder(opType);
-        // 逐次拼接对应的内容
+
+        // 拼接生成查询内容的 SQL
         selectBuilder.append(" ")
                 .append(columnsInSql())
                 .append(" ")
                 .append(fromInSql())
                 .append(" ")
                 .append(whereInSql());
+
+
+        // 有分页的情况，在分页子查询外层的基础上，生成对应的 sql
+        // select * from (实际的  sql) limit....( 分页条件 )
+        if (null != pageConditionMap) {
+            Integer pageIndex = getPageConditionMap().get("pageIndex");
+            Integer pageSize = getPageConditionMap().get("pageSize");
+            return DBFormatter.pageQuerySql(pageIndex, pageSize, getDbType(), selectBuilder.toString());
+        }
+
         return selectBuilder.toString();
     }
 
@@ -967,5 +1001,6 @@ public class SqlCondition {
         likeConditionMap = null;
         existsConditionMap = null;
         joinConditionMap = null;
+        pageConditionMap = null;
     }
 }

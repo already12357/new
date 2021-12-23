@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.Locale;
 
 /**
  * 用于处理不同种类 SQL 语言中的 格式 和 转化 问题
@@ -105,5 +106,47 @@ public class DBFormatter {
             e.printStackTrace();
             return "";
         }
+    }
+
+
+    /**
+     * 根据分页信息和查询主 SQL 生成对应的分页查询 SQL
+     * @param pageIndex 当前页码
+     * @param pageSize 当前页大小
+     * @param dbType 数据库类型
+     * @param sqlContent 查询的内容集合
+     */
+    public static String pageQuerySql(int pageIndex, int pageSize, String dbType, String sqlContent) {
+        StringBuilder frameSql = new StringBuilder("");
+        String dbTypeCase = dbType.toLowerCase(Locale.ENGLISH);
+
+        // 根据不同的操作类型，生成不同的子查询外部 SQL
+        switch (dbTypeCase) {
+            case DBConstant.DB_ORACLE:
+                break;
+
+            case DBConstant.DB_SQLSERVER:
+                break;
+
+            case DBConstant.DB_DB2:
+                break;
+
+
+            case DBConstant.DB_MYSQL:
+                frameSql.append("SELECT")
+                        .append(" * ")
+                        .append("FROM")
+                        .append(" ( ")
+                        .append(sqlContent)
+                        .append(" ) ")
+                        .append("AS PAGE_CONTENTS")
+                        .append(" LIMIT ")
+                        .append(String.valueOf(pageIndex * pageSize))
+                        .append(",")
+                        .append(String.valueOf(pageSize));
+                break;
+        }
+
+        return frameSql.toString();
     }
 }

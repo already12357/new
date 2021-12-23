@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 数据类, 用于对分页数据进行封装
+ * 数据类, 用于对分页数据进行封装, 保存有
  */
 public class PageData<T> {
     // 默认的分页大小
@@ -35,8 +35,6 @@ public class PageData<T> {
         this(data, DEFAULT_SIZE, DEFAULT_INDEX);
     }
 
-
-
     
     public void setPageContent(List<T> pageContent) {
         this.pageContent = pageContent;
@@ -45,17 +43,7 @@ public class PageData<T> {
         return pageContent;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-    public Integer getPageIndex() {
-        return pageIndex;
+    public Integer getSize() {
+        return pageContent.size();
     }
 }

@@ -92,14 +92,13 @@ public class JDBCUtilTest {
         insertCondition.insert_into("course_1").values(7, "5f4d5f", 1645, "PPP");
         System.out.println(insertCondition.executedBy(innerDS));
 
-
         // 查
+        // 分页语法错误
+        // error .......
+        // ...........
         SqlCondition selectCondition = new SqlCondition();
         selectCondition.select_col("*")
-                .from("course_1")
-                .where()
-                .eq("cname", "p999")
-                .like(DBConstant.SQL_AND, "cstatus", "%14%");
+                .from("sys.course_1").page(0, 8);
         System.out.println(selectCondition.generateSql());
 
         ResultSet resultSet = null;
