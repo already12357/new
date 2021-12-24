@@ -134,22 +134,9 @@ public class JsonUtil {
      * }
      */
     public static String mapToJString(Map<String, Object> map) {
-        if (null != map && !map.isEmpty()) {
-            StringBuilder jMapStr = new StringBuilder("");
-
-            jMapStr.append("{");
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                jMapStr.append(innerKeyValueToJString(entry.getKey(), entry.getValue()));
-                jMapStr.append(",");
-            }
-            jMapStr.deleteCharAt(jMapStr.length() - 1);
-
-            jMapStr.append("}");
-
-            return jMapStr.toString();
-        }
-
-        return "";
+        StringBuilder jMapStr = new StringBuilder();
+        jMapStr.append("{").append(innerMapToJString(map)).append("}");
+        return jMapStr.toString();
     }
 
     /**
@@ -214,10 +201,29 @@ public class JsonUtil {
     }
 
 
-    // ===============================
-    // Object - JSON字符串 核心解析函数
+    // =====================================
+    // Object - JSON字符串 核心解析函数，用于底层解析对应的字符串
     // 分别用于 生成  Object[], Object 和 K-V 形式的 JSON 字符串内部的值
     // 外层的函数通过调用方法拼接
+    // 用于处理 Map 类型的对象
+    private static String innerMapToJString(Map<String, Object> map) {
+        if (null != map && !map.isEmpty()) {
+            StringBuilder jMapStr = new StringBuilder("");
+
+            jMapStr.append("{");
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                jMapStr.append(innerKeyValueToJString(entry.getKey(), entry.getValue()));
+                jMapStr.append(",");
+            }
+            jMapStr.deleteCharAt(jMapStr.length() - 1);
+
+            jMapStr.append("}");
+
+            return jMapStr.toString();
+        }
+
+        return "";
+    }
 
     // 用于处理 key-value 类型的对象
     private static String innerKeyValueToJString(String key, Object value) {
@@ -253,10 +259,12 @@ public class JsonUtil {
         return innerValueToJString(array, false);
     }
 
+    // 核心解析
     // 用于处理 Object 类型的字符串解析
     // 此处 inner 用于在循环递归中使用, 默认传 false
     // !!!!!!!!!!!! 后续支持 Map, Entry 等类型 !!!!!!!!!!!!
     private static String innerValueToJString(Object value, boolean inner) {
+        // 传入 null 时返回 " "" "
         if (null == value) {
             return  "\"\"";
         }
@@ -273,7 +281,7 @@ public class JsonUtil {
         else if (Collection.class.isAssignableFrom(value.getClass())) {
             if (!((Collection) value).isEmpty()) {
                 StringBuilder collectionStr = new StringBuilder("");
-
+                // 处理嵌套情况，在内部时需要添加外侧边框，用于递归时使用
                 if (inner) {
                     collectionStr.append("[");
                 }
@@ -324,6 +332,8 @@ public class JsonUtil {
             return new String("\"").concat(String.valueOf(value)).concat("\"");
         }
 
+
+        // 解析失败时返回 ""
         return "";
     }
 }
