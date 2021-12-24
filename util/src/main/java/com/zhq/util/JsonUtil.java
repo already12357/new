@@ -28,7 +28,20 @@ public class JsonUtil {
      *     “data” : "....."
      * }
      */
-    public static String jsonRestReturn(String statCode, String attachMessage, String data) {
+    public static String jsonRestReturn(String statCode, String attachMessage, Object data) {
+//        List<Object> retList = new ArrayList<>();
+//        Map<String, String> messageMap = new HashMap<String, String>();
+//        Map<String, Object> statusAttachment = new HashMap<String, Object>();
+//        Map<String, String> dataMap = new HashMap<String, String>();
+//
+//        dataMap.put("data", objectToJString(data));
+//        messageMap.put("message",mapToJString(statusAttachment));
+//
+//        retList.add(messageMap);
+//        retList.add(dataMap);
+//
+//        return collectionToJString(retList);
+
         JSONObject retObject = new JSONObject();
         JSONObject messageObject = new JSONObject();
         String inputData = "200";
@@ -183,7 +196,7 @@ public class JsonUtil {
      * ( 暂不支持 POJO 类型 ) -
      *  |||||||||||||||||||||  后续支持 POJO 类型 ||||||||||||||||||| ( 注解支持 )
      *
-     * @param value 传入的用于解析的对象
+     * @param obj 传入的用于解析的对象
      * @return
      * 调用 : valueToJString('3')
      * 返回 : "3"
@@ -191,16 +204,24 @@ public class JsonUtil {
      * 调用 : valueToJString(new List(3, '4', 7, new Set(5, 5, '6'), null))
      * 返回 : 3, "4", 7, [5, 5, "6"], ""
      */
-    public static String valueToJString(Object value) {
-        return innerObjectToJString(value, false);
+    public static String objectToJString(Object obj) {
+        return innerObjectToJString(obj, true);
     }
 
 
-    // =====================================
-    // Object - JSON字符串 核心解析函数，用于底层解析对应的字符串
-    // 分别用于 生成  Object[], Object 和 K-V 形式的 JSON 字符串内部的值
-    // 外层的函数通过调用方法拼接
-    // 用于处理 Map 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
+
+    /**
+     * 1. 解析对象的实际处理逻辑，包含了对 Map, Object[], Object, Value(基本类型) 者几种类型的基本解析
+     *
+     * 2. 通过在内部 直接 或 间接 调用 innerObjectToJString 来递归的解析，生成 json 字符串
+     *
+     * 3. 最后 innerObjectToJString 通过 innerValueToJString 作为递归的出口
+     *
+     * 4. 其中的 brackets 变量用于控制是否在调用时，显示该值对应的外部括号 ( 即 {} 或 [] )
+     *
+     * @param brackets
+     * @return
+     */
     private static String innerMapToJString(Map<String, Object> map, boolean brackets) {
         StringBuilder jMapStr = new StringBuilder("");
         if (brackets) {
@@ -222,7 +243,6 @@ public class JsonUtil {
         return jMapStr.toString();
     }
 
-    // 用于处理 key-value 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
     private static String innerKeyValueToJString(String key, Object value, boolean brackets) {
         StringBuilder kvStr = new StringBuilder("");
         if (brackets) {
@@ -272,7 +292,6 @@ public class JsonUtil {
         return arrayStr.toString();
     }
 
-    // 用于处理 Object[] 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
     private static String innerArrayToJString(Object[] array, boolean brackets) {
         StringBuilder arrStr = new StringBuilder("");
         if (brackets) {
@@ -297,8 +316,6 @@ public class JsonUtil {
         return arrStr.toString();
     }
 
-    // 用于处理基本的数据类型 (Long, Integer, Double, Float, Boolean, String, null, Character)
-    // ( 内部间接调用 innerObjectToJString 递归 )
     private static String innerValueToJString(Object value) {
         if (null == value) {
             return new String("\"\"");
@@ -316,7 +333,6 @@ public class JsonUtil {
             return new String("\"").concat(String.valueOf(value)).concat("\"");
         }
     }
-
 
     private static String innerCollectionToJString(Collection obj, boolean brackets) {
         StringBuilder collectionStr = new StringBuilder("");
@@ -338,9 +354,7 @@ public class JsonUtil {
         return collectionStr.toString();
     }
 
-
     // 作为解析调用的总函数，调用其他的函数递归解析
-    // !!!!!!!!!!!! 后续支持 Map, Entry 等类型 !!!!!!!!!!!!
     private static String innerObjectToJString(Object obj, boolean brackets) {
         if (null == obj) {
             return "\"\"";
@@ -358,6 +372,7 @@ public class JsonUtil {
         else if (obj.getClass().isArray()) {
             return innerArrayObjectToJString(obj, brackets);
         }
+        // 其他类型
         else {
             return innerValueToJString(obj);
         }

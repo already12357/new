@@ -9,6 +9,12 @@ import java.util.*;
 
 public class JsonUtilTest {
     @Test
+    public void testJsonReturn() {
+        System.out.println(JsonUtil.jsonRestReturn("200", "成功了", "hello"));
+    }
+
+
+    @Test
     public void testJsonUtilTest() {
         JSONArray jsonArray = new JSONArray();
 
@@ -48,6 +54,15 @@ public class JsonUtilTest {
         map.put("null", null);
         System.out.println(JsonUtil.mapToJString(map));
 
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("ss", 1);
+        map1.put("ss1", 3);
+        map1.put("s34", null);
+        map1.put("fdaf", content);
+        map1.put("null", "3");
+        map1.put("fa", 'c');
+
+
         Object[] testObject_empty = new Object[0];
         System.out.println(JsonUtil.arrayToJString(testObject_empty));
 
@@ -57,5 +72,11 @@ public class JsonUtilTest {
         System.out.println(JsonUtil.collectionToJString(setObject));
 
         System.out.println(JsonUtil.arrayToJString(testObject));
+
+
+        List<Object> mapList = new ArrayList<>();
+        mapList.add(map);
+        mapList.add(map1);
+        System.out.println(JsonUtil.collectionToJString(mapList));
     }
 }
