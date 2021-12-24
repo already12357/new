@@ -5,9 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zhq.util.JsonUtil;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class JsonUtilTest {
     @Test
@@ -37,5 +35,12 @@ public class JsonUtilTest {
         testObject[2] = "2";
         testObject[3] = 4;
         System.out.println(JsonUtil.arrayToJString(testObject));
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sValue", "hello");
+        map.put("iValue", 3);
+        map.put("oaValue", testObject);
+        map.put("null", null);
+        System.out.println(JsonUtil.mapToJString(map));
     }
 }

@@ -1,6 +1,7 @@
 package com.zhq.util.JDBCUtil;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.zhq.util.JsonUtil;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -108,36 +109,38 @@ public class RowData {
     // 以 json 格式答应
     @Override
     public String toString() {
-        if (!data.isEmpty()) {
-            StringBuilder jsonBuilder = new StringBuilder("");
+//        if (!data.isEmpty()) {
+//            StringBuilder jsonBuilder = new StringBuilder("");
+//
+//            jsonBuilder.append("{");
+//            for (Map.Entry<String, Object> dataEntry : data.entrySet()) {
+//                jsonBuilder.append("\"").append(dataEntry.getKey()).append("\"");
+//                jsonBuilder.append(":");
+//                Object valueObject = dataEntry.getValue();
+//
+//
+//                if (null != valueObject) {
+//                    // 字符串类型对象添加对应的双引号
+//                    if (Integer.class.isAssignableFrom(valueObject.getClass())) {
+//                        jsonBuilder.append(String.valueOf(dataEntry.getValue()));
+//                    }
+//                    else {
+//                        jsonBuilder.append("\"").append(String.valueOf(valueObject)).append("\"");
+//                    }
+//                }
+//                else {
+//                    jsonBuilder.append("\"\"");
+//                }
+//
+//                jsonBuilder.append(",");
+//            }
+//            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
+//            jsonBuilder.append("}");
+//            return jsonBuilder.toString();
+//        }
+//
+//        return "";
 
-            jsonBuilder.append("{");
-            for (Map.Entry<String, Object> dataEntry : data.entrySet()) {
-                jsonBuilder.append("\"").append(dataEntry.getKey()).append("\"");
-                jsonBuilder.append(":");
-                Object valueObject = dataEntry.getValue();
-
-
-                if (null != valueObject) {
-                    // 字符串类型对象添加对应的双引号
-                    if (Integer.class.isAssignableFrom(valueObject.getClass())) {
-                        jsonBuilder.append(String.valueOf(dataEntry.getValue()));
-                    }
-                    else {
-                        jsonBuilder.append("\"").append(String.valueOf(valueObject)).append("\"");
-                    }
-                }
-                else {
-                    jsonBuilder.append("\"\"");
-                }
-
-                jsonBuilder.append(",");
-            }
-            jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
-            jsonBuilder.append("}");
-            return jsonBuilder.toString();
-        }
-
-        return "";
+        return JsonUtil.mapToJString(data);
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -89,7 +90,7 @@ public class JsonUtil {
      * @param queryResult
      * @return
      */
-    public static String jResultSetToJson(ResultSet queryResult) {
+    public static String resultSetToJString(ResultSet queryResult) {
         try {
             JSONArray jResultSet = new JSONArray();
             ResultSetMetaData metaData = queryResult.getMetaData();
@@ -120,20 +121,36 @@ public class JsonUtil {
 //    public static <T> T[] jArrayToNativeArray(String jsonStr) {}
 
 
+
     /**
-     * 将 Map 对象转化为 JSON 格式的字符串 ( 注意不同格式的字符串显示 )
-     * {.....}
+     * 将传入的 Map 对象转化为 JSON 格式的字符串
      * @param map
      * @return
+     * 调用 : mapToJString(new HashMap<String, Object>("1", 2, "3", 4, "5", new List(2, 3, 4)))
+     * 返回 :
+     * {
+     *     "1" : 2,
+     *     "3" : 4,
+     *     "5" : [2, 3, 4]
+     * }
      */
     public static String mapToJString(Map<String, Object> map) {
-        StringBuilder jMapStr = new StringBuilder();
+        if (null != map && !map.isEmpty()) {
+            StringBuilder jMapStr = new StringBuilder("");
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            jMapStr.append("{");
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                jMapStr.append(innerKeyValueToJString(entry.getKey(), entry.getValue()));
+                jMapStr.append(",");
+            }
+            jMapStr.deleteCharAt(jMapStr.length() - 1);
 
+            jMapStr.append("}");
+
+            return jMapStr.toString();
         }
 
-        return jMapStr.toString();
+        return "";
     }
 
 
@@ -149,6 +166,9 @@ public class JsonUtil {
 
         if (null != collection && !collection.isEmpty()) {
             jCollectionStr.append("[").append(innerValueToJString(collection, false)).append("]");
+        }
+        else {
+            jCollectionStr.append("[]");
         }
 
         return jCollectionStr.toString();
@@ -216,8 +236,11 @@ public class JsonUtil {
             kvStr.append("\"").append(key).append("\"");
             kvStr.append(":");
 
+            if (null == value) {
+                kvStr.append("\"\"");
+            }
             // 集合类型时
-            if (Collection.class.isAssignableFrom(value.getClass())) {
+            else if (Collection.class.isAssignableFrom(value.getClass())) {
                 kvStr.append("[").append(innerValueToJString(value, false)).append("]");
             }
             // 对象, 键值对类型添加 {}
@@ -274,23 +297,49 @@ public class JsonUtil {
         }
         // 集合类型解析
         else if (Collection.class.isAssignableFrom(value.getClass())) {
-            StringBuilder collectionValue = new StringBuilder("");
             if (!((Collection) value).isEmpty()) {
+                StringBuilder collectionStr = new StringBuilder("");
+
                 if (inner) {
-                    collectionValue.append("[");
+                    collectionStr.append("[");
                 }
 
                 for (Object colValue : ((Collection) value)) {
-                    collectionValue.append(innerValueToJString(colValue, true));
-                    collectionValue.append(",");
+                    collectionStr.append(innerValueToJString(colValue, true));
+                    collectionStr.append(",");
                 }
-                collectionValue.deleteCharAt(collectionValue.length() - 1);
+                collectionStr.deleteCharAt(collectionStr.length() - 1);
 
                 if (inner) {
-                    collectionValue.append("]");
+                    collectionStr.append("]");
                 }
+
+                return collectionStr.toString();
             }
-            return collectionValue.toString();
+        }
+        // 数组类型解析
+        else if (value.getClass().isArray()) {
+            int arrLength = Array.getLength(value);
+            if (arrLength != 0) {
+                StringBuilder arrayStr = new StringBuilder("");
+                if (inner) {
+                    arrayStr.append("[");
+                }
+
+                for (int i = 0; i < arrLength; i++) {
+                    Object arrObject = Array.get(value, i);
+                    arrayStr.append(innerValueToJString(arrObject, true));
+                    arrayStr.append(",");
+                }
+
+                arrayStr.deleteCharAt(arrayStr.length() - 1);
+
+                if (inner) {
+                    arrayStr.append("]");
+                }
+
+                return arrayStr.toString();
+            }
         }
         // POJO 对象支持
 //        else if () {
@@ -300,5 +349,7 @@ public class JsonUtil {
         else {
             return new String("\"").concat(String.valueOf(value)).concat("\"");
         }
+
+        return "";
     }
 }
