@@ -1,7 +1,6 @@
 package com.zhq.util.JDBCUtil;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.zhq.util.JsonUtil;
+import com.zhq.util.JsonUtil.JsonUtil;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

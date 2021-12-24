@@ -1,11 +1,10 @@
 package com.zhq;
 
-import com.alibaba.druid.util.JdbcUtils;
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;
 import com.zhq.util.JDBCUtil.RowData;
 import com.zhq.util.JDBCUtil.SqlCondition;
-import com.zhq.util.JsonUtil;
+import com.zhq.util.JsonUtil.JsonUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCUtilTest {

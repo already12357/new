@@ -1,8 +1,7 @@
 package com.zhq;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.zhq.util.JsonUtil;
+import com.zhq.util.JsonUtil.JsonUtil;
 import org.junit.Test;
 
 import java.util.*;
