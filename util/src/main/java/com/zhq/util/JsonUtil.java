@@ -7,10 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JsonUtil {
     /**
@@ -126,85 +123,182 @@ public class JsonUtil {
     /**
      * 将 Map 对象转化为 JSON 格式的字符串 ( 注意不同格式的字符串显示 )
      * {.....}
-     * @param jMap
+     * @param map
      * @return
      */
-    public static String mapToJString(Map<String, Object> jMap) {
+    public static String mapToJString(Map<String, Object> map) {
         StringBuilder jMapStr = new StringBuilder();
 
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
 
+        }
 
         return jMapStr.toString();
     }
 
+
     /**
-     * 将存储的集合类型转换为 JSON 字符串
-     * [",,", "fdf", 12, 32, 22]
-     * @param array
+     * 将传入的集合对象转化为对应的 JSON 字符串的值
+     * @param collection
      * @return
+     * 调用 : collectionToJString(new List(2, '3', 4, null))
+     * 返回 : [2, "3", 4, ""]
+     */
+    public static String collectionToJString(Collection<Object> collection) {
+        StringBuilder jCollectionStr = new StringBuilder();
+
+        if (null != collection && !collection.isEmpty()) {
+            jCollectionStr.append("[").append(innerValueToJString(collection, false)).append("]");
+        }
+
+        return jCollectionStr.toString();
+    }
+
+    /**
+     * 将传入的键值对转换为对应的 JSON 格式字符串
+     *
+     * @param key
+     * @param value
+     * @return
+     * 调用 :  keyValueToJString("2", 3)
+     * 返回 :  {"2":3}
+     *
+     * 调用 :  keyValueToJString("4", new List(3, "4", 7, null))
+     * 返回 :  {"4":[3, "4", 7, ""}
+     */
+    public static String keyValueToJString(String key, Object value) {
+        StringBuilder jKeyValueStr = new StringBuilder();
+        jKeyValueStr.append("{").append(innerKeyValueToJString(key, value)).append("}");
+        return jKeyValueStr.toString();
+    }
+
+    /**
+     * 将传入的数组数据转化为对应的 JSON 格式字符串
+     * @param array 传入的用于解析的对象
+     * @return
+     * 调用 : arrayToJString(['2', 3, '4', new List<Object>(2, '3')])
+     * 返回 : ["2", 3, "4", [2, "3"]]
      */
     public static String arrayToJString(Object[] array) {
         StringBuilder jArrayStr = new StringBuilder();
-
-        if (null != array && array.length != 0) {
-            jArrayStr.append("[");
-            for (Object jsonObject : array) {
-
-            }
-            jArrayStr.append("]");
-        }
-
+        jArrayStr.append("[").append(innerArrayToJString(array)).append("]");
         return jArrayStr.toString();
     }
 
-    public static String listToJString(List<Object> list) {
-        StringBuilder jListStr = new StringBuilder();
-
-        if (null != list && !list.isEmpty()) {
-            jListStr.append("[");
-            for (Object jsonObject : list) {
-
-            }
-            jListStr.append("]");
-        }
-
-        return jListStr.toString();
-    }
-
-    public static String setToJString(Set<Object> set) {
-        StringBuilder jSetStr = new StringBuilder();
-
-        if (null != set && !set.isEmpty()) {
-            jSetStr.append("[");
-            for (Object jsonObject : set) {
-
-            }
-            jSetStr.append("]");
-        }
-
-        return jSetStr.toString();
-    }
-
-
-
     /**
-     * 将传入的 Pojo  对象转化为 JSON 格式的字符串 ( 反射方法调用  )
-     * @param jObject
+     * 将传入的单个 Object 对象转化为对应的 JSON 字符串值
+     * ( 暂不支持 POJO 类型 ) -
+     *  |||||||||||||||||||||  后续支持 POJO 类型 ||||||||||||||||||| ( 注解支持 )
+     *
+     * @param value 传入的用于解析的对象
      * @return
+     * 调用 : valueToJString('3')
+     * 返回 : "3"
+     *
+     * 调用 : valueToJString(new List(3, '4', 7, new Set(5, 5, '6'), null))
+     * 返回 : 3, "4", 7, [5, 5, "6"], ""
      */
-    public static String jObjectToString(Object jObject) {
-        StringBuilder jObjectStr = new StringBuilder();
-
-
-
-        return jObjectStr.toString();
-    }
-
-    public static String keyValueToJString(String key, Object value) {
-
-    }
-
     public static String valueToJString(Object value) {
+        return innerValueToJString(value, false);
+    }
 
+
+    // ===============================
+    // Object - JSON字符串 核心解析函数
+    // 分别用于 生成  Object[], Object 和 K-V 形式的 JSON 字符串内部的值
+    // 外层的函数通过调用方法拼接
+
+    // 用于处理 key-value 类型的对象
+    private static String innerKeyValueToJString(String key, Object value) {
+        if (null != key && !key.isEmpty()) {
+            StringBuilder kvStr = new StringBuilder("");
+
+            kvStr.append("\"").append(key).append("\"");
+            kvStr.append(":");
+
+            // 集合类型时
+            if (Collection.class.isAssignableFrom(value.getClass())) {
+                kvStr.append("[").append(innerValueToJString(value, false)).append("]");
+            }
+            // 对象, 键值对类型添加 {}
+            // ...
+            // 非集合类型时
+            else {
+                kvStr.append(innerValueToJString(value, false));
+            }
+
+            return kvStr.toString();
+        }
+
+        return "";
+    }
+
+    // 用于处理 Object[] 类型的对象
+    private static String innerArrayToJString(Object[] array) {
+        if (null != array && array.length != 0) {
+            StringBuilder jArrayStr = new StringBuilder("");
+
+            for (Object arrObject : array) {
+                if (Collection.class.isAssignableFrom(arrObject.getClass())) {
+                    jArrayStr.append("[").append(valueToJString(arrObject)).append("]");
+                }
+                else {
+                    jArrayStr.append(valueToJString(arrObject));
+                }
+
+                jArrayStr.append(",");
+            }
+
+            return jArrayStr.toString();
+        }
+        else {
+            return "\"\"";
+        }
+    }
+
+    // 用于处理 Object 类型的字符串解析
+    // 此处 inner 用于在循环递归中使用, 默认传 false
+    // !!!!!!!!!!!! 后续支持 Map, Entry 等类型 !!!!!!!!!!!!
+    private static String innerValueToJString(Object value, boolean inner) {
+        if (null == value) {
+            return  "\"\"";
+        }
+
+        // 数字解析
+        if (Integer.class.isAssignableFrom(value.getClass())
+                || Long.class.isAssignableFrom(value.getClass())
+                || Float.class.isAssignableFrom(value.getClass())
+                || Double.class.isAssignableFrom(value.getClass())
+                || Boolean.class.isAssignableFrom(value.getClass())) {
+            return String.valueOf(value);
+        }
+        // 集合类型解析
+        else if (Collection.class.isAssignableFrom(value.getClass())) {
+            StringBuilder collectionValue = new StringBuilder("");
+            if (!((Collection) value).isEmpty()) {
+                if (inner) {
+                    collectionValue.append("[");
+                }
+
+                for (Object colValue : ((Collection) value)) {
+                    collectionValue.append(innerValueToJString(colValue, true));
+                    collectionValue.append(",");
+                }
+                collectionValue.deleteCharAt(collectionValue.length() - 1);
+
+                if (inner) {
+                    collectionValue.append("]");
+                }
+            }
+            return collectionValue.toString();
+        }
+        // POJO 对象支持
+//        else if () {
+//
+//        }
+        // 非数字类型解析
+        else {
+            return new String("\"").concat(String.valueOf(value)).concat("\"");
+        }
     }
 }
