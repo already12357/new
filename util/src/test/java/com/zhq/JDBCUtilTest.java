@@ -91,9 +91,11 @@ public class JDBCUtilTest {
         pageSelectCondition.select_col("IS_HASCALL", "Flowno", "HallGuid", "CenterGuid", "HandleWindowNo", "CallTime")
                 .from("audit_queue")
                 .where().eq("identitycardnum", "511681199811034574").page(0, 2);
+        ResultSet resultSet = (ResultSet) pageSelectCondition.executedBy(innerDS);
         System.out.println(pageSelectCondition.generateSql());
         List<RowData> rowDatas = RowData.valueOf((ResultSet) pageSelectCondition.executedBy(innerDS));
         System.out.println(rowDatas);
+        System.out.println(JsonUtil.resultSetToJString(resultSet));
 
 //        // 增
 //        SqlCondition insertCondition = new SqlCondition();

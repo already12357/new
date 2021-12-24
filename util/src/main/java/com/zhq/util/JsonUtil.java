@@ -85,30 +85,33 @@ public class JsonUtil {
 
 
     /**
-     * 将数据库查询的 ResultSet 对象转换为对应的 JSONString 对象,
-     * 使用 JSONObject 对象获取
-     * @param queryResult
+     * 将数据库查询的 ResultSet 对象转换为对应的 JSON 格式字符串
+     * @param queryResult 查询到的 JSON 结果集
      * @return
      */
     public static String resultSetToJString(ResultSet queryResult) {
         try {
-            JSONArray jResultSet = new JSONArray();
+            StringBuilder resultSetStr = new StringBuilder();
             ResultSetMetaData metaData = queryResult.getMetaData();
             int columnCount = metaData.getColumnCount();
 
+            resultSetStr.append("[");
             while (queryResult.next()) {
-                JSONObject jElement = new JSONObject();
-
+                resultSetStr.append("{");
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnLabel(i);
                     Object columnValue = queryResult.getObject(i);
-                    jElement.put(columnName, columnValue);
+                    resultSetStr.append(innerKeyValueToJString(columnName, columnValue, false));
+                    resultSetStr.append(",");
                 }
-
-                jResultSet.add(jElement);
+                resultSetStr.deleteCharAt(resultSetStr.length() - 1);
+                resultSetStr.append("}");
+                resultSetStr.append(",");
             }
+            resultSetStr.deleteCharAt(resultSetStr.length() - 1);
+            resultSetStr.append("]");
 
-            return jResultSet.toJSONString();
+            return resultSetStr.toString();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -134,9 +137,7 @@ public class JsonUtil {
      * }
      */
     public static String mapToJString(Map<String, Object> map) {
-        StringBuilder jMapStr = new StringBuilder();
-        jMapStr.append("{").append(innerMapToJString(map)).append("}");
-        return jMapStr.toString();
+        return innerMapToJString(map, true);
     }
 
     /**
@@ -147,9 +148,7 @@ public class JsonUtil {
      * 返回 : [2, "3", 4, ""]
      */
     public static String collectionToJString(Collection<Object> collection) {
-        StringBuilder jCollectionStr = new StringBuilder();
-        jCollectionStr.append("[").append(innerValueToJString(collection, false)).append("]");
-        return jCollectionStr.toString();
+        return innerCollectionToJString(collection, true);
     }
 
     /**
@@ -165,9 +164,7 @@ public class JsonUtil {
      * 返回 :  {"4":[3, "4", 7, ""}
      */
     public static String keyValueToJString(String key, Object value) {
-        StringBuilder jKeyValueStr = new StringBuilder();
-        jKeyValueStr.append("{").append(innerKeyValueToJString(key, value)).append("}");
-        return jKeyValueStr.toString();
+        return innerKeyValueToJString(key, value, true);
     }
 
     /**
@@ -178,9 +175,7 @@ public class JsonUtil {
      * 返回 : ["2", 3, "4", [2, "3"]]
      */
     public static String arrayToJString(Object[] array) {
-        StringBuilder jArrayStr = new StringBuilder();
-        jArrayStr.append("[").append(innerArrayToJString(array)).append("]");
-        return jArrayStr.toString();
+        return innerArrayToJString(array, true);
     }
 
     /**
@@ -197,7 +192,7 @@ public class JsonUtil {
      * 返回 : 3, "4", 7, [5, 5, "6"], ""
      */
     public static String valueToJString(Object value) {
-        return innerValueToJString(value, false);
+        return innerObjectToJString(value, false);
     }
 
 
@@ -205,68 +200,108 @@ public class JsonUtil {
     // Object - JSON字符串 核心解析函数，用于底层解析对应的字符串
     // 分别用于 生成  Object[], Object 和 K-V 形式的 JSON 字符串内部的值
     // 外层的函数通过调用方法拼接
-    // 用于处理 Map 类型的对象
-    private static String innerMapToJString(Map<String, Object> map) {
-        if (null != map && !map.isEmpty()) {
-            StringBuilder jMapStr = new StringBuilder("");
-
+    // 用于处理 Map 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
+    private static String innerMapToJString(Map<String, Object> map, boolean brackets) {
+        StringBuilder jMapStr = new StringBuilder("");
+        if (brackets) {
             jMapStr.append("{");
+        }
+
+        if (null != map && !map.isEmpty()) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                jMapStr.append(innerKeyValueToJString(entry.getKey(), entry.getValue()));
+                jMapStr.append(innerKeyValueToJString(entry.getKey(), entry.getValue(), false));
                 jMapStr.append(",");
             }
             jMapStr.deleteCharAt(jMapStr.length() - 1);
-
-            jMapStr.append("}");
-
-            return jMapStr.toString();
         }
 
-        return "";
+        if (brackets) {
+            jMapStr.append("}");
+        }
+
+        return jMapStr.toString();
     }
 
-    // 用于处理 key-value 类型的对象
-    private static String innerKeyValueToJString(String key, Object value) {
-        if (null != key && !key.isEmpty()) {
-            StringBuilder kvStr = new StringBuilder("");
+    // 用于处理 key-value 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
+    private static String innerKeyValueToJString(String key, Object value, boolean brackets) {
+        StringBuilder kvStr = new StringBuilder("");
+        if (brackets) {
+            kvStr.append("{");
+        }
 
+        if (null != key && !key.isEmpty()) {
             kvStr.append("\"").append(key).append("\"");
             kvStr.append(":");
 
             if (null == value) {
                 kvStr.append("\"\"");
             }
-            // 集合 或 数组类型时
-            else if (Collection.class.isAssignableFrom(value.getClass())
-                    || value.getClass().isArray()) {
-                kvStr.append("[").append(innerValueToJString(value, false)).append("]");
-            }
-            // 对象, 键值对类型添加 {}
-            // ...
-            // 非集合类型时
             else {
-                kvStr.append(innerValueToJString(value, false));
+                kvStr.append(innerObjectToJString(value, true));
             }
-
-            return kvStr.toString();
         }
 
-        return "";
+        if (brackets) {
+            kvStr.append("}");
+        }
+        return kvStr.toString();
     }
 
-    // 用于处理 Object[] 类型的对象
-    private static String innerArrayToJString(Object[] array) {
-        return innerValueToJString(array, false);
+    private static String innerArrayObjectToJString(Object arrObject, boolean brackets) {
+        StringBuilder arrayStr = new StringBuilder("");
+        if (brackets) {
+            arrayStr.append("[");
+        }
+
+        if (null != arrObject) {
+            int arrLength = Array.getLength(arrObject);
+            if (arrLength != 0) {
+                for (int i = 0; i < arrLength; i++) {
+                    Object arrElement = Array.get(arrObject, i);
+                    arrayStr.append(innerObjectToJString(arrElement, true));
+                    arrayStr.append(",");
+                }
+
+                arrayStr.deleteCharAt(arrayStr.length() - 1);
+            }
+        }
+
+        if (brackets) {
+            arrayStr.append("]");
+        }
+        return arrayStr.toString();
     }
 
-    // 核心解析
-    // 用于处理 Object 类型的字符串解析
-    // 此处 inner 用于在循环递归中使用, 默认传 false
-    // !!!!!!!!!!!! 后续支持 Map, Entry 等类型 !!!!!!!!!!!!
-    private static String innerValueToJString(Object value, boolean inner) {
-        // 传入 null 时返回 " "" "
+    // 用于处理 Object[] 类型的对象 ( 内部间接调用 innerObjectToJString 递归 )
+    private static String innerArrayToJString(Object[] array, boolean brackets) {
+        StringBuilder arrStr = new StringBuilder("");
+        if (brackets) {
+            arrStr.append("[");
+        }
+
+        if (null != array) {
+            int arrLength = array.length;
+            if (arrLength > 0) {
+                for (int i = 0; i < arrLength; i++) {
+                    arrStr.append(innerObjectToJString(array[i], true));
+                    arrStr.append(",");
+                }
+
+                arrStr.deleteCharAt(arrStr.length() - 1);
+            }
+        }
+
+        if (brackets) {
+            arrStr.append("]");
+        }
+        return arrStr.toString();
+    }
+
+    // 用于处理基本的数据类型 (Long, Integer, Double, Float, Boolean, String, null, Character)
+    // ( 内部间接调用 innerObjectToJString 递归 )
+    private static String innerValueToJString(Object value) {
         if (null == value) {
-            return  "\"\"";
+            return new String("\"\"");
         }
 
         // 数字解析
@@ -277,63 +312,54 @@ public class JsonUtil {
                 || Boolean.class.isAssignableFrom(value.getClass())) {
             return String.valueOf(value);
         }
-        // 集合类型解析
-        else if (Collection.class.isAssignableFrom(value.getClass())) {
-            if (!((Collection) value).isEmpty()) {
-                StringBuilder collectionStr = new StringBuilder("");
-                // 处理嵌套情况，在内部时需要添加外侧边框，用于递归时使用
-                if (inner) {
-                    collectionStr.append("[");
-                }
-
-                for (Object colValue : ((Collection) value)) {
-                    collectionStr.append(innerValueToJString(colValue, true));
-                    collectionStr.append(",");
-                }
-                collectionStr.deleteCharAt(collectionStr.length() - 1);
-
-                if (inner) {
-                    collectionStr.append("]");
-                }
-
-                return collectionStr.toString();
-            }
-        }
-        // 数组类型解析
-        else if (value.getClass().isArray()) {
-            int arrLength = Array.getLength(value);
-            if (arrLength != 0) {
-                StringBuilder arrayStr = new StringBuilder("");
-                if (inner) {
-                    arrayStr.append("[");
-                }
-
-                for (int i = 0; i < arrLength; i++) {
-                    Object arrObject = Array.get(value, i);
-                    arrayStr.append(innerValueToJString(arrObject, true));
-                    arrayStr.append(",");
-                }
-
-                arrayStr.deleteCharAt(arrayStr.length() - 1);
-
-                if (inner) {
-                    arrayStr.append("]");
-                }
-
-                return arrayStr.toString();
-            }
-        }
-        // POJO 对象支持
-//        else if () {
-//
-//        }
-        // 非数字类型解析
         else {
             return new String("\"").concat(String.valueOf(value)).concat("\"");
         }
+    }
 
 
-        // 解析失败时返回 ""
-        return "";
+    private static String innerCollectionToJString(Collection obj, boolean brackets) {
+        StringBuilder collectionStr = new StringBuilder("");
+        if (brackets) {
+            collectionStr.append("[");
+        }
+
+        if (null != obj && !((Collection) obj).isEmpty()) {
+            for (Object colValue : ((Collection) obj)) {
+                collectionStr.append(innerObjectToJString(colValue, true));
+                collectionStr.append(",");
+            }
+            collectionStr.deleteCharAt(collectionStr.length() - 1);
+        }
+
+        if (brackets) {
+            collectionStr.append("]");
+        }
+        return collectionStr.toString();
+    }
+
+
+    // 作为解析调用的总函数，调用其他的函数递归解析
+    // !!!!!!!!!!!! 后续支持 Map, Entry 等类型 !!!!!!!!!!!!
+    private static String innerObjectToJString(Object obj, boolean brackets) {
+        if (null == obj) {
+            return "\"\"";
+        }
+
+        // Map 类型
+        if (Map.class.isAssignableFrom(obj.getClass())) {
+            return innerMapToJString((Map<String, Object>) obj, brackets);
+        }
+        // 集合类型解析
+        else if (Collection.class.isAssignableFrom(obj.getClass())) {
+            return innerCollectionToJString((Collection) obj, brackets);
+        }
+        // 数组类型解析
+        else if (obj.getClass().isArray()) {
+            return innerArrayObjectToJString(obj, brackets);
+        }
+        else {
+            return innerValueToJString(obj);
+        }
     }
 }

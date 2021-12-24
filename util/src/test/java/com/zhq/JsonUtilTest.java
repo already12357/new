@@ -36,6 +36,11 @@ public class JsonUtilTest {
         testObject[3] = 4;
         System.out.println(JsonUtil.arrayToJString(testObject));
 
+        Set<Object> setObject = new HashSet<Object>();
+        setObject.add("1");
+        setObject.add(testObject);
+        setObject.add(false);
+
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("sValue", "hello");
         map.put("iValue", 3);
@@ -48,5 +53,9 @@ public class JsonUtilTest {
 
         List<Object> test = new ArrayList<>();
         System.out.println(JsonUtil.collectionToJString(test));
+
+        System.out.println(JsonUtil.collectionToJString(setObject));
+
+        System.out.println(JsonUtil.arrayToJString(testObject));
     }
 }
