@@ -121,7 +121,6 @@ public class JsonUtil {
 //    public static <T> T[] jArrayToNativeArray(String jsonStr) {}
 
 
-
     /**
      * 将传入的 Map 对象转化为 JSON 格式的字符串
      * @param map
@@ -153,7 +152,6 @@ public class JsonUtil {
         return "";
     }
 
-
     /**
      * 将传入的集合对象转化为对应的 JSON 字符串的值
      * @param collection
@@ -163,14 +161,7 @@ public class JsonUtil {
      */
     public static String collectionToJString(Collection<Object> collection) {
         StringBuilder jCollectionStr = new StringBuilder();
-
-        if (null != collection && !collection.isEmpty()) {
-            jCollectionStr.append("[").append(innerValueToJString(collection, false)).append("]");
-        }
-        else {
-            jCollectionStr.append("[]");
-        }
-
+        jCollectionStr.append("[").append(innerValueToJString(collection, false)).append("]");
         return jCollectionStr.toString();
     }
 
@@ -239,8 +230,9 @@ public class JsonUtil {
             if (null == value) {
                 kvStr.append("\"\"");
             }
-            // 集合类型时
-            else if (Collection.class.isAssignableFrom(value.getClass())) {
+            // 集合 或 数组类型时
+            else if (Collection.class.isAssignableFrom(value.getClass())
+                    || value.getClass().isArray()) {
                 kvStr.append("[").append(innerValueToJString(value, false)).append("]");
             }
             // 对象, 键值对类型添加 {}
@@ -258,25 +250,7 @@ public class JsonUtil {
 
     // 用于处理 Object[] 类型的对象
     private static String innerArrayToJString(Object[] array) {
-        if (null != array && array.length != 0) {
-            StringBuilder jArrayStr = new StringBuilder("");
-
-            for (Object arrObject : array) {
-                if (Collection.class.isAssignableFrom(arrObject.getClass())) {
-                    jArrayStr.append("[").append(valueToJString(arrObject)).append("]");
-                }
-                else {
-                    jArrayStr.append(valueToJString(arrObject));
-                }
-
-                jArrayStr.append(",");
-            }
-
-            return jArrayStr.toString();
-        }
-        else {
-            return "\"\"";
-        }
+        return innerValueToJString(array, false);
     }
 
     // 用于处理 Object 类型的字符串解析

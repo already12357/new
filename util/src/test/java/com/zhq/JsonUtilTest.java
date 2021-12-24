@@ -42,5 +42,11 @@ public class JsonUtilTest {
         map.put("oaValue", testObject);
         map.put("null", null);
         System.out.println(JsonUtil.mapToJString(map));
+
+        Object[] testObject_empty = new Object[0];
+        System.out.println(JsonUtil.arrayToJString(testObject_empty));
+
+        List<Object> test = new ArrayList<>();
+        System.out.println(JsonUtil.collectionToJString(test));
     }
 }
