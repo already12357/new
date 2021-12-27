@@ -50,34 +50,53 @@ public class StringUtil {
 
 
     /**
-     * 将 List<T> 对象转化为字符串然后拼接
-     * @param list 需要拼接的 List<T>
+     * 将 List<String> 拼接为字符串
+     * @param list 需要拼接的 List<String>
      * @param regex 每个拼接元素之间的分隔符
-     * @param <T>
      * @return
      */
-    public static <T> String mergeList(List<T> list, String regex) {
-        String mergeStr = "";
+    public static String mergeList(List<String> list, String regex) {
+        if (null == list) {
+            return null;
+        }
 
-        if (null != list && !list.isEmpty()) {
-            StringBuilder mergeStrBuilder = new StringBuilder();
+        StringBuilder mergeStr = new StringBuilder("");
 
-            for (int i = 0; i < list.size(); i++) {
-                T element = list.get(i);
-
-                if (element != null && hasContent(element.toString())) {
-                    mergeStrBuilder.append(element + regex);
-                }
-            }
-
-            mergeStr = mergeStrBuilder.toString();
-
-            if (mergeStr.length() > 0) {
-                mergeStr = mergeStr.substring(0, mergeStr.length() - regex.length());
+        for (String element : list) {
+            if (hasContent(element)) {
+                mergeStr.append(element).append(regex);
             }
         }
 
-        return mergeStr;
+        if (mergeStr.length() > 0) {
+            return mergeStr.substring(0, mergeStr.length() - regex.length());
+        }
+
+        return "";
+    }
+
+
+    /**
+     * 将字符串数组拼接为字符串
+     * @param array 字符串数组
+     * @param regex 每个拼接元素之间的分隔符
+     * @return
+     */
+    public static String mergeArray(String[] array, String regex) {
+        if (null == array) {
+            return null;
+        }
+
+        StringBuilder mergeStr = new StringBuilder("");
+
+        for (String element : array) {
+            mergeStr.append(element).append(regex);
+        }
+
+        if (mergeStr.length() > 0) {
+            return mergeStr.substring(0, mergeStr.length() - regex.length());
+        }
+        return "";
     }
 
 
@@ -210,7 +229,7 @@ public class StringUtil {
         return trimStr;
     }
 
-    public static String trimTailQuote(String str) {
+    public static String trimTailComma(String str) {
         return trimTailChar(str, ',');
     }
 

@@ -25,6 +25,7 @@ public class StringUtilTest {
 //        nameList.add(null);
 //        nameList.add("zhaoliu");
         System.out.println(StringUtil.mergeList(nameList, "[,]"));
+        System.out.println(StringUtil.mergeList(nameList, ","));
 
         Map<String, String> contentType = new HashMap<>();
 //        contentType.put("param1", null);
@@ -41,6 +42,9 @@ public class StringUtilTest {
         System.out.println(replacedContent);
 
         String beTrimedChar = "'a', 'b', 'c', 'a',";
-        System.out.println(StringUtil.trimTailQuote(beTrimedChar));
+        System.out.println(StringUtil.trimTailComma(beTrimedChar));
+
+        String beTrimedChar2 = "a, b, c, d, e, f, g";
+        System.out.println(StringUtil.trimTailComma(beTrimedChar2));
     }
 }

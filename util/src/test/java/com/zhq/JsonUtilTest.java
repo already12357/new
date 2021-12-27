@@ -3,6 +3,7 @@ package com.zhq;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.zhq.util.JsonUtil.FastjsonUtil;
 import com.zhq.util.JsonUtil.JsonUtil;
 import org.junit.Test;
@@ -92,5 +93,14 @@ public class JsonUtilTest {
         integersList.add(3);
         integersList.add(8);
         System.out.println(JsonUtil.collectionToJString(integersList));
+
+        JSONArray jArray = new JSONArray();
+        jArray.add(1);
+        jArray.add("3");
+        JSONObject addElement = new JSONObject();
+        addElement.put("hello", 1);
+        jArray.add(addElement);
+        List list_2 = FastjsonUtil.jArrayToList(jArray);
+        System.out.println(list_2);
     }
 }
