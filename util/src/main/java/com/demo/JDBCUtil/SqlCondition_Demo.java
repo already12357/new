@@ -22,15 +22,15 @@ public class SqlCondition_Demo {
         /**
          * 2. 调用对应的  demo 方法
          */
-//        instance.select_demo1();
-//        instance.select_demo2();
-//        instance.select_demo3();
+        instance.select_demo1();
+        instance.select_demo2();
+        instance.select_demo3();
 
-//        instance.update_demo1();
+        instance.update_demo1();
 
-//        instance.delete_demo1();
+        instance.delete_demo1();
 
-//        instance.insert_demo1();
+        instance.insert_demo1();
     }
 
     public void init_DBUtil() {
@@ -59,6 +59,7 @@ public class SqlCondition_Demo {
         // 4. 输出结果
         System.out.println(JsonUtil.resultSetToJString(queryResult));
     }
+
     public void select_demo2() {
         SqlCondition selectSql = new SqlCondition();
         // 在 where 条件函数中使用 SQL_AND | SQL_OR, 来拼接与前面条件的关系 ( 与 | 或 )
@@ -74,6 +75,7 @@ public class SqlCondition_Demo {
         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
         System.out.println(JsonUtil.resultSetToJString(queryResult));
     }
+
     public void select_demo3() {
         SqlCondition selectSql = new SqlCondition();
         // 使用 page 来对查询的结果进行分页
@@ -86,6 +88,7 @@ public class SqlCondition_Demo {
         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
         System.out.println(JsonUtil.resultSetToJString(queryResult));
     }
+
 
     // UPDATE 使用 Demo
     public void update_demo1() {
@@ -102,6 +105,7 @@ public class SqlCondition_Demo {
         System.out.println(updateCount);
     }
 
+
     // DELETE 使用 Demo
     public void delete_demo1() {
         SqlCondition deleteSql = new SqlCondition();
@@ -110,6 +114,7 @@ public class SqlCondition_Demo {
         boolean deleteCount = (Boolean) deleteSql.executedBy(DBUtil.getInnerDS());
         System.out.println(deleteCount);
     }
+
 
     // INSERT 使用 Demo
     public void insert_demo1() {

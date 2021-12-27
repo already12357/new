@@ -63,7 +63,7 @@ public class DBUtil {
 
 
     /**
-     * 根据配置获取数据源
+     * 根据配置获取内部数据源
      */
     public static DataSource getInnerDS() {
         return getInstance().innerDsWithConfig();
