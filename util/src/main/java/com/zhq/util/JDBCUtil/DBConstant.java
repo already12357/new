@@ -1,6 +1,9 @@
 package com.zhq.util.JDBCUtil;
 
-// JDBC 常量类
+/**
+ * 与数据连接相关的常量类
+ * @author Eddie Zhang
+ */
 public class DBConstant {
     /**
      * 通过函数返回不同数据库的不同驱动
@@ -55,8 +58,9 @@ public class DBConstant {
     }
 
 
-
-    // 各种数据库的标志缩写
+    /**
+     * 各种数据库的标志缩写
+     */
     public static final String DB_MYSQL = "mysql";
     public static final String DB_ORACLE = "oracle";
     public static final String DB_SQLSERVER = "sqlserver";
@@ -64,27 +68,39 @@ public class DBConstant {
     public static final String DB_MONGODB = "mongodb";
     public static final String DB_REDIS = "redis";
     public static final String JDBC_STR = "jdbc";
-    
-    // 数据库驱动类路径
+
+
+    /**
+     * 数据库驱动类路径
+     */
     public static final String DRIVER_MYSQL_5 = "com.mysql.jdbc.Driver";
     public static final String DRIVER_MYSQL_8 = "com.mysql.cj.jdbc.Driver";
     public static final String DRIVER_DB2 = "";
     public static final String DRIVER_ORACLE = "";
     public static final String DRIVER_SQLSERVER = "";
 
-    // 各种数据库连接池的缩写
+
+    /**
+     * 各种数据库连接池的缩写
+     */
     public static final String POOL_DRUID = "druid";
     public static final String POOL_C3P0 = "c3p0";
     public static final String POOL_DBCP = "dhcp";
     public static final String POOL_HIKARI = "hikari";
 
-    // 数据库连接池类
+
+    /**
+     * 数据库连接池类
+     */
     public static final String CLASS_DRUID_DS = "com.alibaba.druid.pool.DruidDataSource";
     public static final String CLASS_C3P0_DS = "com.mchange.v2.c3p0.ComboPooledDataSource";
     public static final String CLASS_DBCP_DS = "org.apache.commons.dbcp.BasicDataSource";
     public static final String CLASS_HIKARI_DS= "";
 
-    // 数据库常用词
+
+    /**
+     * SQL 语句常用词
+     */
     public static final String SQL_SELECT = "SELECT";
     public static final String SQL_DELETE = "DELETE";
     public static final String SQL_UPDATE = "UPDATE";
@@ -97,8 +113,11 @@ public class DBConstant {
     public static final String SQL_INNER = "INNER";
     public static final String SQL_JOIN = "JOIN";
 
-    // 数据库函数, 需要区分不同的数据库类型, 默认为 mysql
-    // 待完成
+
+    /**
+     * 数据库函数生成对象, 需要区分不同的数据库类型, 默认为 mysql
+     * 待完成....
+     */
     public static final String FUNCTION_CONCAT(String dbType, String...params) {
         StringBuilder contactStr = new StringBuilder("");
 
@@ -130,11 +149,13 @@ public class DBConstant {
 
         return contactStr.toString().trim();
     }
+
     public static final String FUNCTION_POW(String dbType, Integer pow, Integer x) {
         StringBuilder contactStr = new StringBuilder("");
 
         return contactStr.toString().trim();
     }
+
     public static final String FUNCTION_CASE() {
         StringBuilder contactStr = new StringBuilder("");
 

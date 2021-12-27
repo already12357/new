@@ -23,7 +23,12 @@ public class DBFormatter {
     public static String formatObjToStr(Object value, boolean nullStr, boolean strQuot) {
         if (null == value) {
             if (nullStr) {
-                return "null";
+                if (strQuot) {
+                    return "'null'";
+                }
+                else {
+                    return "null";
+                }
             }
             else {
                 return "";

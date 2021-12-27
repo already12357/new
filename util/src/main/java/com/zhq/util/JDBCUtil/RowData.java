@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * 用于存储数据库查询下来的数据, 核心通过 Map 存储
- * 注意，存储单条数据, 或对应表示多条扩展的数据
+ * 注意，存储单条数据, 如需扩展使用 List 集合
  */
 public class RowData {
     private Map<String, Object> data;

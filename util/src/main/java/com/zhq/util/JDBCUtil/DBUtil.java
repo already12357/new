@@ -8,7 +8,6 @@ import java.util.Locale;
 
 /**
  * 数据库的帮助类，可以快速生成静态数据源对象, 并执行查询语句
- * 使用单例模式？
  * @author Eddie Zhang
  */
 public class DBUtil {
@@ -32,7 +31,7 @@ public class DBUtil {
     // 私有化构造函数
     private DBUtil() {}
     
-    // 对外部的开放函数
+    // 对内部使用的开放函数
     private static DBUtil getInstance() {
         if (null == instance) {
             synchronized (DBUtil.class) {
@@ -91,7 +90,7 @@ public class DBUtil {
     }
 
     /**
-     * 获取不同类型的数据库链接池对象 ( 通过类名反射调用 ), 如 ( dbcp, druid, c3p0.... )
+     * 获取不同类型的内部的数据库链接池对象 ( 通过类名反射调用 ), 如 ( dbcp, druid, c3p0.... )
      * @return
      */
     private DataSource innerDbcpDataSource() {
@@ -140,7 +139,14 @@ public class DBUtil {
     }
 
 
-
+    /**
+     * 供外部调用的数据库连接池创建函数，直接通过连接池的四个属性创建对应的数据库连接池
+     * @param url
+     * @param username
+     * @param password
+     * @param dbType
+     * @return
+     */
     public static DataSource dbcpDataSource(String url, String username, String password, String dbType) {
         try {
             DataSource ds = null;
@@ -318,7 +324,7 @@ public class DBUtil {
 
     /**
      * 使用内部数据源执行对应的 SqlCondition 类
-     * @param sqlCondition
+     * @param sqlCondition 自定义的 SqlCondition 类型
      * @return
      */
     public static Object executeSqlCondition(SqlCondition sqlCondition) {

@@ -208,7 +208,7 @@ public class SqlCondition {
     }
 
     /**
-     * delete 语句组, 可以用于生成对应的 delete 语句
+     * delete 语句组, 可以用于生成对应的 delete 语句, 然后由外部的数据库连接源调用
      * @return
      */
     public SqlCondition delete_from(String tableName, String...tableNames) {
@@ -263,6 +263,7 @@ public class SqlCondition {
         }
         return this;
     }
+
 
     /**
      * insert 语句组, 可以用于生成对应的 insert 语句
@@ -495,7 +496,7 @@ public class SqlCondition {
         parsedEq.append("(")
                 .append(columnName)
                 .append(sign)
-                .append(DBFormatter.formatObjToStr(columnValue))
+                .append(DBFormatter.formatObjToStr(columnValue, true, false))
                 .append(")");
 
         return parsedEq.toString();
@@ -514,9 +515,9 @@ public class SqlCondition {
         parsedBetween.append("(")
                 .append(columnName)
                 .append(" BETWEEN ")
-                .append(DBFormatter.formatObjToStr(bottom))
+                .append(DBFormatter.formatObjToStr(bottom, true, false))
                 .append(" AND ")
-                .append(DBFormatter.formatObjToStr(top))
+                .append(DBFormatter.formatObjToStr(top, true, false))
                 .append(")");
 
         return parsedBetween.toString().trim();
@@ -538,7 +539,7 @@ public class SqlCondition {
                 .append("(");
 
         for (Object range : rangeList) {
-            parsedBetween.append(DBFormatter.formatObjToStr(range)).append(",");
+            parsedBetween.append(DBFormatter.formatObjToStr(range, true, false)).append(",");
         }
 
         parsedBetween.append(")")
@@ -680,7 +681,7 @@ public class SqlCondition {
                 for (String onJoinStr : opJoinStrList) {
                     StringBuilder tableJoinStr = new StringBuilder(onJoinStr);
 
-                    int typeCharIndex = onJoinStr.indexOf(" ") + 1;
+                    int typeCharIndex = onJoinStr.indexOf("(") - 1;
                     Character typeChar = onJoinStr.charAt(typeCharIndex);
                     switch (typeChar) {
                         case 'R':
@@ -702,7 +703,7 @@ public class SqlCondition {
                         tableJoinStr.replace(tableJoinStr.indexOf(","), tableJoinStr.indexOf(",") + 1, DBFormatter.gapStrWithBlank(DBConstant.SQL_ON));
                     }
 
-                    tableJoinStr.delete(tableJoinStr.lastIndexOf(")"), tableJoinStr.lastIndexOf(")") + 1);
+                    tableJoinStr.deleteCharAt(tableJoinStr.lastIndexOf(")"));
 
                     joinSql.append(tableJoinStr);
                     joinSql.append(",");
@@ -914,7 +915,7 @@ public class SqlCondition {
             StringBuilder valuesStr = new StringBuilder("VALUES").append("(");
 
             for (Object value : opValues) {
-                valuesStr.append(DBFormatter.formatObjToStr(value)).append(",");
+                valuesStr.append(DBFormatter.formatObjToStr(value, true, false)).append(",");
             }
 
             valuesStr.append(")");
@@ -932,7 +933,7 @@ public class SqlCondition {
             StringBuilder setStr = new StringBuilder("SET ");
             for (int i = 0; i < setCount; i++) {
                 String expression = opColumns.get(i).concat(" = ")
-                        .concat(DBFormatter.formatObjToStr(opValues.get(i)));
+                        .concat(DBFormatter.formatObjToStr(opValues.get(i), true, false));
                 setStr.append(expression).append(",");
             }
 
