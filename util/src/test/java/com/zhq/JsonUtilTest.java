@@ -26,7 +26,7 @@ public class JsonUtilTest {
         jsonArray.add("4");
         jsonArray.add("5");
 
-        List<Integer> content = FastjsonUtil.jArrayToList(jsonArray, Integer.class);
+        List<Integer> content = FastjsonUtil.jArrayToList(jsonArray);
         System.out.println(content);
 
         List<Object> content_Json = new ArrayList<Object>();
@@ -85,7 +85,12 @@ public class JsonUtilTest {
         System.out.println(testJson);
         JSONArray jsonObject = JSONArray.parseArray(testJson);
 
-
-
+        List<Integer> integersList = new ArrayList<Integer>();
+        integersList.add(2);
+        integersList.add(5);
+        integersList.add(6);
+        integersList.add(3);
+        integersList.add(8);
+        System.out.println(JsonUtil.collectionToJString(integersList));
     }
 }

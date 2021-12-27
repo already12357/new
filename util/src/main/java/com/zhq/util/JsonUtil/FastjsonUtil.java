@@ -6,45 +6,37 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * 用于在 fastjson 条件下，解析对应的对象
+ */
 public class FastjsonUtil {
     /**
      * 将传入的 JSONArray 或 json 字符串转化为对应的 List 对象
      * @param jsonStr 传入的 JSON 数组字符串
-     * @param listType 转换类型 ( 注意使用包装类  )
      * @return
      */
-    public static List jStrToList(String jsonStr, Class listType) {
+    public static List jStrToList(String jsonStr) {
         if (null == jsonStr) {
             return null;
         }
 
         JSONArray jArray = JSON.parseArray(jsonStr);
-        return jArrayToList(jArray, listType);
+        return jArrayToList(jArray);
     }
 
-    public static List jArrayToList(JSONArray jArray, Class listType) {
+    public static List jArrayToList(JSONArray jArray) {
         if (null == jArray) {
             return null;
         }
 
         List retArray = new ArrayList();
-        Method valueOfMethod = null;
 
-        try {
-            // 反射调用转换类型的 valueOf 对象, 如 Integer.valueOf(...)
-            valueOfMethod = listType.getMethod("valueOf", String.class);
-
-            for (int i = 0; i < jArray.size(); i++) {
-                String arrElement = jArray.getString(i);
-                Object convertedValue = valueOfMethod.invoke(null, arrElement);
-                // 调用后转换
-                retArray.add(listType.cast(convertedValue));
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        for (int i = 0; i < jArray.size(); i++) {
+            retArray.add(jArray.get(i));
         }
 
         return retArray;
@@ -80,7 +72,7 @@ public class FastjsonUtil {
 
 
     /**
-     * 将对应的 object 数组转化为对应的 JSONArray 对象
+     * 将传入的 Collection 或 Object[] 对象转为 JSONArray 对象
      * @param array
      * @return
      */
@@ -96,8 +88,34 @@ public class FastjsonUtil {
         return retJArray;
     }
 
+    public static JSONArray collectionToJArray(Collection collection) {
+        if (null == collection) {
+            return null;
+        }
+
+        JSONArray retJArray = new JSONArray();
+        for (Object element : collection) {
+            retJArray.add(element);
+        }
+
+        return retJArray;
+    }
 
 
+    /**
+     * 将 Map 转化为对应的 JSONObject 对象
+     * @param map
+     * @return
+     */
+    public static JSONObject mapToJObject(Map<String, Object> map) {
+        if (null == map) {
+            return null;
+        }
+
+        String mapJStr = JSON.toJSONString(map);
+        JSONObject retJObject = JSON.parseObject(mapJStr);
+        return retJObject;
+    }
 
     /**
      * Rest 接口返回带有状态码的信息
@@ -141,8 +159,6 @@ public class FastjsonUtil {
 
         return retObject.toJSONString();
     }
-    
-    
     
 //      根据传入的泛型将 JSONArray 转换为对应的原生数组 ( 暂时无法实现 )
 //      由于泛型在 Java 存在泛型擦除问题，即在加载时会将除类上标记的泛型全部擦除，所以无法获得泛型的类
