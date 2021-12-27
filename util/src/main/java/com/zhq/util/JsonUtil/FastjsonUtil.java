@@ -10,25 +10,37 @@ import java.util.List;
 
 public class FastjsonUtil {
     /**
-     * 将 JSON 数组字符串转换为对应的类型 List 对象
+     * 将传入的 JSONArray 或 json 字符串转化为对应的 List 对象
      * @param jsonStr 传入的 JSON 数组字符串
-     * @param convertType 转换类型 ( 注意使用包装类  )
+     * @param listType 转换类型 ( 注意使用包装类  )
      * @return
      */
-    public static List jArrayToList(String jsonStr, Class convertType) {
+    public static List jStrToList(String jsonStr, Class listType) {
+        if (null == jsonStr) {
+            return null;
+        }
+
         JSONArray jArray = JSON.parseArray(jsonStr);
+        return jArrayToList(jArray, listType);
+    }
+
+    public static List jArrayToList(JSONArray jArray, Class listType) {
+        if (null == jArray) {
+            return null;
+        }
+
         List retArray = new ArrayList();
         Method valueOfMethod = null;
 
         try {
             // 反射调用转换类型的 valueOf 对象, 如 Integer.valueOf(...)
-            valueOfMethod = convertType.getMethod("valueOf", String.class);
+            valueOfMethod = listType.getMethod("valueOf", String.class);
 
             for (int i = 0; i < jArray.size(); i++) {
                 String arrElement = jArray.getString(i);
                 Object convertedValue = valueOfMethod.invoke(null, arrElement);
                 // 调用后转换
-                retArray.add(convertType.cast(convertedValue));
+                retArray.add(listType.cast(convertedValue));
             }
         }
         catch (Exception e) {
@@ -37,6 +49,54 @@ public class FastjsonUtil {
 
         return retArray;
     }
+
+
+    /**
+     * 将传入的 JSONArray 或 json 字符串转为原生的 Object 数组
+     * @param jArray
+     * @return
+     */
+    public static Object[] jArrayToArray(JSONArray jArray) {
+        if (null == jArray) {
+            return null;
+        }
+
+        Object[] retObject = new Object[jArray.size()];
+        for (int i = 0; i < jArray.size(); i++) {
+            retObject[i] = jArray.get(i);
+        }
+        
+        return retObject;
+    }
+
+    public static Object[] jStrToArray(String jsonStr) {
+        if (null == jsonStr) {
+            return null;
+        }
+
+        JSONArray retJArray = JSON.parseArray(jsonStr);
+        return jArrayToArray(retJArray);
+    }
+
+
+    /**
+     * 将对应的 object 数组转化为对应的 JSONArray 对象
+     * @param array
+     * @return
+     */
+    public static JSONArray arrayToJArray(Object[] array) {
+        if (null == array) {
+            return null;
+        }
+
+        JSONArray retJArray = new JSONArray();
+        for (Object element : array) {
+            retJArray.add(element);
+        }
+        return retJArray;
+    }
+
+
 
 
     /**
@@ -81,4 +141,12 @@ public class FastjsonUtil {
 
         return retObject.toJSONString();
     }
+    
+    
+    
+//      根据传入的泛型将 JSONArray 转换为对应的原生数组 ( 暂时无法实现 )
+//      由于泛型在 Java 存在泛型擦除问题，即在加载时会将除类上标记的泛型全部擦除，所以无法获得泛型的类
+//    public static Object[] jArrayToArray(String jsonStr, Class convertType) {
+//
+//    }
 }

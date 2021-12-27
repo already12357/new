@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.*;
 
+// 原生格式下的 json 帮助类，主要用于将基础类型装换为 json 字符串
 public class JsonUtil {
     /**
      * 将数据库查询的 ResultSet 对象转换为对应的 JSON 格式字符串
@@ -40,11 +41,6 @@ public class JsonUtil {
             return "";
         }
     }
-
-//      根据传入的泛型将 JSONArray 转换为对应的原生数组 ( 暂时无法实现 )
-//      由于泛型在 Java 存在泛型擦除问题，即在加载时会将除类上标记的泛型全部擦除，所以无法获得泛型的类
-//    public static <T> T[] jArrayToNativeArray(String jsonStr) {}
-
 
     /**
      * 将传入的 Map 对象转化为 JSON 格式的字符串

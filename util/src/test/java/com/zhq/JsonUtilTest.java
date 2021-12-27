@@ -1,6 +1,9 @@
 package com.zhq;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.zhq.util.JsonUtil.FastjsonUtil;
 import com.zhq.util.JsonUtil.JsonUtil;
 import org.junit.Test;
 
@@ -9,7 +12,7 @@ import java.util.*;
 public class JsonUtilTest {
     @Test
     public void testJsonReturn() {
-        System.out.println(JsonUtil.jsonRestReturn("200", "成功了", "hello"));
+        System.out.println(FastjsonUtil.jsonRestReturn("200", "成功了", "hello"));
     }
 
 
@@ -23,7 +26,7 @@ public class JsonUtilTest {
         jsonArray.add("4");
         jsonArray.add("5");
 
-        List<Integer> content = JsonUtil.jArrayToList(jsonArray.toJSONString(), Integer.class);
+        List<Integer> content = FastjsonUtil.jArrayToList(jsonArray, Integer.class);
         System.out.println(content);
 
         List<Object> content_Json = new ArrayList<Object>();
@@ -77,5 +80,12 @@ public class JsonUtilTest {
         mapList.add(map);
         mapList.add(map1);
         System.out.println(JsonUtil.collectionToJString(mapList));
+
+        String testJson = JsonUtil.collectionToJString(mapList);
+        System.out.println(testJson);
+        JSONArray jsonObject = JSONArray.parseArray(testJson);
+
+
+
     }
 }
