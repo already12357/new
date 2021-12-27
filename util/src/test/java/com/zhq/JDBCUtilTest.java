@@ -86,9 +86,11 @@ public class JDBCUtilTest {
         DataSource innerDS = DBUtil.getInnerDS();
 
         SqlCondition pageSelectCondition = new SqlCondition();
-        pageSelectCondition.select_col("IS_HASCALL", "Flowno", "HallGuid", "CenterGuid", "HandleWindowNo", "CallTime")
+        pageSelectCondition.
+                select_col("IS_HASCALL", "Flowno", "HallGuid", "CenterGuid", "HandleWindowNo", "CallTime")
                 .from("audit_queue")
-                .where().eq("identitycardnum", "511681199811034574").page(0, 2);
+                .where().eq("identitycardnum", "511681199811034574")
+                .page(0, 2);
         ResultSet resultSet = (ResultSet) pageSelectCondition.executedBy(innerDS);
         System.out.println(pageSelectCondition.generateSql());
         List<RowData> rowDatas = RowData.valueOf((ResultSet) pageSelectCondition.executedBy(innerDS));

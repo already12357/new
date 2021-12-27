@@ -26,11 +26,11 @@ public class SqlCondition_Demo {
 //        instance.select_demo2();
 //        instance.select_demo3();
 
-        instance.update_demo1();
+//        instance.update_demo1();
 
-        instance.delete_demo1();
+//        instance.delete_demo1();
 
-        instance.insert_demo1();
+//        instance.insert_demo1();
     }
 
     public void init_DBUtil() {
@@ -114,6 +114,7 @@ public class SqlCondition_Demo {
     // INSERT 使用 Demo
     public void insert_demo1() {
         SqlCondition insertSql = new SqlCondition();
+        // SQL: insert into course_1 values(41, 'Bella', 450, 'update_deffa')
         insertSql.insert_into("course_1").values(41, "'Bella'", 450, "'update_ddfa'");
         boolean insertCount = (Boolean) insertSql.executedBy(DBUtil.getInnerDS());
         System.out.println(insertCount);
