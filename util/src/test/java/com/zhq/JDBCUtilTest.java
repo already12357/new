@@ -185,4 +185,38 @@ public class JDBCUtilTest {
 //                .like(DBConstant.SQL_AND, "cstatus", "%14%");
 //        System.out.println(selectTestLeftJoinTable.generateSql());
     }
+
+    /**
+     * 多线程环境下测试对应的 JDBC 连接
+     */
+    @Test
+    public void multiThreadTestUtil() {
+        DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
+        DBUtil.setUsername("root");
+        DBUtil.setPassword("Gepoint");
+
+        SqlCondition selectSql = new SqlCondition();
+        selectSql.select_col("*").from("course_1").where().lt("c_id", 10);
+
+        for (int i = 0; i < 2000; i++) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
+                    System.out.println(JsonUtil.resultSetToJString(queryResult));
+                }
+            });
+
+            thread.start();
+            System.out.println("Thread" + i + " started...");
+        }
+
+
+        try {
+            Thread.sleep(30000);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

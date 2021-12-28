@@ -107,7 +107,7 @@ public class RowData {
     }
 
 
-    // 以 json 格式答应
+    // 以 json 格式字符串化
     @Override
     public String toString() {
         return JsonUtil.mapToJString(data);

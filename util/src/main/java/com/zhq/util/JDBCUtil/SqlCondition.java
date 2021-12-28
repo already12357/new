@@ -1,5 +1,7 @@
 package com.zhq.util.JDBCUtil;
 
+import com.zhq.util.ResourceUtil;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,6 +44,16 @@ public class SqlCondition {
     // =============================================
     // 优化，Json 执行格式返回
     // =============================================
+    /**
+     * 连接池连接释放问题........
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+     */
 
 
     // where 部分的所有条件内容集合
@@ -961,25 +973,53 @@ public class SqlCondition {
     }
 
     public Object executedBy(Connection connection) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(generateSql());
+//            switch (opType) {
+//                case DBConstant.SQL_DELETE:
+//                case DBConstant.SQL_INSERT:
+//                    return ps.execute();
+//
+//                case DBConstant.SQL_UPDATE:
+//                    return ps.executeUpdate();
+//
+//                case DBConstant.SQL_SELECT:
+//                    return ps.executeQuery();
+//            }
+//
+//            return null;
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+
         try {
             PreparedStatement ps = connection.prepareStatement(generateSql());
+            Object result = null;
             switch (opType) {
                 case DBConstant.SQL_DELETE:
                 case DBConstant.SQL_INSERT:
-                    return ps.execute();
+                    result = ps.execute();
+                    break;
 
                 case DBConstant.SQL_UPDATE:
-                    return ps.executeUpdate();
+                    result = ps.executeUpdate();
+                    break;
 
                 case DBConstant.SQL_SELECT:
-                    return ps.executeQuery();
+                    result = ps.executeQuery();
+                    break;
             }
 
-            return null;
+            return result;
         }
         catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+        finally {
+            ResourceUtil.closeResources(connection);
         }
     }
 
