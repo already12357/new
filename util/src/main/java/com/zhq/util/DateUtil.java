@@ -77,7 +77,7 @@ public class DateUtil {
     /**
      * 根据时间段获取对应的小时数
      * @param date 日期时间
-     * @param calendarTimeBase Calendar 中的时间进制
+     * @param calendarTimeBase Calendar 中的时间进制 ( 24小时 | 12小时)
      * @return
      */
     public static int getDateHour(Date date, int calendarTimeBase) {
@@ -135,6 +135,37 @@ public class DateUtil {
         return onlyTimeAfter(new Date(), target,  timeUnit);
     }
 
+
+    /**
+     * 直接根据输入的数字创建对应的日期
+     * @param year 年份
+     * @param month 月份
+     * @param day 天
+     * @param hour 小时
+     * @param minute 分钟
+     * @param second 秒
+     * @param millisecond 毫秒
+     * @return
+     */
+    public static Date newDate(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar.getTime();
+    }
+
+    public static Date newDate(int year, int month, int day, int hour, int minute) {
+        return newDate(year, month, day, hour, minute, 0, 0);
+    }
+
+    public static Date newDate(int year, int month, int day) {
+        return newDate(year, month, day, 0, 0, 0, 0);
+    }
 
     /**
      * 判断传入日期中的时间, 是否在当前时间之后

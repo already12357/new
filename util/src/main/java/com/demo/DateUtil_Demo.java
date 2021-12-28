@@ -4,6 +4,7 @@ import com.zhq.util.DateUtil;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DateUtil 类的 Demo
@@ -13,6 +14,11 @@ public class DateUtil_Demo {
         DateUtil_Demo instance = new DateUtil_Demo();
 
         instance.demo1();
+        instance.demo2();
+        instance.demo3();
+        instance.demo4();
+        instance.demo5();
+
     }
 
 
@@ -51,6 +57,25 @@ public class DateUtil_Demo {
     public void demo3() {
         // 使用 dateFromStr 将 特定格式的字符串 转化为 日期
         System.out.println(DateUtil.dateFromStr("2020-03-12 23:10:11"));
+        System.out.println(DateUtil.dateFromStr("2020-03-12", "yyyy-MM-dd"));
+    }
 
+    public void demo4() {
+        // 使用 getDateHour 获取指定日期对象的小时数
+        System.out.println(DateUtil.getDateHour(new Date()));
+        // 传入 Calendar.HOUR 和 Calendar.HOUR_OF_DAY 来控制 十二小时 或 二十四小时 制
+        System.out.println(DateUtil.getDateHour(new Date(), Calendar.HOUR));
+    }
+
+    public void demo5() {
+        // 使用 newDate 直接创建对应的日期对象
+        Date startDate = DateUtil.newDate(2021, 12, 28, 8, 50, 30, 20);
+        Date endDate = DateUtil.newDate(2021, 12, 28, 8,50);
+        // 使用 onlyTimeBetween, onlyTimeAfter, onlyTimeBefore 来比较日期中的时间关系 (仅比较时间)
+        // ，通过 timeUnit 来确定比较的颗粒度大小
+        System.out.println(DateUtil.onlyTimeBetween(new Date(), startDate, endDate, TimeUnit.HOURS));
+        System.out.println(DateUtil.onlyTimeBefore(startDate, new Date(), TimeUnit.DAYS));
+        System.out.println(DateUtil.onlyTimeAfter(startDate, endDate, TimeUnit.HOURS));
+        System.out.println(DateUtil.onlyTimeAfter(startDate, endDate, TimeUnit.SECONDS));
     }
 }
