@@ -62,7 +62,7 @@ public class JsonUtil {
     }
 
     /**
-     * 将传入的集合对象转化为对应的 JSON 字符串的值
+     * 将传入的集合对象 ( List, Set, Collection ) 转化为对应的 JSON 字符串的值
      * @param collection
      * @return
      * 调用 : collectionToJString(new List(2, '3', 4, null))
@@ -71,6 +71,15 @@ public class JsonUtil {
     public static String collectionToJString(Collection collection) {
         return innerCollectionToJString(collection, true);
     }
+
+    public static String listToJString(List list) {
+        return innerCollectionToJString(list, true);
+    }
+
+    public static String setToJString(Set set) {
+        return innerCollectionToJString(set, true);
+    }
+
 
     /**
      * 将传入的键值对转换为对应的 JSON 格式字符串

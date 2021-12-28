@@ -170,6 +170,9 @@ public class DBUtil {
             return null;
         }
     }
+    public static DataSource dbcpDataSource(String url, String username, String password) {
+        return dbcpDataSource(url, username, password, DBConstant.DB_MYSQL);
+    }
 
     public static DataSource c3p0DataSource(String url, String username, String password, String dbType) {
         try {
@@ -192,6 +195,9 @@ public class DBUtil {
             e.printStackTrace();
             return null;
         }
+    }
+    public static DataSource c3p0DataSource(String url, String username, String password) {
+        return c3p0DataSource(url, username, password, DBConstant.DB_MYSQL);
     }
 
     public static DataSource druidDataSource(String url, String username, String password, String dbType) {
@@ -216,7 +222,9 @@ public class DBUtil {
             return null;
         }
     }
-
+    public static DataSource druidDataSource(String url, String username, String password) {
+        return druidDataSource(url, username, password, DBConstant.DB_MYSQL);
+    }
 
 
     /**
@@ -320,7 +328,22 @@ public class DBUtil {
             return false;
         }
     }
+    public static boolean resetDs(DataSource dataSource) {
+        try {
+            if (null != dataSource) {
+                Class dsClazz = dataSource.getClass();
+                Method closeMethod = dsClazz.getMethod("close");
+                closeMethod.invoke(dataSource);
+                dataSource = null;
+            }
 
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     /**
      * 使用内部数据源执行对应的 SqlCondition 类

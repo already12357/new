@@ -26,9 +26,9 @@ public class PageUtilTest {
         listContent.add("String8");
 
 
-        System.out.println(PageUtil.beginIndex(listContent, 1, 10));
-        System.out.println(PageUtil.endIndex(listContent, 1, 10));
-        List<String> pageList = PageUtil.pageList(listContent, 0, 10);
+        System.out.println(PageUtil.beginIndex(listContent.size(), 1, 10));
+        System.out.println(PageUtil.endIndex(listContent.size(), 2, 4));
+        List<String> pageList = PageUtil.pageList(listContent, 2, 3);
         pageList.forEach(System.out::println);
     }
 }
