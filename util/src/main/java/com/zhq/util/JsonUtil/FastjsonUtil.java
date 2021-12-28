@@ -9,6 +9,7 @@ import java.util.*;
 
 /**
  * 用于在 fastjson 条件下，解析对应的对象
+ * @author Eddie Zhang
  */
 public class FastjsonUtil {
     /**

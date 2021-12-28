@@ -15,6 +15,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 原生 Http 请求帮助类
+ * @author Eddie Zhang
+ */
 public class HttpUtil {
     // 默认的文件上传路径
     public static final String DEFAULT_LOADPATH = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file";

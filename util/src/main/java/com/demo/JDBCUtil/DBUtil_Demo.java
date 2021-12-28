@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 
 /**
  * DBUtil 类的 Demo
+ * @author Eddie Zhang
  */
 public class DBUtil_Demo {
     public static void main(String[] args) {

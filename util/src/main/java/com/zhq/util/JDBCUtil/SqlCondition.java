@@ -15,6 +15,7 @@ import java.util.Map;
  * 1. 将传入的条件转化后存入到条件集合 (eqConditionMap, gtConditionMap, ltConditionMap...), 操作相关的 表集合，值集合，列集合
  * 2. 解析集合中的内容，将其通过部分转化的形式 ( where, from 等部分 )， 转化后拼接成完整的 SQL 字符串
  * 3. 通过解析解析拼接的字符串，来调用执行对应的 SQL 操作
+ * @author Eddie Zhang
  */
 public class SqlCondition {
     // =============================================

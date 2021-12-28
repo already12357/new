@@ -5,6 +5,7 @@ import java.util.*;
 
 /**
  * 用于处理和分页有关的事项
+ * @author Eddie Zhang
  */
 public class PageUtil {
     /**

@@ -6,6 +6,10 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.scheduling.quartz.AdaptableJobFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * 用于在 Quartz 框架下，自动产生 Job 实例的工厂对象
+ * @author Eddie Zhang
+ */
 @Component
 public class JobFactory extends AdaptableJobFactory {
     // 注入对象，该对象用于将其他对象注入到 IOC 中

@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * 字符串有关的帮助类
+ * @author Eddie Zhang
+ */
 public class StringUtil {
     /**
      * 判断字符串是否有内容

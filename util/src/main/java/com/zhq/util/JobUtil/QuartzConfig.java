@@ -13,6 +13,10 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 // Quartz 的配置类
 // 不使用 Quartz Springboot 启动环境时，手动配置，将对应生成的任务注入到 Spring 中，
 // 交由 IOC 管理
+
+/**
+ * @author Eddie Zhang
+ */
 @Configuration
 public class QuartzConfig {
     @Autowired

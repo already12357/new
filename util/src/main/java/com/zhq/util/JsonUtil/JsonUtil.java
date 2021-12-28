@@ -7,6 +7,7 @@ import java.util.*;
 
 /**
  * 原生的 JSON 帮助类，主要用于将基础类转换为 json 字符串
+ * @author Eddie Zhang
  */
 // 原生格式下的 json 帮助类，主要用于将基础类型装换为 json 字符串
 public class JsonUtil {

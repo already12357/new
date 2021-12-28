@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 原生日期的处理帮助类
+ * @author Eddie Zhang
+ */
 public class DateUtil {
     /**
      * 获取特定时间之前的时间内容

@@ -9,6 +9,10 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.util.*;
 
+/**
+ * IO 流，文件有关的帮助类
+ * @author Eddie Zhang
+ */
 public class IOUtil {
     // 各种文件格式的二进制流对应的前缀
     public static final byte[] BMP_BIN_PREFIX = {0x42, 0x4d};

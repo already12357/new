@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * 数据类, 用于对分页数据进行封装, 保存有
+ * @author Eddie Zhang
  */
 public class PageData<T> {
     // 默认的分页大小

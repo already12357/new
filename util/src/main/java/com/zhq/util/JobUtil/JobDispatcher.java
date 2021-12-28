@@ -11,6 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 // 用于调度发配对应的任务
 // 默认注入 IOC
+
+/**
+ * @author Eddie Zhang
+ */
 @Component
 public class JobDispatcher {
     public static final String TRIGGER_PREFIX = "trigger_";

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 
 /**
  * SqlCondition 类的 Demo
+ * @author Eddie Zhang
  */
 public class SqlCondition_Demo {
     public static void main(String[] args) {

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * DateUtil 类的 Demo
+ * @author Eddie Zhang
  */
 public class DateUtil_Demo {
     public static void main(String[] args) {
