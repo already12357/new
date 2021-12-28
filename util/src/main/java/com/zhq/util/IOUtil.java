@@ -3,9 +3,7 @@ package com.zhq.util;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.util.*;
 
@@ -32,9 +30,13 @@ public class IOUtil {
     public static final String PPTX = "pptx";
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
+    public static final String ZIP = "zip";
+    public static final String RAR = "rar";
 
     // 各种文件大类
+    // 图片
     public static final String TYPE_IMAGE = "image";
+    // 文本
     public static final String TYPE_TEXT = "text";
 
     // 文件头魔数映射
@@ -54,12 +56,18 @@ public class IOUtil {
      * @param file 解析的文件名
      * @return
      */
-    public static String parseSuffix(File file) {
-        String filePath = file.getAbsolutePath();
-        String[] fileParts = filePath.split("\\.");
-        String suffix = fileParts[fileParts.length - 1];
+    public static String fileSuffix(File file) {
+        try {
+            String filePath = file.getAbsolutePath();
+            String[] fileParts = filePath.split("\\.");
+            String suffix = fileParts[fileParts.length - 1];
 
-        return suffix.toLowerCase(Locale.ENGLISH);
+            return suffix.toLowerCase(Locale.ENGLISH);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -127,7 +135,7 @@ public class IOUtil {
      * @return
      */
     public static File toPdf(File file) {
-        String suffix = parseSuffix(file);
+        String suffix = fileSuffix(file);
         File tempPdfFile = null;
         FileOutputStream fout = null;
 
@@ -139,6 +147,7 @@ public class IOUtil {
 
             fout = new FileOutputStream(tempPdfFile);
 
+            // 根据文件不同类型，调用不同 aspose 对象的 save 方法
             switch (suffix) {
                 case DOC:
                 case DOCX:
@@ -185,7 +194,7 @@ public class IOUtil {
 
     /**
      * 根据魔数获取文件的格式
-     * @param magicBytes
+     * @param magicBytes 传入的魔数数据
      * @return
      */
     private static String fileFormatInMagicBytes(byte[] magicBytes) {
