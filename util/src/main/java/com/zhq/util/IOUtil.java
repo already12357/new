@@ -224,19 +224,29 @@ public class IOUtil {
     }
 
     /**
-     * 根据文件流返回不同大类的文件类型 ( 图片, 文本 )
+     * 根据 文件流 或 文件 返回不同大类的文件类型 ( 图片, 文本 )
      * @param imageBytes
      * @return
      */
     public static String imgTypeInBytes(byte[] imageBytes) {
         return typeInBytes(imageBytes, TYPE_IMAGE);
     }
+
+    public static String imgTypeInFile(File file) {
+        return typeInFile(file, TYPE_IMAGE);
+    }
+
+
     public static String textTypeInBytes(byte[] textBytes) {
         return typeInBytes(textBytes, TYPE_TEXT);
     }
 
+    public static String textTypeInFile(File file) {
+        return typeInFile(file, TYPE_TEXT);
+    }
+
     /**
-     * 根据文件流返回对应的类型
+     * 根据 文件流 或 文件 返回对应的类型
      * @param fileBytes 传入文件的二进制类型
      * @param fileType 文件大类
      * @return
@@ -247,6 +257,11 @@ public class IOUtil {
         // 根据魔数获取文件格式
         String fileFormat = fileFormatInMagicBytes(magicBytes);
         return fileType.concat("/").concat(fileFormat);
+    }
+
+    public static String typeInFile(File file, String fileType) {
+        byte[] fileBytes = bytesInFile(file);
+        return typeInBytes(fileBytes, fileType);
     }
 
     /**

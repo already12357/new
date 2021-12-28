@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 
 /**
  * IOUtil 的 Demo
+ * @author Eddie Zhang
  */
 public class IOUtil_Demo {
     public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class IOUtil_Demo {
 //        instance.demo2();
 //        instance.demo3();
 //        instance.demo4();
-        instance.demo5();
+//        instance.demo5();
     }
 
     public void demo1() {
@@ -93,7 +94,5 @@ public class IOUtil_Demo {
 //        String imageTypeString = IOUtil.imgTypeInBytes(imageFileBytes);
         String imageTypeString = IOUtil.typeInBytes(imageFileBytes, IOUtil.TYPE_IMAGE);
         System.out.println(imageTypeString);
-
-
     }
 }
