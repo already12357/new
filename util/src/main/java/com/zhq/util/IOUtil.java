@@ -99,6 +99,12 @@ public class IOUtil {
             targetDir = new File(toPath);
 
             if (!targetDir.exists()) {
+                // 建立路径上没有的文件夹
+                File parentFile = targetDir.getParentFile();
+                if (!parentFile.exists()) {
+                    parentFile.mkdirs();
+                }
+
                 targetDir.createNewFile();
             }
 
@@ -244,7 +250,7 @@ public class IOUtil {
     }
 
     /**
-     * 读取输入流中的字节数据
+     * 读取 输入流 或 文件 中的字节数据
      * @param in 包含数据的输入流
      * @return
      */
@@ -263,6 +269,20 @@ public class IOUtil {
         catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static byte[] bytesInFile(File file) {
+        FileInputStream fin = null;
+        try {
+            fin = new FileInputStream(file);
+            return bytesInStream(fin);
+        }
+        catch (Exception e) {
+            return null;
+        }
+        finally {
+            ResourceUtil.closeResources(fin);
         }
     }
 
