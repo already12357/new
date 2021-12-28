@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class PageUtil {
     /**
-     * 根据元素数量，当前页号，每页的大小，获取遍历当前页的起始编号
+     * 根据元素数量，当前页号，每页的大小，获取遍历当前页的起始编号 ( 循环是包含 )
      * @param totalSize 查询到的元素总数
      * @param currentPage 当前页号 ( 页号从 0 开始 )
      * @param pageSize 当前页的大小 ( 大于 0 )
@@ -25,7 +25,7 @@ public class PageUtil {
     }
 
     /**
-     * 根据元素数量，当前页号，每页的大小，获取遍历当前页的结束序号 ( 使用不等号连接遍历 )
+     * 根据元素数量，当前页号，每页的大小，获取遍历当前页的结束序号 ( 循环时不包含 )
      * @param totalSize 查询到的元素总数
      * @param currentPage 当前页号 ( 页号从 0 开始 )
      * @param pageSize 当前页的大小 ( 大于 0 )
@@ -87,8 +87,7 @@ public class PageUtil {
         return null;
     }
 
-
-    private static Object[] pageArray(Object[] array, int currentPage, int pageSize) {
+    public static Object[] pageArray(Object[] array, int currentPage, int pageSize) {
         int totalSize = array.length;
         int beginIndex = beginIndex(totalSize, currentPage, pageSize);
         int endIndex = endIndex(totalSize, currentPage, pageSize);

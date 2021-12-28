@@ -6,24 +6,6 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
     /**
-     * 常用正则表达式
-     */
-    public static final String REGEX_MAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-    public static final String REGEX_IPv4 = "(((\\d{1,2})|(1\\d{2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{2})|(2[0-4]\\d)|(25[0-5]))";
-
-
-    /**
-     * 根据正则表达式判断字符串是否有效
-     */
-    public static boolean isMailValid(String mail) {
-        return Pattern.matches(REGEX_MAIL, mail);
-    }
-    public static boolean isIPv4Valid(String ipv4) {
-        return Pattern.matches(REGEX_IPv4, ipv4);
-    }
-
-
-    /**
      * 判断字符串是否有内容
      * @param str 判断的字符串
      * @return

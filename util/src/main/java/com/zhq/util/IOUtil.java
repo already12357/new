@@ -169,15 +169,66 @@ public class IOUtil {
         return tempPdfFile;
     }
 
+//    /**
+//     * 将对应的文件存储到对应的数据库中的对应字段
+//     * @param from
+//     * @param dataSource
+//     */
+//    public static void storeFile(File from, DataSource dataSource) {
+//        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+//    }
+
+
     /**
-     * 将对应的文件存储到对应的数据库中的对应字段
-     * @param from
-     * @param dataSource
+     * 根据魔数获取文件的格式
+     * @param magicBytes
+     * @return
      */
-    public static void storeFile(File from, DataSource dataSource) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private static String fileFormatInMagicBytes(byte[] magicBytes) {
+        for (Map.Entry<String, byte[]> magicMap : MAGIC_MAPS.entrySet()) {
+            boolean matched = true;
+            byte[] iBytes = magicMap.getValue();
+
+            for (int i = 0; i < iBytes.length; i++) {
+                if (iBytes[i] != magicBytes[i]) {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched) {
+                return magicMap.getKey();
+            }
+        }
+
+        return null;
     }
 
+    /**
+     * 根据文件流返回不同大类的文件类型 ( 图片, 文本 )
+     * @param imageBytes
+     * @return
+     */
+    public static String imgTypeInBytes(byte[] imageBytes) {
+        return typeInBytes(imageBytes, TYPE_IMAGE);
+    }
+    public static String textTypeInBytes(byte[] textBytes) {
+        return typeInBytes(textBytes, TYPE_TEXT);
+    }
+
+    /**
+     * 根据文件流返回对应的类型
+     * @param fileBytes 传入文件的二进制类型
+     * @param fileType 文件大类
+     * @return
+     */
+    public static String typeInBytes(byte[] fileBytes, String fileType) {
+        // 获取文件的魔数
+        byte[] magicBytes = magicBytesInFile(fileBytes);
+        // 根据魔数获取文件格式
+        String fileFormat = fileFormatInMagicBytes(magicBytes);
+        return fileType.concat("/").concat(fileFormat);
+    }
 
     /**
      * 读取输入流中的字节数据
@@ -231,56 +282,5 @@ public class IOUtil {
         }
 
         return null;
-    }
-
-    /**
-     * 根据文件流返回对应的类型
-     * @param fileBytes 传入文件的二进制类型
-     * @param fileType 文件大类
-     * @return
-     */
-    public static String typeInBytes(byte[] fileBytes, String fileType) {
-        // 获取文件的魔数
-        byte[] magicBytes = magicBytesInFile(fileBytes);
-        // 根据魔数获取文件格式
-        String fileFormat = fileFormatInMagicBytes(magicBytes);
-        return fileType.concat("/").concat(fileFormat);
-    }
-
-    /**
-     * 根据魔数获取文件的格式
-     * @param magicBytes
-     * @return
-     */
-    private static String fileFormatInMagicBytes(byte[] magicBytes) {
-        for (Map.Entry<String, byte[]> magicMap : MAGIC_MAPS.entrySet()) {
-            boolean matched = true;
-            byte[] iBytes = magicMap.getValue();
-
-            for (int i = 0; i < iBytes.length; i++) {
-                if (iBytes[i] != magicBytes[i]) {
-                    matched = false;
-                    break;
-                }
-            }
-
-            if (matched) {
-                return magicMap.getKey();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * 根据文件流返回不同大类的文件类型 ( 图片, 文本 )
-     * @param imageBytes
-     * @return
-     */
-    public static String imgTypeInBytes(byte[] imageBytes) {
-        return typeInBytes(imageBytes, TYPE_IMAGE);
-    }
-    public static String textTypeInBytes(byte[] textBytes) {
-        return typeInBytes(textBytes, TYPE_TEXT);
     }
 }
