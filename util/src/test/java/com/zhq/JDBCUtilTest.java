@@ -95,9 +95,17 @@ public class JDBCUtilTest {
                 .page(0, 2);
         ResultSet resultSet = (ResultSet) pageSelectCondition.executedBy(innerDS);
         System.out.println(pageSelectCondition.generateSql());
-        List<RowData> rowDatas = RowData.valueOf((ResultSet) pageSelectCondition.executedBy(innerDS));
-        System.out.println(rowDatas);
-        System.out.println(JsonUtil.resultSetToJString(resultSet));
+        ResultSet queryResult = (ResultSet) pageSelectCondition.executedBy(innerDS);
+//        List<RowData> rowDatas = RowData.valueOf(queryResult);
+//        queryResult.beforeFirst();
+
+//        System.out.println(rowDatas);
+//        System.out.println(JsonUtil.resultSetToJString(resultSet));
+
+
+        List<RowData> rowDatas2 = RowData.valueOf(DBUtil.resultSetToList(queryResult));
+        System.out.println(rowDatas2);
+
 
 //        // 增
 //        SqlCondition insertCondition = new SqlCondition();
