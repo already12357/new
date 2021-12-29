@@ -15,7 +15,9 @@ public class ResourceUtil {
     public static void closeResources(AutoCloseable...resources) {
         try {
             for (AutoCloseable resource : resources) {
-                resource.close();
+                if (null != resource) {
+                    resource.close();
+                }
             }
         }
         catch (Exception e) {

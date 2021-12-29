@@ -59,6 +59,9 @@ public class SqlCondition_Demo {
 
         // 4. 输出结果
         System.out.println(JsonUtil.resultSetToJString(queryResult));
+
+        // 5. 回收资源
+        selectSql.release();
     }
 
     public void select_demo2() {
@@ -75,6 +78,7 @@ public class SqlCondition_Demo {
                 .lt("c_id", "user_id").eq(DBConstant.SQL_AND, "cstatus", "'4144'");
         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
         System.out.println(JsonUtil.resultSetToJString(queryResult));
+        selectSql.release();
     }
 
     public void select_demo3() {

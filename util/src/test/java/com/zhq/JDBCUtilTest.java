@@ -5,6 +5,7 @@ import com.zhq.util.JDBCUtil.DBUtil;
 import com.zhq.util.JDBCUtil.RowData;
 import com.zhq.util.JDBCUtil.SqlCondition;
 import com.zhq.util.JsonUtil.JsonUtil;
+import com.zhq.util.ResourceUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -204,6 +205,7 @@ public class JDBCUtilTest {
                 public void run() {
                     ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
                     System.out.println(JsonUtil.resultSetToJString(queryResult));
+                    ResourceUtil.closeResources(queryResult);
                 }
             });
 

@@ -5,6 +5,7 @@ import com.zhq.util.ResourceUtil;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +43,9 @@ public class SqlCondition {
     // 优化，支持 Spring 注入
     // =============================================
     // =============================================
-    // 优化，Json 执行格式返回
+    // 优化，多线程支持 ( 线程池 )
     // =============================================
+
     /**
      * 连接池连接释放问题........
      * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
@@ -54,6 +56,11 @@ public class SqlCondition {
      * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      */
+
+    // 用于执行数据库连接的一些类
+    private Connection innerConn = null;
+    private PreparedStatement innerPs = null;
+    private ResultSet innerRs = null;
 
 
     // where 部分的所有条件内容集合
@@ -973,53 +980,29 @@ public class SqlCondition {
     }
 
     public Object executedBy(Connection connection) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(generateSql());
-//            switch (opType) {
-//                case DBConstant.SQL_DELETE:
-//                case DBConstant.SQL_INSERT:
-//                    return ps.execute();
-//
-//                case DBConstant.SQL_UPDATE:
-//                    return ps.executeUpdate();
-//
-//                case DBConstant.SQL_SELECT:
-//                    return ps.executeQuery();
-//            }
-//
-//            return null;
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
-            PreparedStatement ps = connection.prepareStatement(generateSql());
-            Object result = null;
+            ps = connection.prepareStatement(generateSql());
             switch (opType) {
                 case DBConstant.SQL_DELETE:
                 case DBConstant.SQL_INSERT:
-                    result = ps.execute();
-                    break;
+                    return ps.execute();
 
                 case DBConstant.SQL_UPDATE:
-                    result = ps.executeUpdate();
-                    break;
+                    return ps.executeUpdate();
 
                 case DBConstant.SQL_SELECT:
-                    result = ps.executeQuery();
-                    break;
+                    rs = ps.executeQuery();
+                    return ps.executeQuery();
             }
 
-            return result;
+            return null;
         }
         catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        finally {
-            ResourceUtil.closeResources(connection);
         }
     }
 
@@ -1042,5 +1025,15 @@ public class SqlCondition {
         existsConditionMap = null;
         joinConditionMap = null;
         pageConditionMap = null;
+    }
+
+
+    /**
+     * 回收 JDBC 执行过程中产生的资源
+     */
+    public void release() {
+        ResourceUtil.closeResources(innerPs);
+        ResourceUtil.closeResources(innerConn);
+        ResourceUtil.closeResources(innerRs);
     }
 }

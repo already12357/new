@@ -3,7 +3,7 @@ package com.zhq.util.JDBCUtil;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.*;
-import java.util.Locale;
+import java.util.*;
 
 
 /**
@@ -374,5 +374,39 @@ public class DBUtil {
         }
 
         return null;
+    }
+
+
+    /**
+     * 将 ResultSet 对象转化为 List<Map> 对象
+     * 每个 Map 对象存储一行数据
+     * @param queryResult 查询的结果
+     */
+    public static List<Map<String, Object>> resultSetToList(ResultSet queryResult) {
+        ResultSetMetaData metaData = null;
+
+        try {
+            List<Map<String, Object>> resultMap = new ArrayList<Map<String, Object>>();
+
+            metaData = queryResult.getMetaData();
+
+            while (queryResult.next()) {
+                Map<String, Object> rowMap = new HashMap<String, Object>();
+
+                for (int i = 0; i < metaData.getColumnCount(); i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    Object columnValue = queryResult.getObject(i);
+                    rowMap.put(columnName, columnValue);
+
+                    resultMap.add(rowMap);
+                }
+            }
+
+            return resultMap;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
