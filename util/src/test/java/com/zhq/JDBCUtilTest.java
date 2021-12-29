@@ -193,7 +193,6 @@ public class JDBCUtilTest {
      */
     @Test
     public void multiThreadTestUtil() {
-//        final CountDownLatch latch = new CountDownLatch(10000);
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
@@ -203,16 +202,14 @@ public class JDBCUtilTest {
 //        ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
 //        System.out.println(JsonUtil.resultSetToJString(queryResult));
 //        selectSql.release();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 20000; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
 //                        SqlCondition selectSql = new SqlCondition();
 //                        selectSql.select_col("*").from("course_1").where().lt("c_id", 10);
-                        System.out.println("Begin...");
                         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
-                        System.out.println("Middle....");
                         System.out.println(JsonUtil.resultSetToJString(queryResult));
                         selectSql.release();
                     }
@@ -225,13 +222,5 @@ public class JDBCUtilTest {
             thread.start();
             System.out.println("Thread" + i + " started...");
         }
-
-
-//        try {
-//            latch.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
     }
 }
