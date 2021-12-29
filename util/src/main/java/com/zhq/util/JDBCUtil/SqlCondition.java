@@ -829,7 +829,7 @@ public class SqlCondition {
 
 
     /**
-     * 根据内部配置生成 SQL 整体语句的不同部分 ( where, from, having 等 )
+     * 根据内部配置生成 SQL 整体语句的不同部分 ( where, from, having, set 等 )
      * @return
      */
     public String columnsInSql() {
@@ -1004,7 +1004,7 @@ public class SqlCondition {
     /**
      * 清空该 SqlCondition 中存储的所有条件数据, 用于重置 SqlCondition
      */
-    public void clearCondition() {
+    private void clearCondition() {
         opValues.clear();
         opColumns.clear();
         opTables.clear();
@@ -1029,23 +1029,26 @@ public class SqlCondition {
             Long threadId = Thread.currentThread().getId();
             List<AutoCloseable> releaseList = releaseMap.get(threadId);
 
-            if (!releaseList.isEmpty()) {
+            if (null != releaseList) {
                 for (AutoCloseable resClose : releaseList) {
-                    try {
-                        resClose.close();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                    if (null != resClose) {
+                        try {
+                            resClose.close();
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-
                 releaseList.clear();
             }
         }
     }
 
 
-    // 将资源添加到回收列表中
+    /**
+     * 将资源添加到回收列表中, 然后按当前线程 id 回收对应的资源
+     */
     private void recordRelease(AutoCloseable...resources) {
         Long threadId = Thread.currentThread().getId();
         List<AutoCloseable> resList = releaseMap.get(threadId);

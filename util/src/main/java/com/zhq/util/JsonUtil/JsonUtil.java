@@ -12,6 +12,31 @@ import java.util.*;
 // 原生格式下的 json 帮助类，主要用于将基础类型装换为 json 字符串
 public class JsonUtil {
     /**
+     * 将 Properties 对象转换为对应的 JSON 格式字符串
+     */
+    public static String propertyToJString(Properties prop) {
+        try {
+            StringBuilder resultPropStr = new StringBuilder();
+            Set<Object> keySet = prop.keySet();
+
+            resultPropStr.append("{");
+            for (Object key : keySet) {
+                Object value = prop.get(key);
+                resultPropStr.append(innerKeyValueToJString(String.valueOf(key), value, false));
+                resultPropStr.append(",");
+            }
+            resultPropStr.deleteCharAt(resultPropStr.length() - 1);
+            resultPropStr.append("}");
+
+            return resultPropStr.toString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+    
+    /**
      * 将数据库查询的 ResultSet 对象转换为对应的 JSON 格式字符串
      * @param queryResult 查询到的 JSON 结果集
      * @return

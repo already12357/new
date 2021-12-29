@@ -17,8 +17,10 @@ import java.util.Map;
  * @author Eddie Zhang
  */
 public class RowData extends HashMap<String, Object> {
+    public String tableName;
+
     /**
-     * 将 ResultSet, List<Map> 等类转化为 RowData 类
+     * 将 ResultSet, List<Map>, Map 等类转化为 RowData 类
      * @param queryResult
      * @return
      */
@@ -81,46 +83,85 @@ public class RowData extends HashMap<String, Object> {
         }
     }
 
+    public static RowData valueOf(Map<String, Object> map) {
+        if (null == map) {
+            return null;
+        }
+        try {
+            RowData rowData = new RowData();
+
+            for (Entry<String, Object> paramEntry : map.entrySet()) {
+                String columnName = paramEntry.getKey();
+                Object columnValue = paramEntry.getValue();
+                rowData.set(columnName, columnValue);
+            }
+
+            return rowData;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     public void set(String column, Object value) {
-        this.put(column, value);
+        super.put(column, value);
     }
 
     public void setString(String column, String value) {
-        this.put(column, value);
+        super.put(column, value);
     }
 
     public void setInteger(String column, Integer value) {
-        this.put(column, value);
+        super.put(column, value);
     }
 
     public void setLong(String column, Long value) {
-        this.put(column, value);
+        super.put(column, value);
     }
 
     public void setBoolean(String column, Boolean value) {
-        this.put(column, value);
+        super.put(column, value);
     }
 
     public Object get(String column) {
-        return this.get(column);
+        return super.get(column);
     }
 
     public String getString(String column) {
-        return (String) this.get(column);
+        return (String) super.get(column);
     }
 
     public Integer getInteger(String column) {
-        return (Integer) this.get(column);
+        return (Integer) super.get(column);
     }
 
     public Long getLong(String column) {
-        return (Long) this.get(column);
+        return (Long) super.get(column);
     }
 
     public Boolean getBoolean(String column) {
-        return (Boolean) this.get(column);
+        return (Boolean) super.get(column);
     }
+
+
+    /**
+     * 对表名的处理操作，通常在插入时使用
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+
+    /**
+     * 静态方法，实现了将 RowData 插入，删除的静态方法，对外依赖
+     */
 
 
     // 以 json 格式字符串化

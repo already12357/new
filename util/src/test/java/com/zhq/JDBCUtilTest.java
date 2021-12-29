@@ -231,4 +231,26 @@ public class JDBCUtilTest {
             System.out.println("Thread" + i + " started...");
         }
     }
+
+
+    public void rowDataInserted() {
+        // 静态方法，将对应的数据插入到表中
+        RowData insertData = new RowData();
+
+//        insertData.set(...);
+
+        SqlCondition sqlInsert = new SqlCondition();
+
+
+        // 使用方法
+//        RowData.insertInto(table, rowData);
+//        RowData.insertInto(map);
+//        RowData.insertInto(rowData);
+
+//        RowData.updateRow(rowData, primaryKey);
+//        RowData.updateBatch(rowDatas);
+
+//        RowData.deleteRow(prmiaryKey);
+//        RowData.deleteBatch(strPrimsList);
+    }
 }

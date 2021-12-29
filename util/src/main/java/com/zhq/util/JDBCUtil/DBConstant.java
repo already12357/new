@@ -1,5 +1,7 @@
 package com.zhq.util.JDBCUtil;
 
+import java.io.File;
+
 /**
  * 与数据连接相关的常量类
  * @author Eddie Zhang
@@ -119,6 +121,10 @@ public class DBConstant {
      * 待完成....
      */
     public static final String FUNCTION_CONCAT(String dbType, String...params) {
+        if (null == params) {
+            return null;
+        }
+
         StringBuilder contactStr = new StringBuilder("");
 
         if (params.length > 0) {
@@ -151,16 +157,33 @@ public class DBConstant {
     }
 
     public static final String FUNCTION_POW(String dbType, Integer pow, Integer x) {
-        StringBuilder contactStr = new StringBuilder("");
+        if (null == pow || null == x) {
+            return null;
+        }
 
-        return contactStr.toString().trim();
+        StringBuilder powStr = new StringBuilder("");
+
+        return powStr.toString().trim();
     }
 
     public static final String FUNCTION_CASE() {
-        StringBuilder contactStr = new StringBuilder("");
+        StringBuilder caseStr = new StringBuilder("");
 
 
 
-        return contactStr.toString().trim();
+        return caseStr.toString().trim();
+    }
+
+    // 文件读取方法 
+    public static final String FUNCTION_LOAD(String dbType, File file) {
+        if (null == file) {
+            return null;
+        }
+
+        StringBuilder loadStr = new StringBuilder("");
+
+
+
+        return loadStr.toString().trim();
     }
 }

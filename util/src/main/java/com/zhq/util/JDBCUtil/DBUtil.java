@@ -1,7 +1,5 @@
 package com.zhq.util.JDBCUtil;
 
-import com.alibaba.druid.pool.DruidDataSource;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.*;

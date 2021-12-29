@@ -102,5 +102,13 @@ public class JsonUtilTest {
         jArray.add(addElement);
         List list_2 = FastjsonUtil.jArrayToList(jArray);
         System.out.println(list_2);
+
+
+        Properties prop = new Properties();
+        prop.setProperty("hello", "hello");
+        prop.setProperty("hello1", "hello1");
+        prop.setProperty("hello2", "hello2");
+        prop.setProperty("hello3", "hello3");
+        System.out.println(JsonUtil.propertyToJString(prop));
     }
 }
