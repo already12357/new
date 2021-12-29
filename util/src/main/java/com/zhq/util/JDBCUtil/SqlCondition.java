@@ -29,7 +29,7 @@ public class SqlCondition {
     // 优化，子查询语句的支持
     // =============================================
     // =============================================
-    // 优化，添加分页查询效果
+    // 优化，分页查询多种数据库支持
     // =============================================
     // =============================================
     // 优化，增加对数据库的不同写法
@@ -41,18 +41,11 @@ public class SqlCondition {
     // 优化，多线程支持 ( 线程池 )
     // =============================================
 
-    /**
-     * 连接池连接释放问题........
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-     */
-    // List 对象，存放没有用的资源对象， 通过 release 方法删除
-    private List<AutoCloseable> releaseList;
+
+    // Map 对象，key 为当前线程号
+    //          value 为该线程下使用的 资源对象列表
+    // 根据线程 Id 获取对应线程下的所有资源，然后关闭
+    private Map<Long, List<AutoCloseable>> releaseMap;
 
     // where 部分的所有条件内容集合
     private List<HashMap<String, List<String>>> whereConditionList;
@@ -161,7 +154,7 @@ public class SqlCondition {
 
         whereConditionList = new ArrayList<HashMap<String, List<String>>>();
 
-        releaseList = new ArrayList<AutoCloseable>();
+        releaseMap = new HashMap<Long, List<AutoCloseable>>();
     }
 
     public void setOpType(String opType) {
@@ -960,7 +953,6 @@ public class SqlCondition {
 
     public Object executedBy(DataSource dataSource) {
         Connection connection = null;
-        PreparedStatement ps = null;
 
         try {
             connection = dataSource.getConnection();
@@ -969,6 +961,10 @@ public class SqlCondition {
         catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+        finally {
+            // 将线程依据分类添加到对应的 Map 对象中
+            recordRelease(connection);
         }
     }
 
@@ -998,9 +994,8 @@ public class SqlCondition {
             return null;
         }
         finally {
-            releaseList.add(ps);
-            releaseList.add(rs);
-            releaseList.add(connection);
+            // 将线程依据分类添加到对应的 Map 对象中
+            recordRelease(rs, ps, connection);
         }
     }
 
@@ -1027,10 +1022,13 @@ public class SqlCondition {
 
 
     /**
-     * 回收 JDBC 执行过程中产生的资源
+     * 回收 JDBC 执行过程中产生的资源, 通常在执行的最后调用, 删除对应线程下的所有资源对象
      */
     public void release() {
-        synchronized (Object.class) {
+        synchronized (SqlCondition.class) {
+            Long threadId = Thread.currentThread().getId();
+            List<AutoCloseable> releaseList = releaseMap.get(threadId);
+
             if (!releaseList.isEmpty()) {
                 for (AutoCloseable resClose : releaseList) {
                     try {
@@ -1044,5 +1042,22 @@ public class SqlCondition {
                 releaseList.clear();
             }
         }
+    }
+
+
+    // 将资源添加到回收列表中
+    private void recordRelease(AutoCloseable...resources) {
+        Long threadId = Thread.currentThread().getId();
+        List<AutoCloseable> resList = releaseMap.get(threadId);
+
+        if (null == resList) {
+            resList = new ArrayList<AutoCloseable>();
+        }
+
+        for (AutoCloseable resource : resources) {
+            resList.add(resource);
+        }
+
+        releaseMap.put(threadId, resList);
     }
 }

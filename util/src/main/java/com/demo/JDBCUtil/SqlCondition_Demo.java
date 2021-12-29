@@ -109,6 +109,7 @@ public class SqlCondition_Demo {
                 .where().eq("c_id", 41);
         int updateCount = (Integer) updateSql.executedBy(DBUtil.getInnerDS());
         System.out.println(updateCount);
+        updateSql.release();
     }
 
 

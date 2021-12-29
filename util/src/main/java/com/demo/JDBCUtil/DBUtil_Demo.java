@@ -37,13 +37,14 @@ public class DBUtil_Demo {
         DataSource outerDruidDs = DBUtil.druidDataSource(DBConstant.URL_MYSQL(""), "root", "Gepoint", DBConstant.DB_MYSQL);
 
         /**
-         * 3. 使用数据源进行操作
+         * 3. 使用数据源进行操作, 详细见 SqlCondition_Demo
          */
         SqlCondition selectSql = new SqlCondition();
         selectSql.select_col("*").from("course_1").where().eq("c_id", 41);
         // 使用 executeSqlCondition 执行自定义的查询对象
         ResultSet resultSet = (ResultSet) DBUtil.executeSqlCondition(selectSql);
         System.out.println(JsonUtil.resultSetToJString(resultSet));
+        selectSql.release();
 
         /**
          * 4. 通过 resetDs 关闭数据连接池

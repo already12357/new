@@ -46,6 +46,8 @@ public class JsonUtil_Demo {
 
         // 使用 mapToJString 将 ResultSet 对象转化为 json 字符串
         System.out.println(JsonUtil.resultSetToJString(resultSet));
+
+        selectSql.release();
     }
 
     public void demo2() {

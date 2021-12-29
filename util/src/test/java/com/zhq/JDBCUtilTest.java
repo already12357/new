@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class JDBCUtilTest {
     @Autowired
@@ -187,28 +188,37 @@ public class JDBCUtilTest {
 //        System.out.println(selectTestLeftJoinTable.generateSql());
     }
 
-    public static int index = 0;
-
     /**
      * 多线程环境下测试对应的 JDBC 连接
      */
     @Test
     public void multiThreadTestUtil() {
+//        final CountDownLatch latch = new CountDownLatch(10000);
         DBUtil.setUrl(DBConstant.URL_MYSQL("sys"));
         DBUtil.setUsername("root");
         DBUtil.setPassword("Gepoint");
 
         SqlCondition selectSql = new SqlCondition();
         selectSql.select_col("*").from("course_1").where().lt("c_id", 10);
-
-        for (int i = 0; i < 2000; i++) {
+//        ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
+//        System.out.println(JsonUtil.resultSetToJString(queryResult));
+//        selectSql.release();
+        for (int i = 0; i < 200; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
-                    System.out.println(JsonUtil.resultSetToJString(queryResult));
-                    System.out.println("Query" + (index++) + "Finished...");
-                    selectSql.release();
+                    try {
+//                        SqlCondition selectSql = new SqlCondition();
+//                        selectSql.select_col("*").from("course_1").where().lt("c_id", 10);
+                        System.out.println("Begin...");
+                        ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
+                        System.out.println("Middle....");
+                        System.out.println(JsonUtil.resultSetToJString(queryResult));
+                        selectSql.release();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -217,11 +227,11 @@ public class JDBCUtilTest {
         }
 
 
-        try {
-            Thread.sleep(30000);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
     }
 }
