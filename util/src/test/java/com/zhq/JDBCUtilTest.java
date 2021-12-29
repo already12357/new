@@ -187,6 +187,8 @@ public class JDBCUtilTest {
 //        System.out.println(selectTestLeftJoinTable.generateSql());
     }
 
+    public static int index = 0;
+
     /**
      * 多线程环境下测试对应的 JDBC 连接
      */
@@ -205,7 +207,8 @@ public class JDBCUtilTest {
                 public void run() {
                     ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
                     System.out.println(JsonUtil.resultSetToJString(queryResult));
-                    ResourceUtil.closeResources(queryResult);
+                    System.out.println("Query" + (index++) + "Finished...");
+                    selectSql.release();
                 }
             });
 

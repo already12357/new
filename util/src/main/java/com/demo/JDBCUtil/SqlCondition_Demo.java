@@ -92,6 +92,7 @@ public class SqlCondition_Demo {
                 .page(1, 2);
         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
         System.out.println(JsonUtil.resultSetToJString(queryResult));
+        selectSql.release();
     }
 
 
@@ -118,6 +119,7 @@ public class SqlCondition_Demo {
         deleteSql.delete_from("course_1").where().eq("c_id", 41);
         boolean deleteCount = (Boolean) deleteSql.executedBy(DBUtil.getInnerDS());
         System.out.println(deleteCount);
+        deleteSql.release();
     }
 
 
@@ -128,5 +130,6 @@ public class SqlCondition_Demo {
         insertSql.insert_into("course_1").values(41, "'Bella'", 450, "'update_ddfa'");
         boolean insertCount = (Boolean) insertSql.executedBy(DBUtil.getInnerDS());
         System.out.println(insertCount);
+        insertSql.release();
     }
 }

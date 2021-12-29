@@ -1,15 +1,10 @@
 package com.zhq.util.JDBCUtil;
 
-import com.zhq.util.ResourceUtil;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SQL 查询条件类
@@ -56,12 +51,8 @@ public class SqlCondition {
      * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      * ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
      */
-
-    // 用于执行数据库连接的一些类
-    private Connection innerConn = null;
-    private PreparedStatement innerPs = null;
-    private ResultSet innerRs = null;
-
+    // List 对象，存放没有用的资源对象， 通过 release 方法删除
+    private List<AutoCloseable> releaseList;
 
     // where 部分的所有条件内容集合
     private List<HashMap<String, List<String>>> whereConditionList;
@@ -169,10 +160,12 @@ public class SqlCondition {
         opType = DBConstant.SQL_SELECT;
 
         whereConditionList = new ArrayList<HashMap<String, List<String>>>();
+
+        releaseList = new ArrayList<AutoCloseable>();
     }
 
     public void setOpType(String opType) {
-        this.opType = opType;
+        this.opType = opType.toUpperCase(Locale.ENGLISH);
     }
     public String getOpType() {
         return opType;
@@ -185,7 +178,7 @@ public class SqlCondition {
         return dbType;
     }
     public void setDbType(String dbType) {
-        this.dbType = dbType;
+        this.dbType = dbType.toLowerCase(Locale.ENGLISH);
     }
 
     /**
@@ -995,7 +988,7 @@ public class SqlCondition {
 
                 case DBConstant.SQL_SELECT:
                     rs = ps.executeQuery();
-                    return ps.executeQuery();
+                    return rs;
             }
 
             return null;
@@ -1003,6 +996,11 @@ public class SqlCondition {
         catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+        finally {
+            releaseList.add(ps);
+            releaseList.add(rs);
+            releaseList.add(connection);
         }
     }
 
@@ -1032,8 +1030,19 @@ public class SqlCondition {
      * 回收 JDBC 执行过程中产生的资源
      */
     public void release() {
-        ResourceUtil.closeResources(innerPs);
-        ResourceUtil.closeResources(innerConn);
-        ResourceUtil.closeResources(innerRs);
+        synchronized (Object.class) {
+            if (!releaseList.isEmpty()) {
+                for (AutoCloseable resClose : releaseList) {
+                    try {
+                        resClose.close();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                releaseList.clear();
+            }
+        }
     }
 }
