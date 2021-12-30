@@ -1,6 +1,6 @@
 package com.zhq;
 
-import com.zhq.util.IOUtil;
+import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.ResourceUtil;
 import org.junit.Test;
 
@@ -15,11 +15,11 @@ public class IOUtilTest {
         byte[] bytes = null;
 
         try {
-            fin = new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/config/quartz/quartz.properties"));
+            fin = new FileInputStream(new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/Picture2.png"));
             bytes = IOUtil.bytesInStream(fin);
             for (int i = 0; i < bytes.length; i++) {
-                char bytesChar = (char) bytes[i];
-                System.out.print(bytesChar);
+//                char bytesChar = (char) bytes[i];
+                System.out.printf("%x ", bytes[i]);
             }
         }
         catch (Exception e) {
@@ -58,4 +58,10 @@ public class IOUtilTest {
 //
 //        return sheetCells;
 //    }
+
+    @Test
+    public void printBytesTest() {
+        File file = new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/Picture2.png");
+        IOUtil.printBinaryContent(file);
+    }
 }

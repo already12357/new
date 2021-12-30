@@ -1,6 +1,6 @@
 package com.zhq;
 
-import com.zhq.util.IOUtil;
+import com.zhq.util.IOUtil.IOUtil;
 import org.junit.Test;
 
 import java.io.File;

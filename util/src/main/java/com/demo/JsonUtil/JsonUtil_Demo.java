@@ -28,6 +28,7 @@ public class JsonUtil_Demo {
         instance.demo4();
         instance.demo5();
         instance.demo6();
+        instance.demo7();
     }
 
     public void init_DBUtil() {
@@ -139,5 +140,16 @@ public class JsonUtil_Demo {
         list.add("1");
         list.add(null);
         System.out.println(JsonUtil.collectionToJString(list));
+    }
+
+    public void demo7() {
+        Properties props = new Properties();
+
+        props.setProperty("hello1", "1");
+        props.setProperty("hello2", new Date().toString());
+        props.setProperty("hello3", String.valueOf(true));
+
+        // 使用 propertyToJString 将 Properties 对象对转化为 json 字符串
+        System.out.println(JsonUtil.propertiesToJString(props));
     }
 }

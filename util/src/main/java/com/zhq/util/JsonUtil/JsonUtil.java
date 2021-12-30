@@ -14,7 +14,7 @@ public class JsonUtil {
     /**
      * 将 Properties 对象转换为对应的 JSON 格式字符串
      */
-    public static String propertyToJString(Properties prop) {
+    public static String propertiesToJString(Properties prop) {
         try {
             StringBuilder resultPropStr = new StringBuilder();
             Set<Object> keySet = prop.keySet();

@@ -1,8 +1,10 @@
-package com.zhq.util;
+package com.zhq.util.IOUtil;
 
 import com.aspose.cells.Workbook;
+import com.aspose.psd.internal.bD.E;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
+import com.zhq.util.ResourceUtil;
 
 import java.io.*;
 import java.util.*;
@@ -204,6 +206,10 @@ public class IOUtil {
      * @return
      */
     private static String fileFormatInMagicBytes(byte[] magicBytes) {
+        if (null == magicBytes) {
+            return null;
+        }
+
         for (Map.Entry<String, byte[]> magicMap : MAGIC_MAPS.entrySet()) {
             boolean matched = true;
             byte[] iBytes = magicMap.getValue();
@@ -237,6 +243,8 @@ public class IOUtil {
     }
 
 
+
+
     public static String textTypeInBytes(byte[] textBytes) {
         return typeInBytes(textBytes, TYPE_TEXT);
     }
@@ -244,6 +252,8 @@ public class IOUtil {
     public static String textTypeInFile(File file) {
         return typeInFile(file, TYPE_TEXT);
     }
+
+
 
     /**
      * 根据 文件流 或 文件 返回对应的类型
@@ -253,7 +263,7 @@ public class IOUtil {
      */
     public static String typeInBytes(byte[] fileBytes, String fileType) {
         // 获取文件的魔数
-        byte[] magicBytes = magicBytesInFile(fileBytes);
+        byte[] magicBytes = magicBytesInBytes(fileBytes);
         // 根据魔数获取文件格式
         String fileFormat = fileFormatInMagicBytes(magicBytes);
         return fileType.concat("/").concat(fileFormat);
@@ -263,6 +273,8 @@ public class IOUtil {
         byte[] fileBytes = bytesInFile(file);
         return typeInBytes(fileBytes, fileType);
     }
+
+
 
     /**
      * 读取 输入流 或 文件 中的字节数据
@@ -288,6 +300,10 @@ public class IOUtil {
     }
 
     public static byte[] bytesInFile(File file) {
+        if (null == file) {
+            return null;
+        }
+
         FileInputStream fin = null;
         try {
             fin = new FileInputStream(file);
@@ -303,11 +319,15 @@ public class IOUtil {
 
 
     /**
-     * 根据文件内容匹配文件头中的魔数
+     * 根据文件中的字节数 或 文件对象 匹配文件头中的魔数
      * @param fileBytes 文件内容
      * @return
      */
-    public static byte[] magicBytesInFile(byte[] fileBytes) {
+    public static byte[] magicBytesInBytes(byte[] fileBytes) {
+        if (null == fileBytes) {
+            return null;
+        }
+
         Collection<byte[]> magicBytes = MAGIC_MAPS.values();
 
         // 遍历所有的文件头魔数, 对比返回对应的文件头魔数
@@ -330,5 +350,99 @@ public class IOUtil {
         }
 
         return null;
+    }
+
+    public static byte[] magicBytesInFile(File file) {
+        try {
+            byte[] fileBytes = bytesInFile(file);
+            return magicBytesInBytes(fileBytes);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+    /**
+     * 根据对应是数据流 或 文件对象，生成文件的 DataUrl
+     *
+     * 1. 从 文件 或 流 中读取对应的字节内容
+     * 2. 根据字节内容的前几个字节，匹配对应的魔数字节
+     * 3. 根据匹配的魔数字节，生成 dataUrl 所需的文件类型，base64 编码等
+     * 4. 拼接生成最后结果
+     *
+     * @param imgIn 输入的图片流
+     * @param base64 是否使用 base64 编码 ( 默认使用, true )
+     * @return
+     */
+    public static String imgDataUrl(InputStream imgIn, boolean base64) {
+        try {
+            // 返回的流对象
+            StringBuilder imgUrl = new StringBuilder("");
+            // 具体的二进制流
+            byte[] imageBytes = bytesInStream(imgIn);
+            // 对应的图片
+            String dataType = imgTypeInBytes(imageBytes);
+
+
+            // 拼接对应的 data url 内容
+            imgUrl.append("data: ");
+            imgUrl.append(dataType);
+            if (base64) {
+                String base64ImgStr = Base64.getEncoder().encodeToString(imageBytes);
+                imgUrl.append(";base64,");
+                imgUrl.append(base64ImgStr);
+            }
+            else {
+                String imgStr = new String(imageBytes);
+                imgUrl.append(",");
+                imgUrl.append(imgStr);
+            }
+
+            return imgUrl.toString();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+    public static String imgDataUrl(File file, boolean base64) {
+        FileInputStream fin = null;
+
+        try {
+            fin = new FileInputStream(file);
+            return imgDataUrl(fin, base64);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        finally {
+            ResourceUtil.closeResources(fin);
+        }
+    }
+
+    public static String imgDataUrl(InputStream imgIn) {
+        return imgDataUrl(imgIn, true);
+    }
+    public static String imgDataUrl(File file) {
+        return imgDataUrl(file, true);
+    }
+
+
+    /**
+     * 输出文件内容的二进制字节
+     * @param file 传入的文件对象
+     */
+    public static void printBinaryContent(File file) {
+        byte[] fileBytes = IOUtil.bytesInFile(file);
+
+        for (int i = 0; i < fileBytes.length; i++) {
+            System.out.print(fileBytes[i] + " ");
+        }
+
+        System.out.flush();
     }
 }

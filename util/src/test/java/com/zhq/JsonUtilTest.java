@@ -109,6 +109,6 @@ public class JsonUtilTest {
         prop.setProperty("hello1", "hello1");
         prop.setProperty("hello2", "hello2");
         prop.setProperty("hello3", "hello3");
-        System.out.println(JsonUtil.propertyToJString(prop));
+        System.out.println(JsonUtil.propertiesToJString(prop));
     }
 }
