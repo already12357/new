@@ -24,6 +24,7 @@ public class FastjsonUtil_Demo {
         instance.demo8();
         instance.demo9();
         instance.demo10();
+        instance.demo11();
     }
 
     public void demo1() {
@@ -144,6 +145,25 @@ public class FastjsonUtil_Demo {
 
         // 使用 jsonRestReturn 来返回带有格式的 json 字符串信息
         System.out.println(FastjsonUtil.jsonRestReturn("200", "附加返回信息", jObject.toJSONString()));
+    }
+
+    public void demo11() {
+        List<JSONObject> listJ = new ArrayList<JSONObject>();
+        for (int i = 0; i < 20; i++) {
+            JSONObject jObject = new JSONObject();
+            String key = "jObject".concat(String.valueOf(i));
+            Integer value = i;
+            jObject.put(key,value);
+            listJ.add(jObject);
+        }
+        System.out.println("Before setJKeyValueInListJ");
+        System.out.println(listJ.get(10).toJSONString());
+
+        // 使用 setJKeyValueInListJ 来在 List 中找到对应 key-value 键值的 JSONObject 对象，设置对应 JSONObject 的 key-value 键值对
+        FastjsonUtil.setJKeyValueInListJ(listJ, "jObject10", 10, "jObject10", 20);
+
+        System.out.println("After setJKeyValueInListJ");
+        System.out.println(listJ.get(10).toJSONString());
     }
 }
 

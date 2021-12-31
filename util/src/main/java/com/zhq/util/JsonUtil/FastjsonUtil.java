@@ -185,4 +185,32 @@ public class FastjsonUtil {
 
         return retObject.toJSONString();
     }
+
+
+    /**
+     * 在 List<JSONObject> 中，选中存在 key-value 为特定值的 JSONObject 对象，
+     * 然后设置其中特定的 key-value 对，当 key-value 不存在时，新增对应的 key-value
+     * 并设置其值
+     * @param list 查找的 List<JSONObject> 对象
+     * @param selectKey 作为选中 JSONObject 对象的键名称
+     * @param selectValue 作为选中 JSONObject 对象的值
+     * @param setKey 需要设置的值的名称
+     * @param newValue 设置 List 对象中 key 为 keyName 的 JSONObject
+     */
+    public static boolean setJKeyValueInListJ(List<JSONObject> list, Object selectKey, Object selectValue, String setKey, Object newValue) {
+        try {
+            for (JSONObject jObject : list) {
+                if (jObject.containsKey(selectKey) &&
+                        jObject.get(selectKey).equals(selectValue)) {
+                    jObject.put(setKey, newValue);
+                    return true;
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
