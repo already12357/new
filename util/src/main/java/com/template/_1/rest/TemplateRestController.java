@@ -1,5 +1,7 @@
 package com.template._1.rest;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.template._1.service.api.ITemplateService;
 import com.zhq.util.JsonUtil.FastjsonUtil;
 
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 模板代码：Rest 接口控制器的模板类
- *
+ * @author Eddie Zhang
  */
 @RestController
 @RequestMapping("template")
@@ -28,13 +30,25 @@ public class TemplateRestController {
      */
     @RequestMapping(value = "templateHandlerMethod", method = RequestMethod.POST)
     public String templateHandlerMethod(@RequestBody String params) {
+        // 解析传入的参数的固定格式 ( 通常变量名称不变，便于代码查看 )
+        JSONObject json = JSON.parseObject(params);
+        JSONObject obj = (JSONObject) json.get("params");
+
+//        // 解析其中的参数
+//        String param1 = obj.getString("param1");
+//        Integer param2 = obj.getInteger("param2");
+//        ....
+
+        // 将返回的数据存放到 JSONObject 中
+        JSONObject dataJson = new JSONObject();
+
         try {
             /**
              * 执行接口处理逻辑
              */
 
             // 将返回数据放置在特定格式的 json 中返回
-            return FastjsonUtil.jsonRestReturn("200", "执行成功", "success");
+            return FastjsonUtil.jsonRestReturn("200", "执行成功", dataJson.toJSONString());
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -19,6 +19,8 @@ public class IOConstant {
     public static final String PPTX = "pptx";
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
+    // 文本文件
+
     // 压缩文件
     public static final String ZIP = "zip";
     public static final String RAR = "rar";

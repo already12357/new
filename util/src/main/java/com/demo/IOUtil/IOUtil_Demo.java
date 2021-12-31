@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.IOUtil;
 
 import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.ResourceUtil;
@@ -18,7 +18,7 @@ public class IOUtil_Demo {
 //        instance.demo2();
 //        instance.demo3();
 //        instance.demo4();
-        instance.demo5();
+//        instance.demo5();
     }
 
     public void demo1() {
