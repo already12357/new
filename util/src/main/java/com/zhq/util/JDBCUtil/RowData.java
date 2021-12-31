@@ -163,6 +163,7 @@ public class RowData extends HashMap<String, Object> {
      * 静态方法，实现了将 RowData 插入，删除的静态方法，对外依赖
      */
 //    public static void insertInto(RowData data, String tableName);
+
 //    public static void insertBatch(List<RowData> data, String tableName);
 
 
