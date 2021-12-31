@@ -5,7 +5,7 @@ package com.zhq.util.ApacheUtil;
  */
 public class POIUtil {
     /**
-     * word 模板替换
+     * word 模板替换, 替换 word 文件中的编辑域
      */
-
+    
 }

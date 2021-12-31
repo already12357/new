@@ -1,6 +1,8 @@
-package com.zhq.util;
+package com.zhq.util.HttpUtil;
 
 import com.zhq.util.IOUtil.IOUtil;
+import com.zhq.util.ResourceUtil;
+import com.zhq.util.StringUtil;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -10,7 +12,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 

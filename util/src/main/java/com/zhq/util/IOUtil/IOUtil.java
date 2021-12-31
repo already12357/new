@@ -14,45 +14,6 @@ import java.util.*;
  * @author Eddie Zhang
  */
 public class IOUtil {
-    // 各种文件格式的二进制流对应的前缀
-    public static final byte[] BMP_BIN_PREFIX = {0x42, 0x4d};
-    public static final byte[] GIF_BIN_PREFIX = {0x47, 0x49, 0x46, 0x38};
-    public static final byte[] JPG_BIN_PREFIX = {(byte) 0xff, (byte) 0xd8, (byte) 0xff};
-    public static final byte[] PNG_BIN_PREFIX = {(byte) 0x89, 0x50, 0x4e, 0x47 };
-
-    // 各种文件格式类型
-    public static final String BMP = "bmp";
-    public static final String DOC = "doc";
-    public static final String DOCX = "docx";
-    public static final String GIF = "gif";
-    public static final String JPG = "jpg";
-    public static final String PDF = "pdf";
-    public static final String PNG = "png";
-    public static final String PPT = "ppt";
-    public static final String PPTX = "pptx";
-    public static final String XLS = "xls";
-    public static final String XLSX = "xlsx";
-    public static final String ZIP = "zip";
-    public static final String RAR = "rar";
-
-    // 各种文件大类
-    // 图片
-    public static final String TYPE_IMAGE = "image";
-    // 文本
-    public static final String TYPE_TEXT = "text";
-
-    // 文件头魔数映射
-    public static Map<String, byte[]> MAGIC_MAPS = new HashMap<String, byte[]>() {
-        {
-            put(BMP, BMP_BIN_PREFIX);
-            put(GIF, GIF_BIN_PREFIX);
-            put(PNG, PNG_BIN_PREFIX);
-            put(JPG, JPG_BIN_PREFIX);
-        }
-    };
-
-
-
     /**
      * 用于解析对应的文件后缀名
      * @param file 解析的文件名
@@ -157,25 +118,25 @@ public class IOUtil {
 
             // 根据文件不同类型，调用不同 aspose 对象的 save 方法
             switch (suffix) {
-                case DOC:
-                case DOCX:
+                case IOConstant.DOC:
+                case IOConstant.DOCX:
                     Document document = new Document(file.getAbsolutePath());
                     document.save(fout, com.aspose.words.SaveFormat.PDF);
                     break;
 
-                case PPT:
-                case PPTX:
+                case IOConstant.PPT:
+                case IOConstant.PPTX:
                     Presentation presentation = new Presentation(file.getAbsolutePath());
                     presentation.save(fout, com.aspose.slides.SaveFormat.Pdf);
                     break;
 
-                case XLS:
-                case XLSX:
+                case IOConstant.XLS:
+                case IOConstant.XLSX:
                     Workbook workbook = new Workbook(file.getAbsolutePath());
                     workbook.save(fout, com.aspose.cells.SaveFormat.PDF);
                     break;
 
-                case PDF:
+                case IOConstant.PDF:
                     tempPdfFile = file;
                     break;
             }
@@ -210,23 +171,7 @@ public class IOUtil {
             return null;
         }
 
-        for (Map.Entry<String, byte[]> magicMap : MAGIC_MAPS.entrySet()) {
-            boolean matched = true;
-            byte[] iBytes = magicMap.getValue();
-
-            for (int i = 0; i < iBytes.length; i++) {
-                if (iBytes[i] != magicBytes[i]) {
-                    matched = false;
-                    break;
-                }
-            }
-
-            if (matched) {
-                return magicMap.getKey();
-            }
-        }
-
-        return null;
+        return MagicBytes.format(magicBytes);
     }
 
     /**
@@ -235,22 +180,22 @@ public class IOUtil {
      * @return
      */
     public static String imgTypeInBytes(byte[] imageBytes) {
-        return typeInBytes(imageBytes, TYPE_IMAGE);
+        return typeInBytes(imageBytes, IOConstant.TYPE_IMAGE);
     }
 
     public static String imgTypeInFile(File file) {
-        return typeInFile(file, TYPE_IMAGE);
+        return typeInFile(file, IOConstant.TYPE_IMAGE);
     }
 
 
 
 
     public static String textTypeInBytes(byte[] textBytes) {
-        return typeInBytes(textBytes, TYPE_TEXT);
+        return typeInBytes(textBytes, IOConstant.TYPE_TEXT);
     }
 
     public static String textTypeInFile(File file) {
-        return typeInFile(file, TYPE_TEXT);
+        return typeInFile(file, IOConstant.TYPE_TEXT);
     }
 
 
@@ -328,24 +273,9 @@ public class IOUtil {
             return null;
         }
 
-        Collection<byte[]> magicBytes = MAGIC_MAPS.values();
-
-        // 遍历所有的文件头魔数, 对比返回对应的文件头魔数
-        for (byte[] iBytes : magicBytes) {
-            boolean matched = true;
-
-            for (int i = 0; i < iBytes.length; i++) {
-                Byte iByte = new Byte(iBytes[i]);
-                Byte fByte = new Byte(fileBytes[i]);
-
-                if (iByte.compareTo(fByte) != 0) {
-                    matched = false;
-                    break;
-                }
-            }
-
-            if (matched) {
-                return iBytes;
+        for (MagicBytes magicByte : MagicBytes.values()) {
+            if (magicByte.match(fileBytes)) {
+                return magicByte.getMagicBytes();
             }
         }
 
@@ -370,9 +300,15 @@ public class IOUtil {
      * 根据对应是数据流 或 文件对象，生成文件的 DataUrl
      *
      * 1. 从 文件 或 流 中读取对应的字节内容
-     * 2. 根据字节内容的前几个字节，匹配对应的魔数字节
-     * 3. 根据匹配的魔数字节，生成 dataUrl 所需的文件类型，base64 编码等
-     * 4. 拼接生成最后结果
+     *
+     * 2.获取 dataUrl 中的文件类型
+     *    2.1. 匹配文件字节的前几个字节，获取其中的魔数字节
+     *    2.2. 根据魔数字节匹配对应的文件类型
+     *    2.3. 拼接生成 dataUrl 中的文件类型部分
+     *
+     * 3. 根据文件流中的字节内容, 生成对应的文件数据编码
+     *
+     * 4. 拼接 文件类型，文件数据，最终生成 url
      *
      * @param imgIn 输入的图片流
      * @param base64 是否使用 base64 编码 ( 默认使用, true )

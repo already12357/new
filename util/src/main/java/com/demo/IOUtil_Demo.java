@@ -17,8 +17,8 @@ public class IOUtil_Demo {
 //        instance.demo1();
 //        instance.demo2();
 //        instance.demo3();
-        instance.demo4();
-//        instance.demo5();
+//        instance.demo4();
+        instance.demo5();
     }
 
     public void demo1() {
@@ -91,8 +91,8 @@ public class IOUtil_Demo {
 
         // 使用 typeInBytes, imgTypeInBytes, textTypeInBytes 根据文件字节生成对应的文件类型
         // 形如 image/jpg 可用于 dataurl 的拼接
-//        String imageTypeString = IOUtil.imgTypeInBytes(imageFileBytes);
-        String imageTypeString = IOUtil.typeInBytes(imageFileBytes, IOUtil.TYPE_IMAGE);
+        String imageTypeString = IOUtil.imgTypeInBytes(imageFileBytes);
+//        String imageTypeString = IOUtil.typeInBytes(imageFileBytes, IOUtil.TYPE_IMAGE);
         System.out.println(imageTypeString);
     }
 }
