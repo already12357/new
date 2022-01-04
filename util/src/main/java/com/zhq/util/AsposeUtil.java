@@ -86,7 +86,7 @@ public class AsposeUtil {
                             replaceValues.keySet().toArray(new String[0]),
                             replaceValues.values().toArray(new String[0])
                             );
-                    IOUtil.copyFile(template, destFile);
+                    templateDoc.save(destFile.getAbsolutePath(), com.aspose.words.SaveFormat.DOC);
                     break;
             }
         }

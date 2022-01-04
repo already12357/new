@@ -5,6 +5,8 @@ import com.zhq.util.IOUtil.IOUtil;
 
 import javax.print.attribute.standard.Fidelity;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ApacheUtil 类的 Demo
@@ -14,11 +16,22 @@ public class AsposeUtil_Demo {
     public static void main(String[] args) {
         AsposeUtil_Demo instance = new AsposeUtil_Demo();
 
-        instance.demo1();
+//        instance.demo1();
+        instance.demo2();
     }
 
     public void demo1() {
-        File destFile = new File("C:\\Users\\Administrator\\Desktop\\temp_doc_tepmlate.pdf");
-        IOUtil.copyFile(AsposeUtil.toPdf(new File("C:\\Users\\Administrator\\Desktop\\int_document_doc.doc")), destFile);
+
+    }
+
+    public void demo2() {
+        File docFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc.doc");
+        File destFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc2.doc");
+
+        Map<String, String> mergedMap = new HashMap<String, String>();
+        mergedMap.put("1", "11111");
+        mergedMap.put("2", "222222");
+
+        AsposeUtil.replaceFieldsToDoc(docFile, destFile, mergedMap);
     }
 }

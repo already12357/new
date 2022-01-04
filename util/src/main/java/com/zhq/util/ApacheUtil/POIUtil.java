@@ -15,7 +15,7 @@ import java.io.FileOutputStream;
 import java.util.Iterator;
 
 /**
- * Apache 中 POI 所需要的包
+ * Apache 中操作 office 的 poi 帮助包
  */
 public class POIUtil {
     /**
