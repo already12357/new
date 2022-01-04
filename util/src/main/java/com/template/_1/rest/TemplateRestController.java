@@ -28,7 +28,7 @@ public class TemplateRestController {
      * 1. 控制器中的处理器方法仅支持 POST 请求的映射，映射路径和方法名同名
      * 2. 使用 @RequestBody 标志入参，默认名为 params，json 格式字符串
      */
-    @RequestMapping(value = "templateHandlerMethod", method = RequestMethod.POST)
+    @RequestMapping(value = "/templateHandlerMethod", method = RequestMethod.POST)
     public String templateHandlerMethod(@RequestBody String params) {
         // 解析传入的参数的固定格式 ( 通常变量名称不变，便于代码查看 )
         JSONObject json = JSON.parseObject(params);
@@ -52,7 +52,51 @@ public class TemplateRestController {
         }
         catch (Exception e) {
             e.printStackTrace();
-            return FastjsonUtil.jsonRestReturn("500", "执行错误", "error");
+            // 异常时将异常信息返回到特定格式的 json 中
+            return FastjsonUtil.jsonRestReturn("500", "执行错误", e.getMessage());
+        }
+    }
+
+
+    /**
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * 复制
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!!
+     */
+    @RequestMapping(value = "/templateHandlerMethod2", method = RequestMethod.POST)
+    public String templateHandlerMethod2(@RequestBody String params) {
+        JSONObject json = JSON.parseObject(params);
+        JSONObject obj = (JSONObject) json.get("params");
+
+        /**
+         * 解析所需参数
+         * String param1 = obj.getString("param1");
+         * Integer param2 = obj.getInteger("param2");
+         * ....
+         */
+
+        JSONObject dataJson = new JSONObject();
+
+        try {
+            /**
+             * 执行接口处理逻辑
+             */
+
+
+            /**
+             * 开发环境使用 :
+             * return JsonUtils.zwdtRestReturn("1", "接口调用成功！", dataJson);
+             */
+            return FastjsonUtil.jsonRestReturn("200", "执行成功", dataJson.toJSONString());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            /**
+             * 开发环境使用 :
+             * return JsonUtils.zwdtRestReturn("0", "接口调用异常", e.getMessage());
+             */
+            return FastjsonUtil.jsonRestReturn("500", "执行错误", e.getMessage());
         }
     }
 }
