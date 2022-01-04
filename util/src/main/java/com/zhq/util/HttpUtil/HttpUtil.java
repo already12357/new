@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -97,6 +98,27 @@ public class HttpUtil {
         }
     }
 
+
+    /**
+     * 根据传入的参数进行不同类型的请求
+     * @param urlStr
+     * @param method
+     * @param paramJson
+     * @return
+     */
+    public static String doRequest(String urlStr, String method, String paramJson) {
+        String lowerCaseMethod = method.toLowerCase(Locale.ENGLISH);
+
+        switch (lowerCaseMethod) {
+            case HttpConstant.METHOD_POST:
+                return post(urlStr, paramJson);
+
+            case HttpConstant.METHOD_GET:
+                return get(urlStr);
+        }
+
+        return "";
+    }
 
     /**
      * 发送一个 POST 请求
@@ -189,7 +211,6 @@ public class HttpUtil {
 
         try {
             connection = createConnection(urlStr, "GET", "application/json;charset=utf-8;");
-
             bufReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             String line = null;
             while ((line = bufReader.readLine()) != null) {

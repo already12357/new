@@ -38,7 +38,11 @@ public class IOConstant {
     public static final String TYPE_OFFICE = "office";
 
 
-
+    /**
+     * Office 版本类型
+     */
+    public static final String OFFICE_2010 = "office_2007";
+    public static final String OFFICE_2007 = "office_2007";
 
 }
 
