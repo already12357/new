@@ -28,7 +28,7 @@ public class AsposeUtil_Demo {
         File docFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc.doc");
         File destFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc2.doc");
 
-        Map<String, String> mergedMap = new HashMap<String, String>();
+        Map<String, Object> mergedMap = new HashMap<String, Object>();
         mergedMap.put("1", "11111");
         mergedMap.put("2", "222222");
 

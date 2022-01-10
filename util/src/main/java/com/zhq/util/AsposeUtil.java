@@ -3,13 +3,13 @@ package com.zhq.util;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
-import com.aspose.words.IMailMergeDataSource;
-import com.aspose.words.net.System.Data.DataSet;
+import com.template._1.util.TemplateMailMergeDataSource;
 import com.zhq.util.IOUtil.IOConstant;
 import com.zhq.util.IOUtil.IOUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,7 +74,37 @@ public class AsposeUtil {
      * @param destFile 替换后文件的位置
      * @param replaceValues 文本
      */
-    public static void replaceFieldsToDoc(File template, File destFile, Map<String, String> replaceValues) {
+    public static void replaceRegionFieldsToDoc(File template, File destFile, List<Map<String, Object>> replaceValues) {
+        try {
+            Document templateDoc = new Document(template.getAbsolutePath());
+            String suffix = IOUtil.fileSuffix(template);
+
+            switch (suffix) {
+                case IOConstant.DOC:
+                case IOConstant.DOCX:
+                    /**
+                     * 使用自定义的数据源 TemplateMailMergeDataSource
+                     */
+                    templateDoc.getMailMerge().execute(new TemplateMailMergeDataSource(replaceValues, "interface"));
+
+                    templateDoc.save(destFile.getAbsolutePath(), com.aspose.words.SaveFormat.DOC);
+                    break;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * 替换 word 文档中的一个编辑域, 将原有的文件信息存储到文件中
+     * @param template 需要替换域的文件
+     * @param destFile 替换后文件的位置
+     * @param replaceValues 替换的域值 ( 文本使用 String, 图片使用 byte[]  ), 使用 Map 类型传入
+     */
+    public static void replaceFieldsToDoc(File template, File destFile, Map<String, Object> replaceValues) {
         try {
             Document templateDoc = new Document(template.getAbsolutePath());
             String suffix = IOUtil.fileSuffix(template);
@@ -84,7 +114,7 @@ public class AsposeUtil {
                 case IOConstant.DOCX:
                     templateDoc.getMailMerge().execute(
                             replaceValues.keySet().toArray(new String[0]),
-                            replaceValues.values().toArray(new String[0])
+                            replaceValues.values().toArray(new Object[0])
                             );
                     templateDoc.save(destFile.getAbsolutePath(), com.aspose.words.SaveFormat.DOC);
                     break;

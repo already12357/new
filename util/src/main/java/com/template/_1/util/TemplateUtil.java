@@ -4,9 +4,9 @@ import com.template._1.third.ThirdConstant;
 import com.zhq.util.AsposeUtil;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,11 +25,17 @@ public class TemplateUtil {
     public static final String RENDER_LOCATION = "C:/Users/Administrator/Desktop/interface_test.docx";
 
     /**
+     * 接口请求成功的图片位置 ( 注意修改 )
+     */
+    public static final String IMG_LOCATION = "src/main/resources/file/template/_1/pic/interface_img.png";
+
+    /**
      * 根据对应接口，生成对应的接口文档, 替换对应的域,
      * 可以使用 ThirdConstant 中的常量
      */
     public static void interfaceDocument() {
-        Map<String, String> docFieldsMap = new HashMap<String, String>();
+        List<Map<String, Object>> docsFieldsMapList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> docFieldsMap = new HashMap<String, Object>();
 
         /**
          * 根据 ThirdConstant 中定义的常量直接赋值，
@@ -41,11 +47,12 @@ public class TemplateUtil {
         docFieldsMap.put("interface_reqdata", ThirdConstant.TEST_REQ_DATA_NAME1());
         docFieldsMap.put("interface_retdata", ThirdConstant.TEST_RES_DATA_NAME1());
 
+        docsFieldsMapList.add(docFieldsMap);
+
         File templateDoc = new File(TEMPLATE_LOCATION);
         File renderDoc = new File(RENDER_LOCATION);
-        AsposeUtil.replaceFieldsToDoc(templateDoc, renderDoc, docFieldsMap);
+        AsposeUtil.replaceRegionFieldsToDoc(templateDoc, renderDoc, docsFieldsMapList);
     }
-
 
 
     /**
