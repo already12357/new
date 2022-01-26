@@ -72,9 +72,10 @@ public class AsposeUtil {
      * 替换 word 文档中的编辑域, 并将其复制到一个新的文档中
      * @param template 模板文档
      * @param destFile 替换后文件的位置
-     * @param replaceValues 文本
+     * @param replaceValues 替换的域值，支持多个前缀，使用 Map 来存储每个域值
+     * @param tableName 域名称
      */
-    public static void replaceRegionFieldsToDoc(File template, File destFile, List<Map<String, Object>> replaceValues) {
+    public static void replaceRegionFieldsToDoc(File template, File destFile, List<Map<String, Object>> replaceValues, String tableName) {
         try {
             Document templateDoc = new Document(template.getAbsolutePath());
             String suffix = IOUtil.fileSuffix(template);
@@ -85,8 +86,7 @@ public class AsposeUtil {
                     /**
                      * 使用自定义的数据源 TemplateMailMergeDataSource
                      */
-                    templateDoc.getMailMerge().execute(new TemplateMailMergeDataSource(replaceValues, "interface"));
-
+                    templateDoc.getMailMerge().executeWithRegions(new TemplateMailMergeDataSource(replaceValues, tableName));
                     templateDoc.save(destFile.getAbsolutePath(), com.aspose.words.SaveFormat.DOC);
                     break;
             }
@@ -99,7 +99,7 @@ public class AsposeUtil {
 
 
     /**
-     * 替换 word 文档中的一个编辑域, 将原有的文件信息存储到文件中
+     * 替换 word 文档中的编辑域, 用于没有区域前缀的情况
      * @param template 需要替换域的文件
      * @param destFile 替换后文件的位置
      * @param replaceValues 替换的域值 ( 文本使用 String, 图片使用 byte[]  ), 使用 Map 类型传入

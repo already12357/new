@@ -295,7 +295,7 @@ public class IOUtil {
 
 
     /**
-     * 将该部分移到 HttpUtil 中，将 IOUtil 与 HttpUtil 的工作类进一步划分完全
+     * 将该部分移到 HttpUtil 中，将 IOUtil 与 HttpUtil 的功能进一步解耦
      */
     /**
      * 根据对应是数据流 或 文件对象，生成文件的 DataUrl

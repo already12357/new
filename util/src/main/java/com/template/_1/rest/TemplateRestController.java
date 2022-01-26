@@ -60,11 +60,16 @@ public class TemplateRestController {
 
 
 
+
+
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!!!
      * 复制
      * !!!!!!!!!!!!!!!!!!!!!!!!!!!
      */
+    @Autowired
+    private ITemplateService templateService2;
+
     @RequestMapping(value = "/templateHandlerMethod2", method = RequestMethod.POST)
     public String templateHandlerMethod2(@RequestBody String params) {
         JSONObject json = JSON.parseObject(params);

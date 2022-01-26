@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- main boot js -->
+    <script src="./js/mainBoot.js" type="text/javascript" 
+    onload="loadResource('.');"></script>
+    <!-- BootStrap Link Tag -->
+    <!-- <link rel="stylesheet" href="css/css-ref/bootstrap-3.4.1-dist/css/bootstrap.css">
+    <script src="css/css-ref/bootstrap-3.4.1-dist/js/bootstrap.js"></script> -->
+    
+    <title>Index</title>
+</head>
+<body>
+    <!-- buttons linking to different component pages -->
+    <button id="item-btn" class="btn btn-link">item</button><br/>
+    <button id="layout-btn" class="btn btn-link">layout</button><br/>
+    <button id="list-btn" class="btn btn-link">list</button><br/>
+    <button id="navigator-btn" class="btn btn-link">navigator</button><br/>
+    <button id="panel-btn" class="btn btn-link">panel</button><br/>
+    <button id="table-btn" class="btn btn-link">table</button><br/>
+    <button id="download-btn" class="btn btn-link">download</button><br/>
+
+    <h3 class="page-header"></h3>
+    <button id="download-update-btn" class="btn btn-link">update download package</button><br/>
+</body>
+
+<script type="text/javascript">
+    window.onload = function() {
+        /**
+         * bind click events
+         */
+         $("#item-btn").click(function (e) { 
+            window.location.href = "html/item.html";
+        });
+        $("#layout-btn").click(function (e) { 
+            window.location.href = "html/layout.html";
+        });
+        $("#list-btn").click(function (e) { 
+            window.location.href = "html/list.html";
+        });
+        $("#navigator-btn").click(function (e) { 
+            window.location.href = "html/navigator.html";
+        });
+        $("#panel-btn").click(function (e) { 
+            window.location.href = "html/panel.html";
+        });
+        $("#table-btn").click(function (e) { 
+            window.location.href = "html/table.html";
+        });
+        $("#download-btn").click(function (e) { 
+            window.location.href = "html/download.html";
+        });
+
+
+        // call .exe to package all the file in ./code/package/~
+        $("#download-update-btn").click(function (e) { 
+            // user layer confirm
+            top.layer.confirm(
+                'Are you sure to update download package?', 
+                {
+                    title : 'Confirm',
+                    btn : ['Right now', 'Not this time']
+                },
+                function() {
+                    top.layer.closeAll();
+                    // loading layer page
+                    let loadMask = layer.load(2, {
+                        shade: [0.8, '#fff']
+                    });
+
+                    /* call shell to package file in test directory */
+                    /* Integer 7-zip, using js to call it */
+
+                    // close loading layer page
+                    layer.close(loadMask);
+                    // open msg layer
+                    layer.msg('Finished');
+                },
+                function() { top.layer.closeAll(); }
+            );
+        });
+    }
+</script>
+</html>

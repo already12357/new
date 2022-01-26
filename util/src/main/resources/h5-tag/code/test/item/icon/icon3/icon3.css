@@ -1,0 +1,12 @@
+/**
+ * Icon-Style-3
+ */
+.icon-style-3 {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+.icon-style-3:hover {
+    cursor: pointer;
+}

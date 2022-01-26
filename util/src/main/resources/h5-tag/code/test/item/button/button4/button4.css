@@ -1,0 +1,29 @@
+.button-style-4 {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 16px;
+    padding: 4px 12px 4px 12px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161);/* IE */
+    -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161); /* Firefox */
+    -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161); /* Safari and Chrome */
+    behavior: url(ie-css3.htc);
+    vertical-align: top;
+}
+.button-style-4:hover {background-color: #eaeaf1;}
+.button-style-4 svg {
+    vertical-align: middle;
+
+    /* Icon Size Set */
+    width: 12px;
+    height: 12px;
+}
+.button-style-4 span {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 400;
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    margin-top: -3px;
+
+    /* Font Size Set */
+    font-size: 16px;
+}

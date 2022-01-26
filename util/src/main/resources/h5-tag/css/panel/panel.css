@@ -1,0 +1,102 @@
+/**
+ * Swiper1
+ */
+.swiper1 {
+    vertical-align: top;
+    display: inline-block;
+}
+#com_swiper1 {
+    /* Frame Size */
+    width: 400px;
+    height: 200px;
+}
+#com_swiper1 a {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+#com_swiper1 img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/**
+ * Swiper2
+ */
+ .swiper2 {
+    vertical-align: top;
+    display: inline-block;
+    
+    /**
+     * Frame Size
+     */
+    width: 700px;
+    height: 400px;
+
+    /* Position */
+    /* position: absolute; */
+}
+#com_swiper2 {
+    width: 100%;
+    height: 100%;
+}
+#com_swiper2 .swiper-slide {
+    /* Page Size */
+    margin-top: 5%;
+    width: 30%;
+    height: 80%;
+}
+#com_swiper2 a {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+#com_swiper2 img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/**
+ * Swiper3
+ */
+#com_swiper3 {
+    vertical-align: top;
+    display: inline-block;
+    border: 1px solid gray;
+    border-radius: 4px;
+
+    /* Swiper Frame Set */
+    width: 500px;
+    height: 300px;
+}
+#com_swiper3 #pictures_div {
+    display: inline-block;
+    position: relative;
+
+    /* Image Frame Position */
+    top: 10%;
+    left: 3%;
+
+    /* Image Frame Size */
+    width: 30%;
+    height: 55%;
+}
+#com_swiper3 #pictures_div img {    
+    position:absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+#com_swiper3 #text_swiper {
+    border: 1px solid rgb(255, 192, 203);
+    vertical-align: top;
+    display: inline-block;
+    width: 50%;
+    height: 100%;
+    top: 10%;
+    left: 6%;
+}
+

@@ -2,12 +2,11 @@ package com.template._1.util;
 
 import com.template._1.third.ThirdConstant;
 import com.zhq.util.AsposeUtil;
+import com.zhq.util.IOUtil.IOUtil;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 代码模板的帮助类,
@@ -25,9 +24,9 @@ public class TemplateUtil {
     public static final String RENDER_LOCATION = "C:/Users/Administrator/Desktop/interface_test.docx";
 
     /**
-     * 接口请求成功的图片位置 ( 注意修改 )
+     * 接口请求成功的图片位置 ( 默认位于桌面 )
      */
-    public static final String IMG_LOCATION = "src/main/resources/file/template/_1/pic/interface_img.png";
+    public static final String IMG_LOCATION = FileSystemView.getFileSystemView().getHomeDirectory() + "/copyFile.png";
 
     /**
      * 根据对应接口，生成对应的接口文档, 替换对应的域,
@@ -46,12 +45,13 @@ public class TemplateUtil {
         docFieldsMap.put("interface_description", ThirdConstant.DESCRIPTION_NAME1);
         docFieldsMap.put("interface_reqdata", ThirdConstant.TEST_REQ_DATA_NAME1());
         docFieldsMap.put("interface_retdata", ThirdConstant.TEST_RES_DATA_NAME1());
+        docFieldsMap.put("interface_pic", Base64.getEncoder().encode(IOUtil.bytesInFile(new File(IMG_LOCATION))));
 
         docsFieldsMapList.add(docFieldsMap);
 
         File templateDoc = new File(TEMPLATE_LOCATION);
         File renderDoc = new File(RENDER_LOCATION);
-        AsposeUtil.replaceRegionFieldsToDoc(templateDoc, renderDoc, docsFieldsMapList);
+        AsposeUtil.replaceRegionFieldsToDoc(templateDoc, renderDoc, docsFieldsMapList, "interface");
     }
 
 
