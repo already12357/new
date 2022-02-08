@@ -22,6 +22,7 @@
     <button id="navigator-btn" class="btn btn-link">navigator</button><br/>
     <button id="panel-btn" class="btn btn-link">panel</button><br/>
     <button id="table-btn" class="btn btn-link">table</button><br/>
+    <button id="form-btn" class="btn btn-link">form</button><br/>
     <button id="download-btn" class="btn btn-link">download</button><br/>
 
     <h3 class="page-header"></h3>
@@ -51,6 +52,9 @@
         $("#table-btn").click(function (e) { 
             window.location.href = "html/table.html";
         });
+        $("#form-btn").click(function (e) { 
+            window.location.href = "html/form.html";
+        });
         $("#download-btn").click(function (e) { 
             window.location.href = "html/download.html";
         });
@@ -72,9 +76,11 @@
                         shade: [0.8, '#fff']
                     });
 
+                    
                     /* call shell to package file in test directory */
                     /* Integer 7-zip, using js to call it */
                     // new ActiveXObject("")
+
 
                     // close loading layer page
                     layer.close(loadMask);

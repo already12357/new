@@ -29,6 +29,7 @@ function loadResource(parentPath) {
 
     // Layui
     document.getElementsByTagName("head")[0].appendChild(scriptDom(parentPath + "/ref/Layui/layui-v2.6.8/layui/layui.js", "text/javascript"));
+    document.getElementsByTagName("head")[0].appendChild(linkDom(parentPath + "/ref/Layui/layui-v2.6.8/layui/css/layui.css", "stylesheet"));
 }
 
 /**

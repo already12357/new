@@ -26,6 +26,21 @@
     </div>
 </script>
 
+<!-- Input 5 -->
+<script type="text/x-dot-template" id="input-tmp5">
+    <input class="select-button x-overflow-ellipsis" type="button" value="{{=it.dValue}}">
+    <div class="select-list-div ">
+        <ul class="select-list clear-box-border">
+            {{ for (var i = 0; i < it.totalCount; i++) { }}
+            <li data-item="{{=it.contentList[i]}}">
+                <span class="x-overflow-ellipsis">{{=it.contentList[i]}}</span>
+            </li>
+            {{ } }}
+        </ul>
+    </div>
+    <input class="select-value" type="hidden" value="{{=it.dValue}}">
+</script>
+
 <body>
     <h3 class="page-header">Button</h3>
     <!-- Button 1 -->
@@ -92,18 +107,12 @@
     <input class="input-style-3" type="text" placeholder="Here's the place Holder" title="input-3">
     
     <!-- Input 4-->
-    <select class="input-style-4 appearnce-none not-allow-select" title="input-4">
-        <option>默认</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-    </select>
+    <div class="layui-inline input-style-4">
+        <input type="text" class="layui-input" id="input-start-date">
+    </div>
 
-    <!-- Input-test -->
-    <input type="date">
-
-
+    <!-- Input 5 -->
+    <div class="input-div-5"></div>
 
 
 
