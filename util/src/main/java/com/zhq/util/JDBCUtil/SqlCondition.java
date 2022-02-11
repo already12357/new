@@ -361,6 +361,7 @@ public class SqlCondition {
         return like(DBConstant.SQL_AND, columnName, columnValue);
     }
 
+    // exists haven't finisihed yet ........
 //    public SqlCondition exists(String append, Object existsValue) {
 //        String existsStr = parseExists(append, existsValue);
 //        addConditionStr();
@@ -576,6 +577,7 @@ public class SqlCondition {
 
         parsedExists.append("(")
                 .append(" EXISTS ")
+                // exists haven't finished ...............
 //                .append(DBFormatter.formatObjToStr())
                 .append(")");
 
