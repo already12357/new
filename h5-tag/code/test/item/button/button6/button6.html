@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button6</title>
+    <link href="./button6.css" rel="stylesheet">
+    <style>
+        .not-allow-select {
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .x-overflow-ellipsis {
+            overflow-x: hidden;
+            white-space: nowrap;
+
+            /* unsolved */
+            /* !!!!!!!!!!!! firefox unsupported !!!!!!!!! */
+            -o-text-overflow: ellipsis;
+            -ms-text-overflow: ellipsis;
+            text-overflow:ellipsis;
+        }
+
+        .x-limit-Line1 {
+            /* change line number here */
+            line-clamp: 1;
+            -webkit-line-clamp: 1;
+        }
+    </style>
+</head>
+
+<!-- Button 6 -->
+<script type="text/x-dot-template" id="button-tmp6">
+    <div class="button-div">
+        <img src="./img/triangle1.svg">
+        <span>Button Style-6</span>
+    </div>
+    <div class="list-div">
+        <ul>
+            {{for (var i = 0; i < it.total; i++) { }}
+            <li>
+                <a class="x-overflow-ellipsis x-limit-Line1">{{=it.contentList[i]}}</a>
+            </li>
+            {{ } }}
+        </ul>
+    </div>
+</script>
+
+<body>
+    <!-- START : Copy Here -->
+    <!-- Button 6 --> 
+    <div class="button-div-6 not-allow-select" title="button-6">
+    </div>
+    <!-- END   : Copy Here -->
+</body>
+<script src="./jQuery/jquery-1.12.min.js"></script>
+<script src="./doT.js" type="text/javascript"></script>
+<script src="./niceScroll/jquery.nicescroll-3.5.1.js" type="text/javascript"></script>
+<script src="./button6.js"></script>
+</html>

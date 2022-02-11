@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</title>
+    <script src="../js/mainBoot.js" onload="loadResource('..');"></script>
+    <link href="../css/form/form.css" rel="stylesheet">
+</head>
+<body>
+    <h3 class="page-header">Layer Form</h3>
+
+    <div class="layer-style-1 not-allow-select" title="layer-1">
+        <form class="layui-form layui-inline" action="" method="post">
+            <div class="log-title-div">Login System</div>
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Username</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-username log-input-icon"></i>
+                    <input type="text" class="layui-input log-input log-username">
+                </div>
+            </div>
+    
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Passwd</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-password log-input-icon"></i>
+                    <input type="password" class="layui-input log-input log-password">
+                </div>
+            </div>
+
+            <div class="log-row log-message">
+                <a class="log-error-msg" disabled>111111</a>
+                <a class="log-link-forgetpass">forget?</a>
+            </div>
+
+            <div class="log-row">
+                <button class="layui-btn layui-inline layui-btn-normal log-btn">登录</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="layer-style-2 not-allow-select" title="layer-2">
+        <header class="layui-elip">Login</header>
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input log-username" placeholder="Username">
+            </div>
+            <div class="layui-input-inline">
+                <input type="password" class="layui-input log-password" placeholder="Password">
+            </div>
+            
+            <span class="link-param">
+                <a class="link-register" href="#">Register</a>
+                <a class="link-lostpasswd" href="#">Lost Passwd?</a>
+            </span>
+
+            <div class="layui-input-inline">
+                <button lay-submit class="layui-btn log-btn">Login</button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- <form class="layui-form layui-inline">
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 文本输入框 </label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="" placeholder="Input your content" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 表格标识 </label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="" placeholder="Input your content" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 密码输入框 </label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="password" name="" placeholder="Input your content" autocomplete="off">
+            </div>
+            <div class="layui-form-mid layui-word-aux">辅助文字</div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 下拉选择框 </label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="aihao">
+                    <option value="0">写作</option>
+                    <option value="1">阅读</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 单选框 </label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="0" title="男" checked>
+                <input type="radio" name="sex" value="1" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 复选样式一</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-skin="switch" lay-text="on|off">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-pane">
+            <label class="layui-form-label"> 复选样式二</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-skin="primary">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text layui-form-pane">
+            <label class="layui-form-label"> 文本域 </label>
+            <div class="layui-input-block">
+                <textarea placeholder="place input content" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </form> -->
+
+    <h3 class="page-header">Native Form</h3>
+
+    <h3 class="page-header">Bootstrap Form</h3>
+
+    <h3 class="page-header"></h3>
+
+    <button id="test-layer" class="btn btn-link">test BTN</button>
+
+
+    <br/><button id="back-btn" class="btn btn-link">Go Back</button><br/>
+</body>
+<script src="../js/common.js"></script>
+<script src="../js/form/form.js"></script>
+</html>

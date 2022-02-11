@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer 2</title>
+    <link href="./layui-v2.6.8/layui/css/layui.css" rel="stylesheet">
+    <link href="./layer2.css" rel="stylesheet">
+    <style>
+        .not-allow-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="layer-style-2">
+        <header class="layui-elip">Login</header>
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input log-username" placeholder="Username">
+            </div>
+            <div class="layui-input-inline">
+                <input type="password" class="layui-input log-password" placeholder="Password">
+            </div>
+            
+            <span class="link-param">
+                <a class="link-register" href="#">Register</a>
+                <a class="link-lostpasswd" href="#">Lost Passwd?</a>
+            </span>
+
+            <div class="layui-input-inline">
+                <button lay-submit class="layui-btn log-btn">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="./jQuery/jquery-1.12.min.js"></script>
+<script src="./layui-v2.6.8/layui/layui.js"></script>
+<script src="./common.js"></script>
+<script src="./layer2.js"></script>
+</html>

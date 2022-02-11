@@ -1,0 +1,54 @@
+.layer-style-2 {
+    vertical-align: top;
+    display: inline-block;
+    background-color: aliceblue;
+
+    /* Outer Padding Set */
+    padding: 35px 50px 35px 50px;
+}
+.layer-style-2 header {
+    font-size: 25px;
+    font-weight: 100;
+    text-align: center;
+
+    /* Form Title Set */
+    height: 30px;
+    line-height: 25px;
+}
+.layer-style-2 form {
+    width: 200px;
+}
+.layer-style-2 form input {
+    height: 33px;
+    width: 200px;
+
+    /* Set Input Gap */
+    margin-top: 6px;
+}
+.layer-style-2 .log-btn {
+    /* Button Size Set */
+    width: 75px;
+    height: 35px;
+    line-height: 12px;
+
+    /* Button Margin Set */
+    margin: 15px 0px 0px 60px;
+}
+.layer-style-2 .link-param a {
+    font-size: 12px;
+}
+.layer-style-2 .link-param {
+    display: block;
+    align-content: center;
+    border-bottom: 1px solid rgb(194, 191, 191);
+    /* Link Bar Padding Set */
+    padding: 8px 0px 4px 0px;
+}
+.layer-style-2 .link-register {
+    /* <Register> Margin Set */
+    margin-left: 8px;
+}
+.layer-style-2 .link-lostpasswd {
+    /* <Lost Passwd?> Margin Set */
+    margin-left: 65px;
+}

@@ -1,0 +1,33 @@
+/**
+ * Input-Style-3
+ */
+ .input-style-3 {
+    vertical-align: top;
+    text-align: left;
+    display: inline-block;
+    color: rgb(34, 34, 38);
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    border-radius: 16px 0px 0px 16px;
+    border: 1px solid rgb(232, 232, 237);
+    outline: none;
+    /* transition: padding-left .5s ease 0s; */
+    transition: width .5s ease 0s;
+
+    /* Inner Padding Set */
+    padding: 6px 10px 6px 16px;
+
+    /* Font Size Set */
+    font-size: 14px;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.input-style-3:focus {
+    border: 1px solid rgb(252, 85, 49);
+    /* transition: width .5s ease 0s; */
+
+    /* Set Expanded Width */
+    width: 500px;
+
+}
+.input-style-3::-ms-clear { display: none; }

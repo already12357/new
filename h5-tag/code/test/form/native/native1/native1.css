@@ -1,0 +1,63 @@
+.native-style-1 {
+    display: inline-block;
+    vertical-align: top;
+
+    /* Background color set */
+    background-color: rgb(248, 248, 248);
+
+    /* Outer Frame Set */
+    padding: 25px 60px 40px 60px;
+}
+.native-style-1 h1 {
+    text-align: center;
+    font-size: 25px;
+
+    /* Set Title Margin */  
+    margin: 0px 0px 10px 0px;
+}
+.native-style-1 .input-div {
+    /* Set Input Row Margin */
+    margin-top: 10px;
+}
+.native-style-1 .input-div i {
+    font-family: LayuiIcon;
+    display: inline-block;
+    vertical-align: bottom;
+
+    /* Icon Size Set */
+    font-size: 26px;
+}
+.native-style-1 .input-div input {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 18px;
+
+    /* Input Inner Padding Set */
+    padding: 5px 10px 2px 5px;
+
+    /* Input Left Margin Set */
+    margin-left: 5px;
+
+    /* Input Bottom Set */
+    border-bottom: 2px solid rgb(0, 0, 0) ;
+}
+
+.native-style-1 .input-div .log-btn {
+    outline: none;
+    border: none;
+    
+    background-color: transparent;
+    border: 1.5px solid rgb(0, 0, 0);
+    border-radius: 12px;
+
+    /* Button Font */
+    font-size: 18px;
+    font-weight: 500;
+
+    /* Button Inner Padding Set */
+    padding: 5px 10px;
+
+    /* Button Margin Set */
+    margin: 10px 0px 0px 105px;
+}

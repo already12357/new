@@ -1,0 +1,112 @@
+/**
+ * List-Style-1
+ */
+.list-style-1 {
+    vertical-align: middle;
+    display: inline-block;
+    border: 1px solid rgb(197, 178, 216);
+
+    /* Total Width Set */
+    width: 338px;
+}
+.list-style-1 ul {
+    margin: 0px 0px;
+    list-style: none;
+    padding: 7px 0px 0px 0px;
+}
+.list-style-1 li {
+    font-family: 'Microsoft YaHei','SF Pro Display',Roboto,Noto,Arial,'PingFang SC',sans-serif;
+    padding: 4px 10px;
+}
+.list-style-1 li:hover {
+    background-color: rgb(241, 241, 243);
+    cursor: pointer;
+}
+.list-style-1 .list-header {
+    display: block;
+    text-align: left;
+    border-bottom: 1px solid rgb(241, 241, 243);
+    font-family: 'Microsoft YaHei','SF Pro Display',Roboto,Noto,Arial,'PingFang SC',sans-serif;
+
+    /* Header Font Size Set */
+    font-size: 14px;
+
+    /* Header Padding Set */
+    padding: 8px 12px 8px 12px;
+}
+.list-style-1 .num {
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+
+    /* Num Size */
+    width: 3%;
+    height: 100%;
+
+    /* Num Font Size Set */
+    font-size: 12px;
+}
+.list-style-1 ul li:nth-child(1) .num {color: rgb(254, 45, 70);}
+.list-style-1 ul li:nth-child(2) .num {color: rgb(255, 102, 0);}
+.list-style-1 ul li:nth-child(3) .num {color: rgb(250, 169, 14);}
+.list-style-1 .content {
+    vertical-align: middle;
+    display: inline-block;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+
+    /* Content Size */
+    width: 80%;
+    height: 100%;
+
+    /* Content Font Size Set */
+    font-size: 12px;
+
+    /* Content Margin Set */
+    margin-left: 3%;
+}
+.list-style-1 ul li .item-img {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 2%;
+
+    /* Image Size Set */
+    width: 16px;
+    height: 16px;
+}
+
+
+/**
+ * List-Style-2
+ */
+.list-style-2 {
+    vertical-align: top;
+    display: inline-block;
+    border: 1px solid green;
+    overflow-x: auto;
+
+    /* Frame Size Set */
+    width: 300px;
+    height: 80px;
+}
+.list-style-2 .list-frame {
+    width: 400px;
+    font-size: 0px;
+}
+.list-style-2 .list-div {
+    vertical-align: top;
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px solid rgb(233, 227, 238);
+
+    /* Margin Size Set */
+    margin: 4px 5px;
+
+    /* Item Size Set */
+    height: 75%;
+    width: 150px;
+}
+.list-style-2 .list-div:hover {
+    border: 1px solid rgb(176, 175, 177);
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vertical-1</title>
+    <link href="./vertical1.css" rel="stylesheet">
+    <style>
+        /* not allow to select text elements in button */
+        .not-allow-select {
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<!-- List 1 -->
+<script type="text/x-dot-template" id="list-tmp1">
+    <span class="list-header">{{=it.title}}</span> 
+    <ul>
+        {{for (var i = 1; i <= Math.min(it.total, 10); i++) { }}
+        <li>
+            <span class="num">{{=i}}</span>
+            <span class="content">{{=it.contentList[i-1]}}</span>
+            {{if (it.isHotImgShow[i - 1]) { }}
+            <img class="item-img" src="./img/fire1.png">
+            {{ } }}
+        </li>
+        {{ } }}
+    </ul>
+</script>
+
+
+<body>
+    <!-- List Divs -->
+    <div class="list-div-1" title="vertical-1">
+    </div>
+</body>
+<script src="./jQuery/jquery-1.12.min.js"></script>
+<script src="./doT.js"></script>
+<script src="./vertical1.js"></script>
+</html>

@@ -1,0 +1,151 @@
+/* CONFIG */
+/* not allow to select text elements in button */
+.not-allow-select {
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* set appearance none */
+.appearnce-none {
+    appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -webkit-appearance: none;
+}
+
+
+/* define the clear inline-block display */
+.clear-display-inblock {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0px;
+}
+
+
+/* set border-box */
+.clear-box-border {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+/* set element rotate */
+@keyframes rotate-360-anim {
+    0% {
+        transform: rotate(0deg); 
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+    }
+    100% { 
+        transform: rotate(359deg); 
+        -webkit-transform: rotate(359deg);
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -ms-transform: rotate(359deg);
+    }
+}
+@keyframes rotate-90-anim {
+    0% {
+        transform: rotate(0deg); 
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+    }
+    100% { 
+        transform: rotate(89deg); 
+        -webkit-transform: rotate(89deg);
+        -moz-transform: rotate(89deg);
+        -o-transform: rotate(89deg);
+        -ms-transform: rotate(89deg);
+    }
+}
+@keyframes rotate-anim-click {
+    0% {
+        transform: rotate(0deg); 
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+    }
+    100% { 
+        transform: rotate(270deg); 
+        -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        -ms-transform: rotate(270deg);
+    }
+}
+.rotate-slow {
+    animation: rotate-360-anim 40s linear 0s infinite;
+    -o-animation: rotate-360-anim 40s linear 0s infinite;
+    -webkit-animation: rotate-360-anim 40s linear 0s infinite;
+    -moz-animation: rotate-360-anim 40s linear 0s infinite;
+}
+.rotate-normal {
+    animation: rotate-360-anim 15s linear 0s infinite;
+    -o-animation: rotate-360-anim 15s linear 0s infinite;
+    -webkit-animation: rotate-360-anim 15s linear 0s infinite;
+    -moz-animation: rotate-360-anim 15s linear 0s infinite;
+}
+.rotate-fast {
+    animation: rotate-anim 5s linear 0s infinite;
+    -o-animation: rotate-anim 5s linear 0s infinite;
+    -webkit-animation: rotate-anim 5s linear 0s infinite;
+    -moz-animation: rotate-anim 5s linear 0s infinite;
+}
+.rotate-vfast {
+    animation: rotate-360-anim 2s linear 0s infinite;
+    -o-animation: rotate-360-anim 2s linear 0s infinite;
+    -webkit-animation: rotate-360-anim 2s linear 0s infinite;
+    -moz-animation: rotate-360-anim 2s linear 0s infinite;
+}
+.rotate-vfast:hover,
+.rotate-fast:hover,
+.rotate-normal:hover,
+.rotate-slow:hover {
+    animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    -webkit-animation-play-state: paused;
+}
+.rotate-vfast:active,
+.rotate-fast:active,
+.rotate-normal:active,
+.rotate-slow:active {
+    animation: rotate-anim-click .5s linear 0s infinite;
+    -o-animation: rotate-anim-click .5s linear 0s infinite;
+    -webkit-animation: rotate-anim-click .5s linear 0s infinite;
+    -moz-animation: rotate-anim-click .5s linear 0s infinite;
+}
+
+
+/* set text overflow ellipsis x */
+/* with different line number displayed */
+.x-overflow-ellipsis {
+    overflow-x: hidden;
+    white-space: nowrap;
+
+    /* unsolved */
+    /* !!!!!!!!!!!! firefox unsupported !!!!!!!!! */
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    text-overflow:ellipsis;
+}
+
+
+/* set line limit number */
+.x-limit-Line1 {
+    /* change line number here */
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+}

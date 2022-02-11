@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input5</title>
+    <link href="./input5.css" rel="stylesheet">
+    <style>
+        .not-allow-select {
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .x-overflow-ellipsis {
+            overflow-x: hidden;
+            white-space: nowrap;
+
+            /* unsolved */
+            /* !!!!!!!!!!!! firefox unsupported !!!!!!!!! */
+            -o-text-overflow: ellipsis;
+            -ms-text-overflow: ellipsis;
+            text-overflow:ellipsis;
+        }
+
+        /* set border-box */
+        .clear-box-border {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<script type="text/x-dot-template" id="input-tmp5">
+    <input class="select-button x-overflow-ellipsis" type="button" value="{{=it.dValue}}">
+    <div class="select-list-div clear-box-border">
+        <ul class="select-list">
+            {{ for (var i = 0; i < it.totalCount; i++) { }}
+            <li data-item="{{=it.contentList[i]}}">
+                <span class="x-overflow-ellipsis">{{=it.contentList[i]}}</span>
+            </li>
+            {{ } }}
+        </ul>
+    </div>
+    <input class="select-value" type="hidden" value="{{=it.dValue}}">
+</script>
+
+<body>
+    <!-- Render Part -->
+    <div class="input-div-5">
+    </div>
+
+</body>
+<script src="./jQuery/jquery-1.12.min.js"></script>
+<script src="./doT.js"></script>
+<script src="./niceScroll/jquery.nicescroll-3.5.1.js"></script>
+<script src="./input5.js"></script>
+</html>

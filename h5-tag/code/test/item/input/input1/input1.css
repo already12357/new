@@ -1,0 +1,29 @@
+/**
+ * Input-Style-1
+ */
+ .input-style-1 {
+    border: none;
+    vertical-align: top;
+    outline: none;
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    border-radius: 10px;
+    background-color: rgb(227, 237, 247);
+    color: rgb(0, 114, 255);
+
+    /* Width Set*/
+    width: 300px;
+
+    /* Inner Padding Set */
+    padding: 8px 10px 8px 16px;
+
+    /* Font Size Set */
+    font-size: 14px;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.input-style-1::-moz-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1:-moz-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1:-ms-input-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1::-webkit-input-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1::-ms-clear { display: none; }
