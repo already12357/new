@@ -90,19 +90,10 @@ public class TemplateRestController {
              */
 
 
-            /**
-             * 开发环境使用 :
-             * return JsonUtils.zwdtRestReturn("1", "接口调用成功！", dataJson);
-             */
             return FastjsonUtil.jsonRestReturn("200", "执行成功", dataJson.toJSONString());
         }
         catch (Exception e) {
             e.printStackTrace();
-
-            /**
-             * 开发环境使用 :
-             * return JsonUtils.zwdtRestReturn("0", "接口调用异常", e.getMessage());
-             */
             return FastjsonUtil.jsonRestReturn("500", "执行错误", e.getMessage());
         }
     }
