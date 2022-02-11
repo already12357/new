@@ -1,5 +1,6 @@
 package com.demo.QRUtil;
 
+import com.config.PathConfig;
 import com.zhq.util.QRUtil.ZxingUtil;
 
 public class ZxingUtil_Demo {
@@ -11,6 +12,6 @@ public class ZxingUtil_Demo {
 
     public void demo1() {
         String qrCodeContent = "This is my content";
-        ZxingUtil.qrCode(qrCodeContent, 200, 200, );
+        ZxingUtil.qrCode(qrCodeContent, 200, 200, PathConfig.QRCODE_DOWNLOAD_PATH);
     }
 }
