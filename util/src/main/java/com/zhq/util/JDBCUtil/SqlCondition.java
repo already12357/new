@@ -361,14 +361,23 @@ public class SqlCondition {
         return like(DBConstant.SQL_AND, columnName, columnValue);
     }
 
-    public SqlCondition exists(String append, String columnName, Object columnValue) {
-        String existsStr = parseExists(append, columnName, columnValue);
-        addConditionStr(getExistsConditionMap(), columnName, existsStr);
-        return this;
-    }
-    public SqlCondition exists(String columnName, Object columnValue) {
-        return exists(DBConstant.SQL_AND, columnName, columnValue);
-    }
+//    public SqlCondition exists(String append, Object existsValue) {
+//        String existsStr = parseExists(append, existsValue);
+//        addConditionStr();
+//    }
+//
+//    public SqlCondition exists(Object existsValue) {
+//
+//    }
+
+//    public SqlCondition exists(String append, String columnName, Object columnValue) {
+//        String existsStr = parseExists(append, columnName, columnValue);
+//        addConditionStr(getExistsConditionMap(), columnName, existsStr);
+//        return this;
+//    }
+//    public SqlCondition exists(String columnName, Object columnValue) {
+//        return exists(DBConstant.SQL_AND, columnName, columnValue);
+//    }
 
     public SqlCondition in(String append, String columnName, List<Object> rangeList) {
         String inStr = parseIn(append, columnName, rangeList);
@@ -502,7 +511,7 @@ public class SqlCondition {
         parsedEq.append("(")
                 .append(columnName)
                 .append(sign)
-                .append(DBFormatter.formatObjToStr(columnValue, true, false))
+                .append(DBFormatter.formatObjToStr(columnValue, true, false, false))
                 .append(")");
 
         return parsedEq.toString();
@@ -521,9 +530,9 @@ public class SqlCondition {
         parsedBetween.append("(")
                 .append(columnName)
                 .append(" BETWEEN ")
-                .append(DBFormatter.formatObjToStr(bottom, true, false))
+                .append(DBFormatter.formatObjToStr(bottom, true, false, false))
                 .append(" AND ")
-                .append(DBFormatter.formatObjToStr(top, true, false))
+                .append(DBFormatter.formatObjToStr(top, true, false, false))
                 .append(")");
 
         return parsedBetween.toString().trim();
@@ -545,7 +554,7 @@ public class SqlCondition {
                 .append("(");
 
         for (Object range : rangeList) {
-            parsedBetween.append(DBFormatter.formatObjToStr(range, true, false)).append(",");
+            parsedBetween.append(DBFormatter.formatObjToStr(range, true, false, false)).append(",");
         }
 
         parsedBetween.append(")")
@@ -555,7 +564,7 @@ public class SqlCondition {
         return parsedBetween.toString().trim();
     }
 
-    private String parseExists(String append, String columnName, Object columnValue) {
+    private String parseExists(String append, Object columnValue) {
         StringBuilder parsedExists = new StringBuilder();
 
         if (append.equalsIgnoreCase(DBConstant.SQL_OR)) {
@@ -566,8 +575,8 @@ public class SqlCondition {
         }
 
         parsedExists.append("(")
-                .append(columnName)
                 .append(" EXISTS ")
+//                .append(DBFormatter.formatObjToStr())
                 .append(")");
 
         return parsedExists.toString().trim();
@@ -578,7 +587,7 @@ public class SqlCondition {
                 (null != joinTable && !joinTable.isEmpty())) {
             // 每次都要连接最近添加进去的表
             StringBuilder parsedJoin = new StringBuilder(opTable);
-            String onStr = DBFormatter.formatObjToStr(on, false, false);
+            String onStr = DBFormatter.formatObjToStr(on, false, false, false);
 
             // opTable L(joinTable, .....)
             switch (joinType) {
@@ -921,7 +930,7 @@ public class SqlCondition {
             StringBuilder valuesStr = new StringBuilder("VALUES").append("(");
 
             for (Object value : opValues) {
-                valuesStr.append(DBFormatter.formatObjToStr(value, true, false)).append(",");
+                valuesStr.append(DBFormatter.formatObjToStr(value, true, false, false)).append(",");
             }
 
             valuesStr.append(")");
@@ -939,7 +948,7 @@ public class SqlCondition {
             StringBuilder setStr = new StringBuilder("SET ");
             for (int i = 0; i < setCount; i++) {
                 String expression = opColumns.get(i).concat(" = ")
-                        .concat(DBFormatter.formatObjToStr(opValues.get(i), true, false));
+                        .concat(DBFormatter.formatObjToStr(opValues.get(i), true, false, false));
                 setStr.append(expression).append(",");
             }
 

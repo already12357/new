@@ -23,15 +23,16 @@ public class SqlCondition_Demo {
         /**
          * 2. 调用对应的  demo 方法
          */
-        instance.select_demo1();
-        instance.select_demo2();
-        instance.select_demo3();
+//        instance.select_demo1();
+//        instance.select_demo2();
+//        instance.select_demo3();
+        instance.select_demo4();
 
-        instance.update_demo1();
+//        instance.update_demo1();
 
-        instance.delete_demo1();
+//        instance.delete_demo1();
 
-        instance.insert_demo1();
+//        instance.insert_demo1();
     }
 
     public void init_DBUtil() {
@@ -93,6 +94,33 @@ public class SqlCondition_Demo {
         ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
         System.out.println(JsonUtil.resultSetToJString(queryResult));
         selectSql.release();
+    }
+
+    public void select_demo4() {
+        for (int i = 0; i < 1000; i++) {
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    SqlCondition selectSql = new SqlCondition();
+                    selectSql
+                            .select_col("*")
+                            .from("course_1 c1")
+                            .where().eq("c1.cname", "'p999'");
+                    ResultSet queryResult = (ResultSet) selectSql.executedBy(DBUtil.getInnerDS());
+                    System.out.println(JsonUtil.resultSetToJString(queryResult));
+
+                    selectSql.release();
+                }
+            });
+
+            thread.start();
+        }
+    }
+
+    public void demo5() {
+        SqlCondition selectSql = new SqlCondition();
+        selectSql
+                .select_col(" * ")
+                .from("course_1 c1");
     }
 
 

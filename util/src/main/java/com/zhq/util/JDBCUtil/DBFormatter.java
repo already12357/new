@@ -2,6 +2,7 @@ package com.zhq.util.JDBCUtil;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.aspose.cad.internal.B.S;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -17,45 +18,77 @@ public class DBFormatter {
      * @param value 参数对象
      * @param nullStr 为空时是否显示 null 字符串
      * @param strQuot 传入对象为字符串时, 返回内容是否要添加引号
+     * @param outerBrackets 是否在外侧添加小括号
      * @return
      */
-    public static String formatObjToStr(Object value, boolean nullStr, boolean strQuot) {
+    public static String formatObjToStr(Object value, boolean nullStr, boolean strQuot, boolean outerBrackets) {
+//        if (null == value) {
+//            if (nullStr) {
+//                if (strQuot) {
+//                    return "'null'";
+//                }
+//                else {
+//                    return "null";
+//                }
+//            }
+//            else {
+//                return "";
+//            }
+//        }
+//
+//        String valueStr = String.valueOf(value);
+//
+//        // 判断传入的父类 value 是否为 String 类型, 如果是 String 类型，根据入参标识确定是否添加双引号
+//        if (value.getClass().isAssignableFrom(String.class)) {
+//            if (strQuot) {
+//                return new String("'").concat(valueStr).concat("'");
+//            }
+//            else {
+//                return new String(valueStr);
+//            }
+//        }
+//
+//        // 判断传入的类型是否为 SqlCondition 对象, 是的话，进行子查询的转换
+//        if (value.getClass().isAssignableFrom(SqlCondition.class)) {
+//            return ((SqlCondition) value).generateSql();
+//        }
+//
+//        return valueStr;
+
+
+        String valueStr = "";
         if (null == value) {
             if (nullStr) {
-                if (strQuot) {
-                    return "'null'";
-                }
-                else {
-                    return "null";
-                }
+                valueStr = "null";
             }
             else {
-                return "";
+                valueStr = "";
+            }
+        }
+        else {
+            // 判断传入的父类 value 是否为 String 类型, 如果是 String 类型，根据入参标识确定是否添加双引号
+            if (value.getClass().isAssignableFrom(String.class)) {
+                valueStr = String.valueOf(value);
+            }
+
+            // 判断传入的类型是否为 SqlCondition 对象, 是的话，进行子查询的转换
+            if (value.getClass().isAssignableFrom(SqlCondition.class)) {
+                valueStr = ((SqlCondition) value).generateSql();
             }
         }
 
-        String valueStr = String.valueOf(value);
-
-        // 判断传入的父类 value 是否为 String 类型, 如果是 String 类型，则添加双引号
-        if (value.getClass().isAssignableFrom(String.class)) {
-            if (strQuot) {
-                return new String("'").concat(valueStr).concat("'");
-            }
-            else {
-                return new String(valueStr);
-            }
+        if (strQuot) {
+            valueStr = new String("'").concat(valueStr).concat("'");
         }
-
-        // 判断传入的类型是否为 SqlCondition 对象, 是的话，进行子查询的转换
-        if (value.getClass().isAssignableFrom(SqlCondition.class)) {
-            return ((SqlCondition) value).generateSql();
+        if (outerBrackets) {
+            valueStr = new String("(").concat(valueStr).concat(")");
         }
 
         return valueStr;
     }
 
     public static String formatObjToStr(Object value) {
-        return formatObjToStr(value, true, true);
+        return formatObjToStr(value, true, true, false);
     }
 
 

@@ -48,7 +48,6 @@ public class RowData extends HashMap<String, Object> {
                 rowData.add(row);
             }
             queryResult.beforeFirst();
-
             return rowData;
         }
         catch (Exception e) {
