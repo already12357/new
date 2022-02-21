@@ -288,6 +288,7 @@ public class IOUtil {
      * @param base64 是否使用 base64 编码 ( 默认使用, true )
      * @return
      */
+    // 使用 DataUrl 枚举类替代部分方法
     public static String imgDataUrl(InputStream imgIn, boolean base64) {
         try {
             // 返回的流对象
