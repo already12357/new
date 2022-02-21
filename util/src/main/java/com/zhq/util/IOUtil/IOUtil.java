@@ -1,7 +1,6 @@
 package com.zhq.util.IOUtil;
 
 import com.aspose.cells.Workbook;
-import com.aspose.psd.internal.bD.E;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
 import com.zhq.util.ResourceUtil;
@@ -160,18 +159,24 @@ public class IOUtil {
 //        JdbcTemplate jdbcTemplate = new JdbcTemplate();
 //    }
 
-
     /**
-     * 根据魔数获取文件的格式
-     * @param magicBytes 传入的魔数数据
-     * @return
+     * 将字节数据写入文件
+     * @param file 文件对象
+     * @param data 写入文件的二进制数据
      */
-    private static String fileFormatInMagicBytes(byte[] magicBytes) {
-        if (null == magicBytes) {
-            return null;
-        }
+    public static void writeBytesToFile(File file, byte[] data) {
+        FileOutputStream fout = null;
 
-        return MagicBytes.format(magicBytes);
+        try {
+            fout = new FileOutputStream(file);
+            fout.write(data);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            ResourceUtil.closeResources(fout);
+        }
     }
 
     /**
@@ -208,10 +213,10 @@ public class IOUtil {
      */
     public static String typeInBytes(byte[] fileBytes, String fileType) {
         // 获取文件的魔数
-        byte[] magicBytes = magicBytesInBytes(fileBytes);
+        byte[] magicBytes = MagicBytes.extractMBytes(fileBytes);
         // 根据魔数获取文件格式
-        String fileFormat = fileFormatInMagicBytes(magicBytes);
-        return fileType.concat("/").concat(fileFormat);
+        String fileFormat = MagicBytes.format(magicBytes);
+        return fileType.concat(File.separator).concat(fileFormat);
     }
 
     public static String typeInFile(File file, String fileType) {
@@ -262,38 +267,6 @@ public class IOUtil {
         }
     }
 
-
-    /**
-     * 根据文件中的字节数 或 文件对象 匹配文件头中的魔数
-     * @param fileBytes 文件内容
-     * @return
-     */
-    public static byte[] magicBytesInBytes(byte[] fileBytes) {
-        if (null == fileBytes) {
-            return null;
-        }
-
-        for (MagicBytes magicByte : MagicBytes.values()) {
-            if (magicByte.match(fileBytes)) {
-                return magicByte.getMagicBytes();
-            }
-        }
-
-        return null;
-    }
-
-    public static byte[] magicBytesInFile(File file) {
-        try {
-            byte[] fileBytes = bytesInFile(file);
-            return magicBytesInBytes(fileBytes);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
     /**
      * 将该部分移到 HttpUtil 中，将 IOUtil 与 HttpUtil 的功能进一步解耦
      */
@@ -321,13 +294,11 @@ public class IOUtil {
             StringBuilder imgUrl = new StringBuilder("");
             // 具体的二进制流
             byte[] imageBytes = bytesInStream(imgIn);
-            // 对应的图片
+            // 对应的 dataurl 类型前缀
             String dataType = imgTypeInBytes(imageBytes);
 
-
             // 拼接对应的 data url 内容
-            imgUrl.append("data: ");
-            imgUrl.append(dataType);
+            imgUrl.append("data: ").append(dataType);
             if (base64) {
                 String base64ImgStr = Base64.getEncoder().encodeToString(imageBytes);
                 imgUrl.append(";base64,");

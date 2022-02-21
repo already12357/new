@@ -1,5 +1,7 @@
 package com.zhq.util.IOUtil;
 
+import java.io.File;
+
 /**
  * 文件魔数头的信息定义，使用枚举类型定义
  * @author Eddie Zhang
@@ -43,9 +45,23 @@ public class IOConstant {
      */
     public static final String OFFICE_2010 = "office_2007";
     public static final String OFFICE_2007 = "office_2007";
+}
+
+// 用于拼接生成 dataUrl 的一些常量
+// data:①[<mime type>]②[;charset=<charset>]③[;<encoding>]④,<encoded data>⑤
+enum DataUrl {
+    URL_IMAGE;
+    // 构造函数
+    private DataUrl(String mimeType, String encode, ) {
+
+    }
+    // mime 文件格式
+    private String mimeType;
+    // 编码方式
 
 }
 
+// 枚举类对象，存储 文件格式 和 对应的魔数字节
 enum MagicBytes {
     // 图片
     JPG("jpg", new byte[]{(byte) 0xff, (byte) 0xd8, (byte) 0xff}),
@@ -84,7 +100,7 @@ enum MagicBytes {
     }
 
     /**
-     * 根据文件中的二进制流匹配对应的文本内容
+     * 将传入的二进制数据域当前的魔数字节比对，查看当前传入的 fileBytes 是否为魔数字节
      */
     public boolean match(byte[] fileBytes) {
         if (null == fileBytes || fileBytes.length < this.magicBytes.length) {
@@ -111,6 +127,24 @@ enum MagicBytes {
         for (MagicBytes magicBytes : MagicBytes.values()) {
             if (magicBytes.match(matchBytes)) {
                 return magicBytes.fileFormat;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * 从二进制数据中, 提取对应的魔数前缀, 当不满足要求时, 返回空
+     */
+    public static byte[] extractMBytes(byte[] bytes) {
+        if (null == bytes) {
+            return null;
+        }
+
+        for (MagicBytes magicByte : MagicBytes.values()) {
+            if (magicByte.match(bytes)) {
+                return magicByte.getMagicBytes();
             }
         }
 

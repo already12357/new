@@ -21,6 +21,7 @@ public class AsposeUtil_Demo {
     }
 
     public void demo1() {
+        File docFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc.doc");
 
     }
 

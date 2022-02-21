@@ -1,6 +1,7 @@
 package com.demo.IOUtil;
 
 import com.zhq.util.IOUtil.IOUtil;
+import com.zhq.util.QRUtil.QRUtil;
 import com.zhq.util.ResourceUtil;
 
 import java.io.File;
@@ -18,7 +19,6 @@ public class IOUtil_Demo {
 //        instance.demo2();
 //        instance.demo3();
 //        instance.demo4();
-//        instance.demo5();
     }
 
     public void demo1() {
@@ -77,15 +77,6 @@ public class IOUtil_Demo {
     }
 
     public void demo4() {
-        File imgFile = new File("./src/main/resources/file/Picture2.png");
-        byte[] imgBytes = IOUtil.bytesInFile(imgFile);
-        byte[] magicBytesInImg =  IOUtil.magicBytesInBytes(imgBytes);
-
-        // 使用 magicBytesInFile 读取文件字节中的魔数部分
-        System.out.println(magicBytesInImg);
-    }
-
-    public void demo5() {
         File imgFile = new File("./src/main/resources/file/bg.jpg");
         byte[] imageFileBytes = IOUtil.bytesInFile(imgFile);
 

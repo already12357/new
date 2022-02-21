@@ -102,7 +102,6 @@ public class AsposeUtil {
     }
 
 
-
     /**
      * 替换 word 文档中的编辑域, 用于没有区域前缀的情况
      * @param template 需要替换域的文件
@@ -129,6 +128,12 @@ public class AsposeUtil {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * 替换 Aspose Word 中的编辑域内容
+     *
+     */
 
 
 
