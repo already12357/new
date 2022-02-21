@@ -1,5 +1,6 @@
 package com.demo.PageUtil;
 
+import com.zhq.util.JsonUtil.JsonUtil;
 import com.zhq.util.PageUtil.PageData;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 public class PageData_Demo {
     public static void main(String[] args) {
         PageData_Demo instance = new PageData_Demo();
+
         instance.demo1();
     }
 
@@ -24,7 +26,15 @@ public class PageData_Demo {
         strLists.add(null);
         strLists.add(6);
 
-        PageData pageData = new PageData(strLists, 2, 1);
+        PageData pageData = new PageData(strLists, 2, 2);
         System.out.println(pageData.hasNextPage());
+
+        System.out.println(pageData.getPageSize());
+
+        System.out.println(pageData.getTotalSize());
+
+        System.out.println(pageData.getPageCount());
+
+        System.out.println(JsonUtil.listToJString(pageData.getPageContent()));
     }
 }

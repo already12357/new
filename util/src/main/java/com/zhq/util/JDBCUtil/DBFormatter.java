@@ -181,11 +181,27 @@ public class DBFormatter {
                         .append(String.valueOf(pageSize * (pageIndex + 1)));
                 break;
 
-            case DBConstant.DB_SQLSERVER:
 
+            // ......................................
+            // SQLServer 分页查询方法
+            // 未完成.......
+            // ......................................
+            // 外部包装
+            // select * from (
+            //
+            //　　　　select *, ROW_NUMBER() OVER(Order by a.CreateTime DESC ) AS RowNumber from table_name as a
+            //　　) as b
+            //　　where RowNumber BETWEEN 1 and 5
+            case DBConstant.DB_SQLSERVER:
+                frameSql.append("select *, ROW_NUMBER() OVER (ORDER BY ... DESC) AS ROWNUMBER FROM ")
+                        .append("(").append(sqlContent).append(")")
+                        .append(" WHERE ")
+                        .append("RowNumber BETWEEN")
+                        .append(pageIndex * pageSize).append(" AND ").append((pageIndex + 1) * pageSize);
                 break;
 
             case DBConstant.DB_DB2:
+
                 break;
 
 

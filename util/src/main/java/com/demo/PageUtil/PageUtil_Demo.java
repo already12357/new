@@ -13,7 +13,7 @@ public class PageUtil_Demo {
     public static void main(String[] args) {
         PageUtil_Demo instance = new PageUtil_Demo();
 
-//        instance.demo1();
+        instance.demo1();
         instance.demo2();
     }
 

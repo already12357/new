@@ -1,8 +1,13 @@
 package com.zhq.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
+import com.aspose.words.net.System.Data.DataRow;
+import com.aspose.words.net.System.Data.DataSet;
+import com.aspose.words.net.System.Data.DataTable;
 import com.template._1.util.TemplateMailMergeDataSource;
 import com.zhq.util.IOUtil.IOConstant;
 import com.zhq.util.IOUtil.IOUtil;
@@ -119,6 +124,62 @@ public class AsposeUtil {
                     templateDoc.save(destFile.getAbsolutePath(), com.aspose.words.SaveFormat.DOC);
                     break;
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * 替换 Aspose Word 中的 Table 编辑域，如下：
+     * 《TableStart:{tableName}》
+     * 《columns1》《columns2》《columns3》《columns4》
+     * 《fields1》 《fields2》 《fields3》 《fields4》
+     * 《/TableStart:{tableName}》
+     *
+     * @param doc 传入的 Aspose 文档对象
+     * @param tableName 编辑域表格的名称 
+     * @param colList 编辑域表格的列名集合
+     * @param data 渲染编辑域表格所用的数据, 其中每一列的数据使用一个 JSONObject 存储, 所有数据组合为 JSONArray
+     *             [
+     *                 {
+     *                     "col1_name1":"col1_val1",
+     *                     "col1_name2": col1_val2,
+     *                     "col1_name3":"col1_val3"
+     *                 },
+     *                 {
+     *                     "col2_name1":"col2_val1",
+     *                     "col2_name2": col2_val2,
+     *                     "col2_name3":"col2_val3"
+     *                 },
+     *             ......
+     *             ]
+     *
+     *
+     */
+    public static void fillTable(Document doc, String tableName, List<String> colList, JSONArray data) {
+        try {
+            DataTable dataTable = new DataTable(tableName);
+            DataSet dataSet = new DataSet();
+
+            // 添加需要渲染的表格列
+            for (String columnName : colList) {
+                dataTable.getColumns().add(columnName);
+            }
+
+            // 渲染表格数据
+            for (int i = 0; i < data.size(); i++) {
+                DataRow rowObject = dataTable.newRow();
+                JSONObject rowData = data.getJSONObject(i);
+
+                rowData.put(String.valueOf(i), rowData.get(colList.get(i)));
+                dataTable.getRows().add(rowObject);
+            }
+
+            dataSet.getTables().add(dataTable);
+            doc.getMailMerge().executeWithRegions(dataSet);
         }
         catch (Exception e) {
             e.printStackTrace();

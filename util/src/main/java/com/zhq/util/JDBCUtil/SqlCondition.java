@@ -10,9 +10,12 @@ import java.util.*;
  * SQL 查询条件类
  * 本质是将传入的数据转化为对应的 SQL 语句, 通过原生的 JDBC 执行
  * 流程为：
- * 1. 将传入的条件转化后存入到条件集合 (eqConditionMap, gtConditionMap, ltConditionMap...), 操作相关的 表集合，值集合，列集合
- * 2. 解析集合中的内容，将其通过部分转化的形式 ( where, from 等部分 )， 转化后拼接成完整的 SQL 字符串
- * 3. 通过解析解析拼接的字符串，来调用执行对应的 SQL 操作
+ * 1. 调用 sql 生成函数 ( eq(), like(), select_col() 等 ) 传入 sql 部分的生成信息
+ * 2. 解析函数 ( eq(), like(), select_col() 等 ) 传入的信息，通过一定的规则生成字符串，存储到集合 ( eqConditionMap, gtConditionMap, ltConditionMap , betweenConditionMap 等 ) 中
+ * 3. 取出集合中的字符串, 按一定规则拼接成 sql 语句的各个部分
+ * 4. 通过 DataSource 对象执行对应的 sql 语句, 并将执行 sql 语句的资源单独存放到资源集合中
+ * 5. 释放资源集合中的所有资源, 结束这次 sql 执行
+ *
  * @author Eddie Zhang
  */
 public class SqlCondition {
@@ -61,6 +64,8 @@ public class SqlCondition {
     private HashMap<String, List<String>> existsConditionMap;
     // 表连接的内容
     private HashMap<String, List<String>> joinConditionMap;
+
+
     // 分页信息存储 ( 注意需要指定数据库类型  )
     // pageIndex <--> 0 当前页号 
     // pageSize <--> 10 当前页的大小
@@ -144,6 +149,7 @@ public class SqlCondition {
         }
         return pageConditionMap;
     }
+
 
     public SqlCondition() {
         opColumns = new ArrayList<String>();
@@ -362,10 +368,11 @@ public class SqlCondition {
     }
 
     // exists haven't finisihed yet ........
-//    public SqlCondition exists(String append, Object existsValue) {
-//        String existsStr = parseExists(append, existsValue);
+    public SqlCondition exists(String append, Object existsValue) {
+        String existsStr = parseExists(append, existsValue);
 //        addConditionStr();
-//    }
+        return this;
+    }
 //
 //    public SqlCondition exists(Object existsValue) {
 //
@@ -492,7 +499,7 @@ public class SqlCondition {
     }
 
     /**
-     * 解析传入的判断参数，将其转换为 SQL 字符串
+     * 解析传入的判断参数, 将其转化为一定格式的字符串, 存放在条件集合中
      * @param append 拼接方式, 使用 and / or ( 通过前缀 * / # 区分 ), 对应常量 DBConstant.SQL_AND, DBConstant.SQL_OR
      * @param columnName 列名称
      * @param columnValue 列值
@@ -795,7 +802,6 @@ public class SqlCondition {
                 .append(" ")
                 .append(whereInSql());
 
-
         // 有分页的情况，在分页子查询外层的基础上，生成对应的 sql
         // select * from (实际的  sql) limit....( 分页条件 )
         if (null != pageConditionMap) {
@@ -852,8 +858,8 @@ public class SqlCondition {
             }
             columnsStr.deleteCharAt(columnsStr.length() - 1);
             return columnsStr.toString().trim();
-        }
 
+        }
         return "";
     }
 

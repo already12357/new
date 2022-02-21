@@ -1,5 +1,9 @@
 package com.zhq.util;
 
+import org.springframework.http.HttpRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -19,14 +23,14 @@ public class StringUtil {
         return !(null == str || str.trim().length() == 0);
     }
 
-
     /**
      * 从 URL 格式的字符串中, 通过名称获取一个参数
      * @param url 输入的 URL 字符串
      * @param name 需要的参数名称
      * @return
      */
-    public static String extractUrlParam(String url, String name) {
+    // 代替 extractUrlParam
+    public static String urlParam(String url, String name) {
         int valueStart = url.indexOf(name + '=') + name.length() + 1;
         String paramParts = url.substring(valueStart);
         String[] values = paramParts.split("&");
@@ -34,6 +38,33 @@ public class StringUtil {
         return values[0];
     }
 
+    /**
+     * 从 URL 格式的字符串中，将参数部分转化为 Map 集合对象
+     * @param url 输入的 URL 参数
+     */
+    public static Map<String, Object> urlParamsToMap(String url) {
+        Map<String, Object> paramsMap = new HashMap<>();
+
+        if (hasContent(url) && url.indexOf('?') != -1) {
+            int paramStrIndex = url.indexOf('?');
+            String paramsStr = url.substring(paramStrIndex + 1);
+            String[] paramStrArray = paramsStr.split("&");
+
+            for (String paramExpression : paramStrArray) {
+                String[] paramExpArray = paramExpression.split("=");
+                if (hasContent(paramExpArray[0])) {
+                    String paramName = paramExpression.split("=")[0];
+                    String paramValue = "";
+                    if (paramExpArray.length > 1) {
+                        paramValue = paramExpression.split("=")[1];
+                    }
+                    paramsMap.put(paramName, paramValue);
+                }
+            }
+        }
+
+        return paramsMap;
+    }
 
     /**
      * 将 List<String> 拼接为字符串
@@ -42,25 +73,26 @@ public class StringUtil {
      * @return
      */
     public static String mergeList(List<String> list, String regex) {
-        if (null == list) {
-            return null;
-        }
+        if (null != list && !list.isEmpty()) {
+            StringBuilder mergeStr = new StringBuilder("");
 
-        StringBuilder mergeStr = new StringBuilder("");
-
-        for (String element : list) {
-            if (hasContent(element)) {
-                mergeStr.append(element).append(regex);
+            for (String element : list) {
+                if (hasContent(element)) {
+                    mergeStr.append(element).append(regex);
+                }
             }
-        }
 
-        if (mergeStr.length() > 0) {
-            return mergeStr.substring(0, mergeStr.length() - regex.length());
+            if (mergeStr.length() > 0) {
+                return mergeStr.substring(0, mergeStr.length() - regex.length());
+            }
         }
 
         return "";
     }
 
+    public static String mergeList(List<String> list) {
+        return mergeList(list, ",");
+    }
 
     /**
      * 将字符串数组拼接为字符串
@@ -69,22 +101,24 @@ public class StringUtil {
      * @return
      */
     public static String mergeArray(String[] array, String regex) {
-        if (null == array) {
-            return null;
+        if (null != array && array.length > 0) {
+            StringBuilder mergeStr = new StringBuilder("");
+
+            for (String element : array) {
+                mergeStr.append(element).append(regex);
+            }
+
+            if (mergeStr.length() > 0) {
+                return mergeStr.substring(0, mergeStr.length() - regex.length());
+            }
         }
 
-        StringBuilder mergeStr = new StringBuilder("");
-
-        for (String element : array) {
-            mergeStr.append(element).append(regex);
-        }
-
-        if (mergeStr.length() > 0) {
-            return mergeStr.substring(0, mergeStr.length() - regex.length());
-        }
         return "";
     }
 
+    public static String mergeArray(String[] array) {
+        return mergeArray(array, ",");
+    }
 
     /**
      * 将 Map 数据结构转化为参数据的形式
@@ -108,7 +142,6 @@ public class StringUtil {
 
         return xFormUrlStr;
     }
-
 
     /**
      * 替换字符串中的特定字符，并且使用空格在两边隔开
@@ -144,7 +177,6 @@ public class StringUtil {
         retStr.replace(replaceIndex, replaceIndex + 1, fullReplaceContent);
         return retStr.toString();
     }
-
 
     /**
      * 给对应的字符串打上单引号

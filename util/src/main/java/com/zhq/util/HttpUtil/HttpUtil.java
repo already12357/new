@@ -3,6 +3,7 @@ package com.zhq.util.HttpUtil;
 import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.ResourceUtil;
 import com.zhq.util.StringUtil;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -304,7 +305,6 @@ public class HttpUtil {
     }
 
 
-
     /**
      * 在处理器方法中下载对应的文件
      * @param request 处理器方法传入的 Servlet 原生请求
@@ -472,5 +472,44 @@ public class HttpUtil {
         finally {
             ResourceUtil.closeResources(in, out);
         }
+    }
+
+
+    /**
+     * 通过请求对象获取其中的参数信息
+     * @param request 传入的请求对象
+     * @param paramName 参数名称
+     */
+    public static String[] getUrlParam(HttpServletRequest request, String paramName) {
+        Map<String, String[]> reqParamsMap = request.getParameterMap();
+
+        for (Map.Entry<String, String[]> reqParam : reqParamsMap.entrySet()) {
+            if (reqParam.getKey().equals(paramName)) {
+                return reqParam.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    public static String getUrlParam(String url, String paramName) {
+        int urlParamStartIndex = url.indexOf('?');
+
+        if (urlParamStartIndex != -1) {
+            String reqUrlParams = url.substring(urlParamStartIndex + 1);
+            String[] paramsExps = reqUrlParams.split("&");
+
+            for (String paramsExpression : paramsExps) {
+                if (StringUtil.hasContent(paramsExpression)) {
+                    String[] paramsPairs = paramsExpression.split("=");
+
+                    if (paramsPairs.length > 1 && paramsPairs[0].equals(paramName)) {
+                        return paramsPairs[1];
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

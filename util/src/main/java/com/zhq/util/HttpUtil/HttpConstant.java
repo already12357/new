@@ -41,5 +41,4 @@ enum MediaMap {
         this.fileFormat = fileFormat;
         this.mediaType = mediaType;
     }
-
 }
