@@ -180,53 +180,6 @@ public class IOUtil {
     }
 
     /**
-     * 根据 文件流 或 文件 返回不同大类的文件类型 ( 图片, 文本 )
-     * @param imageBytes
-     * @return
-     */
-    public static String imgTypeInBytes(byte[] imageBytes) {
-        return typeInBytes(imageBytes, IOConstant.TYPE_IMAGE);
-    }
-
-    public static String imgTypeInFile(File file) {
-        return typeInFile(file, IOConstant.TYPE_IMAGE);
-    }
-
-
-
-
-    public static String textTypeInBytes(byte[] textBytes) {
-        return typeInBytes(textBytes, IOConstant.TYPE_TEXT);
-    }
-
-    public static String textTypeInFile(File file) {
-        return typeInFile(file, IOConstant.TYPE_TEXT);
-    }
-
-
-
-    /**
-     * 根据 文件流 或 文件 返回对应的类型
-     * @param fileBytes 传入文件的二进制类型
-     * @param fileType 文件大类
-     * @return
-     */
-    public static String typeInBytes(byte[] fileBytes, String fileType) {
-        // 获取文件的魔数
-        byte[] magicBytes = MagicBytes.extractMBytes(fileBytes);
-        // 根据魔数获取文件格式
-        String fileFormat = MagicBytes.format(magicBytes);
-        return fileType.concat(File.separator).concat(fileFormat);
-    }
-
-    public static String typeInFile(File file, String fileType) {
-        byte[] fileBytes = bytesInFile(file);
-        return typeInBytes(fileBytes, fileType);
-    }
-
-
-
-    /**
      * 读取 输入流 或 文件 中的字节数据
      * @param in 包含数据的输入流
      * @return
@@ -266,80 +219,6 @@ public class IOUtil {
             ResourceUtil.closeResources(fin);
         }
     }
-
-    /**
-     * 将该部分移到 HttpUtil 中，将 IOUtil 与 HttpUtil 的功能进一步解耦
-     */
-    /**
-     * 根据对应是数据流 或 文件对象，生成文件的 DataUrl
-     *
-     * 1. 从 文件 或 流 中读取对应的字节内容
-     *
-     * 2.获取 dataUrl 中的文件类型
-     *    2.1. 匹配文件字节的前几个字节，获取其中的魔数字节
-     *    2.2. 根据魔数字节匹配对应的文件类型
-     *    2.3. 拼接生成 dataUrl 中的文件类型部分
-     *
-     * 3. 根据文件流中的字节内容, 生成对应的文件数据编码
-     *
-     * 4. 拼接 文件类型，文件数据，最终生成 url
-     *
-     * @param imgIn 输入的图片流
-     * @param base64 是否使用 base64 编码 ( 默认使用, true )
-     * @return
-     */
-    // 使用 DataUrl 枚举类替代部分方法
-    public static String imgDataUrl(InputStream imgIn, boolean base64) {
-        try {
-            // 返回的流对象
-            StringBuilder imgUrl = new StringBuilder("");
-            // 具体的二进制流
-            byte[] imageBytes = bytesInStream(imgIn);
-            // 对应的 dataurl 类型前缀
-            String dataType = imgTypeInBytes(imageBytes);
-
-            // 拼接对应的 data url 内容
-            imgUrl.append("data: ").append(dataType);
-            if (base64) {
-                String base64ImgStr = Base64.getEncoder().encodeToString(imageBytes);
-                imgUrl.append(";base64,");
-                imgUrl.append(base64ImgStr);
-            }
-            else {
-                String imgStr = new String(imageBytes);
-                imgUrl.append(",");
-                imgUrl.append(imgStr);
-            }
-
-            return imgUrl.toString();
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
-    public static String imgDataUrl(File file, boolean base64) {
-        FileInputStream fin = null;
-
-        try {
-            fin = new FileInputStream(file);
-            return imgDataUrl(fin, base64);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-        finally {
-            ResourceUtil.closeResources(fin);
-        }
-    }
-
-    public static String imgDataUrl(InputStream imgIn) {
-        return imgDataUrl(imgIn, true);
-    }
-    public static String imgDataUrl(File file) {
-        return imgDataUrl(file, true);
-    }
-
 
     /**
      * 输出文件内容的二进制字节
