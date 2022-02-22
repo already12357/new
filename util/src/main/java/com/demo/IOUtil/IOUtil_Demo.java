@@ -1,5 +1,6 @@
 package com.demo.IOUtil;
 
+import com.config.CommonConfig;
 import com.zhq.util.IOUtil.*;
 import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.QRUtil.QRUtil;
@@ -17,21 +18,21 @@ public class IOUtil_Demo {
         IOUtil_Demo instance = new IOUtil_Demo();
 
 //        instance.demo1();
-//        instance.demo2();
+        instance.demo2();
 //        instance.demo3();
-        instance.demo4();
+//        instance.demo4();
     }
 
     public void demo1() {
-        File file = new File("./src/main/java/com/demo/IOUtil_Demo.java");
+        File file = new File(CommonConfig.DEMO_FILE_LOCATION + "io/io_demo_1.docx");
 
         // 使用 fileSuffix 根据文件名，获取其文件后缀
         System.out.println(IOUtil.fileSuffix(file));
     }
 
     public void demo2() {
-        String sourcePath = "./src/main/java/com/demo/IOUtil_Demo.java";
-        String destPath = "./src/main/resources/file/test.java";
+        String sourcePath = CommonConfig.DEMO_FILE_LOCATION + "./src/main/java/com/demo/IOUtil_Demo.java";
+        String destPath = CommonConfig.DEMO_FILE_LOCATION + "./src/main/resources/file/test.java";
         File source = new File(sourcePath);
         File destFile = new File(destPath);
         FileInputStream fin = null;
