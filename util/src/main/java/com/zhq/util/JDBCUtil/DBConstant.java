@@ -71,7 +71,6 @@ public class DBConstant {
     public static final String DB_REDIS = "redis";
     public static final String JDBC_STR = "jdbc";
 
-
     /**
      * 数据库驱动类路径
      */
@@ -81,7 +80,6 @@ public class DBConstant {
     public static final String DRIVER_ORACLE = "";
     public static final String DRIVER_SQLSERVER = "";
 
-
     /**
      * 各种数据库连接池的缩写
      */
@@ -90,7 +88,6 @@ public class DBConstant {
     public static final String POOL_DBCP = "dhcp";
     public static final String POOL_HIKARI = "hikari";
 
-
     /**
      * 数据库连接池类
      */
@@ -98,7 +95,6 @@ public class DBConstant {
     public static final String CLASS_C3P0_DS = "com.mchange.v2.c3p0.ComboPooledDataSource";
     public static final String CLASS_DBCP_DS = "org.apache.commons.dbcp.BasicDataSource";
     public static final String CLASS_HIKARI_DS= "";
-
 
     /**
      * SQL 语句常用词
@@ -114,76 +110,4 @@ public class DBConstant {
     public static final String SQL_RIGHT = "RIGHT";
     public static final String SQL_INNER = "INNER";
     public static final String SQL_JOIN = "JOIN";
-
-
-    /**
-     * 数据库函数生成对象, 需要区分不同的数据库类型, 默认为 mysql
-     * 待完成....
-     */
-    public static final String FUNCTION_CONCAT(String dbType, String...params) {
-        if (null == params) {
-            return null;
-        }
-
-        StringBuilder contactStr = new StringBuilder("");
-
-        if (params.length > 0) {
-            switch (dbType) {
-                case DBConstant.DB_MYSQL:
-                    contactStr.append("CONCAT(");
-                    for (String param : params) {
-                        contactStr.append("'")
-                                .append(param)
-                                .append("',");
-                    }
-                    contactStr.append(")");
-                    contactStr.deleteCharAt(contactStr.length() - 2);
-                    break;
-
-                case DBConstant.DB_ORACLE:
-                    for (String param : params) {
-                        contactStr.append("'")
-                                .append(param)
-                                .append("'")
-                                .append("||");
-                    }
-                    break;
-
-            }
-
-        }
-
-        return contactStr.toString().trim();
-    }
-
-    public static final String FUNCTION_POW(String dbType, Integer pow, Integer x) {
-        if (null == pow || null == x) {
-            return null;
-        }
-
-        StringBuilder powStr = new StringBuilder("");
-
-        return powStr.toString().trim();
-    }
-
-    public static final String FUNCTION_CASE() {
-        StringBuilder caseStr = new StringBuilder("");
-
-
-
-        return caseStr.toString().trim();
-    }
-
-    // 文件读取方法 
-    public static final String FUNCTION_LOAD(String dbType, File file) {
-        if (null == file) {
-            return null;
-        }
-
-        StringBuilder loadStr = new StringBuilder("");
-
-
-
-        return loadStr.toString().trim();
-    }
 }

@@ -3,7 +3,6 @@ package com.zhq.util.HttpUtil;
 import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.ResourceUtil;
 import com.zhq.util.StringUtil;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -13,7 +12,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,6 +37,8 @@ public class HttpUtil {
     }
 
     // 文件控件默认
+
+
 
     /**
      * 建立一个连接

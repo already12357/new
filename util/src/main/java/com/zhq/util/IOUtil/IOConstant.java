@@ -41,7 +41,7 @@ public class IOConstant {
     // 纯文本
     public static final String TYPE_TEXT = "text";
     // 音频，视频等
-
+    public static final String TYPE_AUDIT = "audit";
     // office 文档
     public static final String TYPE_OFFICE = "office";
 

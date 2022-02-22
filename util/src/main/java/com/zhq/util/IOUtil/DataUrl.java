@@ -11,7 +11,8 @@ public enum DataUrl {
     URL_NULL("", "", ""),
     URL_GIF("image", IOConstant.GIF, "base64"),
     URL_PNG("image", IOConstant.PNG, "base64"),
-    URL_JPG("image", IOConstant.JPG, "base64");
+    URL_JPG("image", IOConstant.JPG, "base64"),
+    URL_BMP("image", IOConstant.BMP, "base64");
 
     /**
      * 构造函数

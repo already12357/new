@@ -8,6 +8,7 @@ import java.util.*;
 
 /**
  * 数据库的帮助类，可以快速生成静态数据源对象, 并执行查询语句
+ * 采用单例模式
  * @author Eddie Zhang
  */
 public class DBUtil {
@@ -176,7 +177,7 @@ public class DBUtil {
 
     public static DataSource c3p0DataSource(String url, String username, String password, String dbType) {
         try {
-            // 使用反射调用, 减少依赖引入
+            // 反射调用构建数据连接池
             DataSource ds = null;
             Class dsClazz = Class.forName(DBConstant.CLASS_C3P0_DS);
             Method userSetter = dsClazz.getMethod("setUser", String.class);
@@ -203,7 +204,7 @@ public class DBUtil {
     public static DataSource druidDataSource(String url, String username, String password, String dbType) {
         try {
             DataSource ds = null;
-            // 使用反射调用, 减少依赖引入
+            // 反射调用构建数据连接池
             Class dsClazz = Class.forName(DBConstant.CLASS_DRUID_DS);
             Method userSetter = dsClazz.getMethod("setUsername", String.class);
             Method passwdSetter = dsClazz.getMethod("setPassword", String.class);
@@ -309,7 +310,7 @@ public class DBUtil {
 
 
     /**
-     * 重置内部数据源
+     * 重置内部数据源, 在关闭内部数据源后, 重新建立对应的数据源
      * @return
      */
     public static boolean resetInnerDs() {
