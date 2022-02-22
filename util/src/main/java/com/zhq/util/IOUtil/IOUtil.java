@@ -97,58 +97,58 @@ public class IOUtil {
     }
 
 
-    /**
-     * 使用 Aspose 将传出的文件转化为 pdf 文件并返回
-     * @param file 需要转化的文件
-     * @return
-     */
-    public static File toPdf(File file) {
-        String suffix = fileSuffix(file);
-        File tempPdfFile = null;
-        FileOutputStream fout = null;
-
-        try {
-            if (null == tempPdfFile || !tempPdfFile.exists()) {
-                // 通过临时文件来存储存储在线显示的内容
-                tempPdfFile = File.createTempFile("temp", ".pdf");
-            }
-
-            fout = new FileOutputStream(tempPdfFile);
-
-            // 根据文件不同类型，调用不同 aspose 对象的 save 方法
-            switch (suffix) {
-                case IOConstant.DOC:
-                case IOConstant.DOCX:
-                    Document document = new Document(file.getAbsolutePath());
-                    document.save(fout, com.aspose.words.SaveFormat.PDF);
-                    break;
-
-                case IOConstant.PPT:
-                case IOConstant.PPTX:
-                    Presentation presentation = new Presentation(file.getAbsolutePath());
-                    presentation.save(fout, com.aspose.slides.SaveFormat.Pdf);
-                    break;
-
-                case IOConstant.XLS:
-                case IOConstant.XLSX:
-                    Workbook workbook = new Workbook(file.getAbsolutePath());
-                    workbook.save(fout, com.aspose.cells.SaveFormat.PDF);
-                    break;
-
-                case IOConstant.PDF:
-                    tempPdfFile = file;
-                    break;
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            ResourceUtil.closeResources(fout);
-        }
-
-        return tempPdfFile;
-    }
+//    /**
+//     * 使用 Aspose 将传出的文件转化为 pdf 文件并返回一个
+//     * @param file 需要转化的文件
+//     * @return
+//     */
+//    public static File toPdf(File file) {
+//        String suffix = fileSuffix(file);
+//        File tempPdfFile = null;
+//        FileOutputStream fout = null;
+//
+//        try {
+//            if (null == tempPdfFile || !tempPdfFile.exists()) {
+//                // 通过临时文件来存储存储在线显示的内容
+//                tempPdfFile = File.createTempFile("temp", ".pdf");
+//            }
+//
+//            fout = new FileOutputStream(tempPdfFile);
+//
+//            // 根据文件不同类型，调用不同 aspose 对象的 save 方法
+//            switch (suffix) {
+//                case IOConstant.DOC:
+//                case IOConstant.DOCX:
+//                    Document document = new Document(file.getAbsolutePath());
+//                    document.save(fout, com.aspose.words.SaveFormat.PDF);
+//                    break;
+//
+//                case IOConstant.PPT:
+//                case IOConstant.PPTX:
+//                    Presentation presentation = new Presentation(file.getAbsolutePath());
+//                    presentation.save(fout, com.aspose.slides.SaveFormat.Pdf);
+//                    break;
+//
+//                case IOConstant.XLS:
+//                case IOConstant.XLSX:
+//                    Workbook workbook = new Workbook(file.getAbsolutePath());
+//                    workbook.save(fout, com.aspose.cells.SaveFormat.PDF);
+//                    break;
+//
+//                case IOConstant.PDF:
+//                    tempPdfFile = file;
+//                    break;
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        finally {
+//            ResourceUtil.closeResources(fout);
+//        }
+//
+//        return tempPdfFile;
+//    }
 
 //    /**
 //     * 将对应的文件存储到对应的数据库中的对应字段

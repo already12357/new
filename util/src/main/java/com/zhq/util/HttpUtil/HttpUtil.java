@@ -1,5 +1,6 @@
 package com.zhq.util.HttpUtil;
 
+import com.zhq.util.AsposeUtil;
 import com.zhq.util.IOUtil.IOUtil;
 import com.zhq.util.ResourceUtil;
 import com.zhq.util.StringUtil;
@@ -297,7 +298,7 @@ public class HttpUtil {
      */
     public static void viewFile(HttpServletRequest request, HttpServletResponse response, File file) throws UnsupportedEncodingException {
         // 将文件转换为 pdf 然后在网页上在线显示
-        File pdfFile = IOUtil.toPdf(file);
+        File pdfFile = AsposeUtil.toPdf(file);
         // 拼接取得 contentRange 属性
         String contentRange = initContentRange(request, pdfFile);
         // 设置响应头

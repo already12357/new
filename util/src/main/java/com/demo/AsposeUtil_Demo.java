@@ -6,6 +6,7 @@ import com.aspose.words.Document;
 import com.aspose.words.SaveFormat;
 import com.config.CommonConfig;
 import com.zhq.util.AsposeUtil;
+import com.zhq.util.IOUtil.IOUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +21,13 @@ public class AsposeUtil_Demo {
         AsposeUtil_Demo instance = new AsposeUtil_Demo();
 
 //        instance.demo1();
-        instance.demo2();
+//        instance.demo2();
+        instance.demo3();
     }
 
+    /**
+     * demo : fillWordFields
+     */
     public void demo1() {
         try {
             File docFile = new File(CommonConfig.DEMO_FILE_LOCATION + "aspose/aspose_demo_1.docx");
@@ -45,6 +50,9 @@ public class AsposeUtil_Demo {
     }
 
 
+    /**
+     * demo : fillWordTable
+     */
     public void demo2() {
         try {
             File docFile = new File(CommonConfig.DEMO_FILE_LOCATION + "/aspose/aspose_demo_2.docx");
@@ -72,20 +80,23 @@ public class AsposeUtil_Demo {
             }
 
             AsposeUtil.fillWordTable(doc, "interface", colList, dataArray);
-            doc.save(CommonConfig.DEMO_FILE_LOCATION + "aspose/out/aspose_demo_2_out.docx");
+            doc.save(CommonConfig.DEMO_FILE_LOCATION + "aspose/out/aspose_demo_2_out.docx", SaveFormat.DOCX);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
 
-//        File docFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc.doc");
-//        File destFile = new File("C:\\Users\\Administrator\\Desktop\\int_document_doc2.doc");
-//
-//        Map<String, Object> mergedMap = new HashMap<String, Object>();
-//        mergedMap.put("1", "11111");
-//        mergedMap.put("2", "222222");
-//
-//        AsposeUtil.replaceFieldsToDoc(docFile, destFile, mergedMap);
+    /**
+     * demo : toPdf
+     */
+    public void demo3() {
+        File wordFile = new File(CommonConfig.DEMO_FILE_LOCATION + "aspose/aspose_demo_3.docx");
+        File pdfFile = new File(CommonConfig.DEMO_FILE_LOCATION + "aspose/out/aspose_demo_3_out.pdf");
+
+        File tmpFile = AsposeUtil.toPdf(wordFile);
+        IOUtil.copyFile(tmpFile, pdfFile);
+        tmpFile.delete();
     }
 }

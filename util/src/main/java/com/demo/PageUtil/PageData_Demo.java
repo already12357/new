@@ -17,7 +17,9 @@ public class PageData_Demo {
         instance.demo1();
     }
 
-
+    /**
+     * demo : hasNextPage, getPageSize, getTotalSize, getPageCount, getPageContent
+     */
     public void demo1() {
         List<Integer> strLists = new ArrayList<Integer>();
         strLists.add(1);

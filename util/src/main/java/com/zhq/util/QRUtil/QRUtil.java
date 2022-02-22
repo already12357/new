@@ -16,7 +16,7 @@ import java.util.Hashtable;
  */
 public class QRUtil {
     /**
-     * 根据传入的 text 生成对应的二维码, 输出其二进制数据
+     * 根据传入的 text 生成对应的二维码, 输出其二进制数据 ( 图片数据 )
      * @param text 二维码内容生成依据
      * @param width 二维码宽度
      * @param height 二维码高度

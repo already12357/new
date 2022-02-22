@@ -16,12 +16,15 @@ public class IOUtil_Demo {
     public static void main(String[] args) {
         IOUtil_Demo instance = new IOUtil_Demo();
 
-//        instance.demo1();
-//        instance.demo2();
-//        instance.demo3();
+        instance.demo1();
+        instance.demo2();
+        instance.demo3();
         instance.demo4();
     }
 
+    /**
+     * demo : fileSuffix
+     */
     public void demo1() {
         File file = new File(CommonConfig.DEMO_FILE_LOCATION + "io/io_demo_1.docx");
 
@@ -29,6 +32,9 @@ public class IOUtil_Demo {
         System.out.println(IOUtil.fileSuffix(file));
     }
 
+    /**
+     * demo : copyFile
+     */
     public void demo2() {
         String sourcePath = CommonConfig.DEMO_FILE_LOCATION + "io/io_demo_2.txt";
         String destPath = CommonConfig.DEMO_FILE_LOCATION + "io/out/io_demo_2.1_out.txt";
@@ -53,6 +59,9 @@ public class IOUtil_Demo {
         }
     }
 
+    /**
+     * demo : bytesPrint, bytesInFile, bytesInStream
+     */
     public void demo3() {
         File imgFile = new File(CommonConfig.DEMO_FILE_LOCATION + "io/io_demo_3.png");
         IOUtil.bytesPrint(imgFile);
@@ -79,6 +88,9 @@ public class IOUtil_Demo {
         }
     }
 
+    /**
+     * demo : bytesInFile, getDataUrlByFormat, DATA_URL
+     */
     public void demo4() {
         File imgFile = new File(CommonConfig.DEMO_FILE_LOCATION + "io/io_demo_4.png");
         byte[] imageFileBytes = IOUtil.bytesInFile(imgFile);

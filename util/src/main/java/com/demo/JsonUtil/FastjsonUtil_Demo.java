@@ -27,6 +27,9 @@ public class FastjsonUtil_Demo {
         instance.demo11();
     }
 
+    /**
+     * demo : jStrToList
+     */
     public void demo1() {
         String listJStr = "[1, 2, \"3\", \"4\", 5]";
 
@@ -35,6 +38,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jList);
     }
 
+    /**
+     * demo : jArrayToList
+     */
     public void demo2() {
         JSONArray jArray = new JSONArray();
         for (int i = 0; i < 20; i++) {
@@ -48,6 +54,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jList);
     }
 
+    /**
+     * demo : jArrayToSet
+     */
     public void demo3() {
         JSONArray jArray = new JSONArray();
         for (int i = 0; i < 20; i++) {
@@ -61,6 +70,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jSet);
     }
 
+    /**
+     * demo : jArrayToArray
+     */
     public void demo4() {
         JSONArray jArray = new JSONArray();
         for (int i = 0; i < 20; i++) {
@@ -74,6 +86,9 @@ public class FastjsonUtil_Demo {
         System.out.println(array);
     }
 
+    /**
+     * demo : jStrToArray
+     */
     public void demo5() {
         String arrJStr = "[1, 2, \"3\", \"4\", 5, \"\", 2]";
 
@@ -82,6 +97,9 @@ public class FastjsonUtil_Demo {
         System.out.println(array);
     }
 
+    /**
+     * demo : arrayToJArray
+     */
     public void demo6() {
         Object[] array = new Object[5];
 
@@ -96,6 +114,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jArray.toJSONString());
     }
 
+    /**
+     * demo : listToJArray
+     */
     public void demo7() {
         List list = new ArrayList();
         list.add("1");
@@ -108,6 +129,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jArray.toJSONString());
     }
 
+    /**
+     * demo : setToJArray
+     */
     public void demo8() {
         Set set = new HashSet();
         set.add("1");
@@ -120,6 +144,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jArray.toJSONString());
     }
 
+    /**
+     * demo : mapToJObject
+     */
     public void demo9() {
         List list = new ArrayList();
         list.add("1");
@@ -138,6 +165,9 @@ public class FastjsonUtil_Demo {
         System.out.println(jObject.toJSONString());
     }
 
+    /**
+     * demo : jsonRestReturn
+     */
     public void demo10() {
         JSONObject jObject = new JSONObject();
         jObject.put("key1", "Str1");
@@ -147,6 +177,9 @@ public class FastjsonUtil_Demo {
         System.out.println(FastjsonUtil.jsonRestReturn("200", "附加返回信息", jObject.toJSONString()));
     }
 
+    /**
+     * demo : setJKeyValueInListJ
+     */
     public void demo11() {
         List<JSONObject> listJ = new ArrayList<JSONObject>();
         for (int i = 0; i < 20; i++) {

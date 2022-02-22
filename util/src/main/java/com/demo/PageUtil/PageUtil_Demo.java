@@ -17,6 +17,9 @@ public class PageUtil_Demo {
         instance.demo2();
     }
 
+    /**
+     * demo : pageListFromPage, pageArrayFromPage,
+     */
     public void demo1() {
         List<Integer> strLists = new ArrayList<Integer>();
         strLists.add(1);
@@ -43,6 +46,9 @@ public class PageUtil_Demo {
         System.out.println(JsonUtil.arrayToJString(pagedArray));
     }
 
+    /**
+     * demo : pageListFromItem
+     */
     public void demo2() {
         List<Integer> strLists = new ArrayList<Integer>();
         strLists.add(1);

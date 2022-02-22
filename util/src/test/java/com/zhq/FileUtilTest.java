@@ -1,5 +1,6 @@
 package com.zhq;
 
+import com.zhq.util.AsposeUtil;
 import com.zhq.util.IOUtil.IOUtil;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class FileUtilTest {
         String pdfFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test.pdf";
         String docxFilePath = "C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/file_test1.xlsx";
         File docxFile = new File(docxFilePath);
-        IOUtil.toPdf(docxFile);
+        AsposeUtil.toPdf(docxFile);
     }
 
     @Test

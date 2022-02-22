@@ -5,10 +5,6 @@ W
 'src/test/java/com/zhq/JDBCUtilTest.java,8\a\8a77b912961ecff2da4118e0d4777e2510b9f90d
 W
 'src/test/java/com/zhq/JsonUtilTest.java,8\8\8822b59c0e826403536ed6058662ee2ae66a461a
-W
-'src/test/java/com/zhq/FileUtilTest.java,7\a\7ac56c00ddc8e13226bd35d6aa6d55410f2841a5
-f
-6src/main/java/com/demo/JsonUtil/FastjsonUtil_Demo.java,4\a\4a6e15bdb95806dca8f7e7860ccd2ffc110fa34a
 a
 1src/main/java/com/zhq/util/JsonUtil/JsonUtil.java,e\1\e1438d6277182b27d146c15c12295f3ae060eac6
 b
@@ -25,8 +21,6 @@ o
 ?src/main/java/com/template/_1/service/api/ITemplateService.java,6\7\67cf7d4cfa40acb72660b4d1c758f773f9865cbf
 f
 6src/main/java/com/template/_1/third/ThirdConstant.java,d\a\da760356cad5cd5529aa0b3297390bee9211cb1a
-d
-4src/main/java/com/template/_1/util/TemplateUtil.java,d\6\d6d699ce5d206c576f2a35df8362ce638689c7a3
 s
 Csrc/main/java/com/template/_1/util/TemplateMailMergeDataSource.java,6\1\615583957a3427a184ad14d88ef1d52021f57a1f
 `
@@ -45,10 +39,6 @@ e
 5src/main/java/com/zhq/util/JDBCUtil/SqlCondition.java,b\e\be93107aedaba4ec0df8356953a271f86b474340
 a
 1src/main/java/com/zhq/util/PageUtil/PageData.java,a\9\a960e4555afbc27c714b431a6a3c37f578e129cc
-b
-2src/main/java/com/demo/PageUtil/PageUtil_Demo.java,d\b\dbd4df290b29def8281e0816751338e4edfdaeee
-b
-2src/main/java/com/demo/PageUtil/PageData_Demo.java,9\0\908afd43750dbe148b98d1c772e3999c6f0a2d3b
 Z
 *src/main/java/com/zhq/util/StringUtil.java,c\3\c3f509b5cb8bae8abd66d1fe62616b7786fb157b
 X
@@ -57,5 +47,3 @@ e
 5src/main/java/com/zhq/util/JsonUtil/FastjsonUtil.java,a\9\a9a24ad308b0475ad41979475b231dc15f1f0291
 \
 ,src/main/java/com/zhq/util/ResourceUtil.java,1\0\10dbd159eaf845781b9d15bb0c403fff734eec99
-]
--src/main/java/com/zhq/util/QRUtil/QRUtil.java,2\6\2605bf67ca7c5e745df1f3ee771853816e656d3f
