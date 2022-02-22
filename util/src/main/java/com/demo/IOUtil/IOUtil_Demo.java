@@ -31,7 +31,7 @@ public class IOUtil_Demo {
 
     public void demo2() {
         String sourcePath = "./src/main/java/com/demo/IOUtil_Demo.java";
-        String destPath = "./src/main/resources/file_template/destfile.java";
+        String destPath = "./src/main/resources/file/test.java";
         File source = new File(sourcePath);
         File destFile = new File(destPath);
         FileInputStream fin = null;
@@ -58,8 +58,6 @@ public class IOUtil_Demo {
         // 使用 bytesInFile, bytesInStream 读取文件或流中的字节数据
         byte[] imageFileBytes = IOUtil.bytesInFile(imgFile);
         System.out.println(imageFileBytes);
-
-
 
         FileInputStream fin = null;
         try {

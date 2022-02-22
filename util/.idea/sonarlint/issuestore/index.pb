@@ -13,8 +13,6 @@ U
 %src/test/java/com/zhq/IOUtilTest.java,0\f\0f6f8f3501bd087a8a6ce7e0973a0a35391a71ab
 f
 6src/main/java/com/demo/JsonUtil/FastjsonUtil_Demo.java,4\a\4a6e15bdb95806dca8f7e7860ccd2ffc110fa34a
-W
-'src/test/java/com/zhq/HttpUtilTest.java,6\5\654c9e2e634088199cf186b62776b4d42974a8ac
 a
 1src/main/java/com/zhq/util/JsonUtil/JsonUtil.java,e\1\e1438d6277182b27d146c15c12295f3ae060eac6
 b
@@ -23,8 +21,6 @@ b
 -src/main/java/com/zhq/util/Temp/TempFile.java,6\e\6e4aa5196c94bb1de38de290f66be0e0e924e893
 c
 3src/main/java/com/demo/ApacheUtil/POIUtil_Demo.java,8\f\8fe5eb9bd4d5de1e18e2357e2a4c45929e1f4300
-Y
-)src/main/java/com/demo/DateUtil_Demo.java,d\f\dfebf64bf5facc7fc1306f68a766d640fe1fa206
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 W
@@ -59,18 +55,12 @@ e
 5src/main/java/com/zhq/util/JDBCUtil/SqlCondition.java,b\e\be93107aedaba4ec0df8356953a271f86b474340
 a
 1src/main/java/com/zhq/util/PageUtil/PageData.java,a\9\a960e4555afbc27c714b431a6a3c37f578e129cc
-a
-1src/main/java/com/zhq/util/HttpUtil/HttpUtil.java,f\1\f131a16de79a5b6cd4d7551f5040dfc4dbf0485e
 b
 2src/main/java/com/demo/PageUtil/PageUtil_Demo.java,d\b\dbd4df290b29def8281e0816751338e4edfdaeee
 [
 +src/main/java/com/demo/StringUtil_Demo.java,f\d\fdf19bc5aefbae2da017231099e05b467527500c
 b
 2src/main/java/com/demo/PageUtil/PageData_Demo.java,9\0\908afd43750dbe148b98d1c772e3999c6f0a2d3b
-Y
-)src/main/java/com/demo/HttpUtil_Demo.java,4\b\4bf0e5896e2cf65f058194a2522887c40de19c3d
-e
-5src/main/java/com/zhq/util/HttpUtil/HttpConstant.java,9\e\9e8551fba4a1bcbcb438d93634727b40a958f036
 Z
 *src/main/java/com/zhq/util/StringUtil.java,c\3\c3f509b5cb8bae8abd66d1fe62616b7786fb157b
 X

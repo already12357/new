@@ -231,39 +231,6 @@ public class HttpUtil {
 
 
     /**
-     * 从数据流中，获取赋值到前端 <img> 标签 src 属性上直接展示图片的 base64 字段
-     * 可以 <img src="data:img/png;base64,....."> 用于直接显示
-     * @param imgIn 输入的图片流
-     * @param base64 是否使用 base64 编码
-     * @return
-     */
-    public static String imgDataUrl(InputStream imgIn, boolean base64) {
-        // 返回的流对象
-        StringBuilder imgUrl = new StringBuilder("");
-        // 具体的二进制流
-        byte[] imageBytes = IOUtil.bytesInStream(imgIn);
-        // 对应的图片
-        String dataType = IOUtil.imgTypeInBytes(imageBytes);
-
-        // 拼接对应的 data url 内容
-        imgUrl.append("data: ");
-        imgUrl.append(dataType);
-        if (base64) {
-            String base64ImgStr = Base64.getEncoder().encodeToString(imageBytes);
-            imgUrl.append(";base64,");
-            imgUrl.append(base64ImgStr);
-        }
-        else {
-            String imgStr = new String(imageBytes);
-            imgUrl.append(",");
-            imgUrl.append(imgStr);
-        }
-
-        return imgUrl.toString();
-    }
-
-
-    /**
      * 上传请求中的文件
      * @param multiRequest 原生的 Http 中的多段请求
      * @param inputName <input> 上传控件中的控件名称 ( 默认填入 file )
