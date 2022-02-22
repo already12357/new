@@ -16,9 +16,9 @@ public class IOUtil_Demo {
     public static void main(String[] args) {
         IOUtil_Demo instance = new IOUtil_Demo();
 
-        instance.demo1();
-        instance.demo2();
-        instance.demo3();
+//        instance.demo1();
+//        instance.demo2();
+//        instance.demo3();
         instance.demo4();
     }
 

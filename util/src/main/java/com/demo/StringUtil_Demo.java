@@ -16,6 +16,9 @@ public class StringUtil_Demo {
         instance.demo1();
     }
 
+    /**
+     * demo : urlParamsToMap
+     */
     public void demo1() {
         String url = "http://localhost:8090/epoint-web-zwfwznsb/rest/selfservicetestrequest/gettestinfo?&hell&owhello=a&paramsq=1&welove=2&valentimedaty=true&nullPname=&";
         Map<String, Object> urlParamsMap = StringUtil.urlParamsToMap(url);

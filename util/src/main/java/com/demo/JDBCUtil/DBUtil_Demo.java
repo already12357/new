@@ -19,7 +19,10 @@ public class DBUtil_Demo {
         instance.demo1();
     }
 
-
+    /**
+     * demo : setUrl, setUsername, setPassword, getInnerDS, druidDataSource, executeSqlCondition,
+     *        resetInnerDs, resetDs
+     */
     public void demo1() {
         /**
          * 1. 初始化连接类
@@ -33,7 +36,7 @@ public class DBUtil_Demo {
          * 2. 获取内部的数据库连接池
          *    或 直接传入信息创建
          */
-        DataSource innerDs = DBUtil.getInnerDS();
+//        DataSource innerDs = DBUtil.getInnerDS();
         DataSource outerDruidDs = DBUtil.druidDataSource(DBConstant.URL_MYSQL(""), "root", "Gepoint", DBConstant.DB_MYSQL);
 
         /**
@@ -50,7 +53,7 @@ public class DBUtil_Demo {
          * 4. 通过 resetDs 关闭数据连接池
          *    通过 resetInnerDs 关闭内部数据库连接池
          */
-        DBUtil.resetInnerDs();
+//        DBUtil.resetInnerDs();
         DBUtil.resetDs(outerDruidDs);
     }
 }

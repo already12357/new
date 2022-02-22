@@ -38,7 +38,7 @@ public class JsonUtil_Demo {
     }
 
     /**
-     * 使用实例
+     * demo : resultSetToJString
      */
     public void demo1() {
         SqlCondition selectSql = new SqlCondition();
@@ -51,6 +51,9 @@ public class JsonUtil_Demo {
         selectSql.release();
     }
 
+    /**
+     * demo : mapToJString
+     */
     public void demo2() {
         Object[] testObject = new Object[4];
         testObject[2] = "2";
@@ -66,6 +69,9 @@ public class JsonUtil_Demo {
         System.out.println(JsonUtil.mapToJString(mapObject));
     }
 
+    /**
+     * demo : collectionToJString
+     */
     public void demo3() {
         List list = new ArrayList();
         list.add(1);
@@ -88,6 +94,9 @@ public class JsonUtil_Demo {
         System.out.println(JsonUtil.collectionToJString(collection));
     }
 
+    /**
+     * demo : keyValueToJString
+     */
     public void demo4() {
         Map<String, Object> mapObject = new HashMap<>();
         mapObject.put("sValue", "hello");
@@ -110,6 +119,9 @@ public class JsonUtil_Demo {
         System.out.println(JsonUtil.keyValueToJString(key, valueList));
     }
 
+    /**
+     * demo : arrayToJString
+     */
     public void demo5() {
         Map<String, Object> mapObject = new HashMap<>();
         mapObject.put("sValue", "hello");
@@ -125,6 +137,9 @@ public class JsonUtil_Demo {
         System.out.println(JsonUtil.arrayToJString(testObject));
     }
 
+    /**
+     * demo : objectToJString, collectionToJString
+     */
     public void demo6() {
         Map<String, Object> mapObject = new HashMap<>();
         mapObject.put("sValue", "hello");
@@ -142,6 +157,9 @@ public class JsonUtil_Demo {
         System.out.println(JsonUtil.collectionToJString(list));
     }
 
+    /**
+     * demo : propertiesToJString
+     */
     public void demo7() {
         Properties props = new Properties();
 

@@ -23,16 +23,16 @@ public class SqlCondition_Demo {
         /**
          * 2. 调用对应的  demo 方法
          */
-//        instance.select_demo1();
-//        instance.select_demo2();
-//        instance.select_demo3();
+        instance.select_demo1();
+        instance.select_demo2();
+        instance.select_demo3();
         instance.select_demo4();
 
-//        instance.update_demo1();
+        instance.update_demo1();
 
-//        instance.delete_demo1();
+        instance.delete_demo1();
 
-//        instance.insert_demo1();
+        instance.insert_demo1();
     }
 
     public void init_DBUtil() {
@@ -42,6 +42,10 @@ public class SqlCondition_Demo {
     }
 
     // SELECT 使用 Demo
+
+    /**
+     * demo : select_col, from, where, lt, executedBy, release
+     */
     public void select_demo1() {
         // 1. 建立查询实例
         SqlCondition selectSql = new SqlCondition();
@@ -65,6 +69,9 @@ public class SqlCondition_Demo {
         selectSql.release();
     }
 
+    /**
+     * demo : select_col, from, where, lt, eq, executedBy
+     */
     public void select_demo2() {
         SqlCondition selectSql = new SqlCondition();
         // 在 where 条件函数中使用 SQL_AND | SQL_OR, 来拼接与前面条件的关系 ( 与 | 或 )
@@ -82,6 +89,9 @@ public class SqlCondition_Demo {
         selectSql.release();
     }
 
+    /**
+     * demo : select_col, from, where, eq, page, executedBy, release
+     */
     public void select_demo3() {
         SqlCondition selectSql = new SqlCondition();
         // 使用 page 来对查询的结果进行分页
@@ -96,6 +106,9 @@ public class SqlCondition_Demo {
         selectSql.release();
     }
 
+    /**
+     * demo : select_col, from, where, eq, executedBy, release
+     */
     public void select_demo4() {
         for (int i = 0; i < 1000; i++) {
             Thread thread = new Thread(new Runnable() {
@@ -116,15 +129,21 @@ public class SqlCondition_Demo {
         }
     }
 
+    /**
+     * demo : select_col, from
+     */
     public void demo5() {
         SqlCondition selectSql = new SqlCondition();
         selectSql
                 .select_col(" * ")
                 .from("course_1 c1");
+        selectSql.release();
     }
 
 
-    // UPDATE 使用 Demo
+    /**
+     * demo : update_table, set_col, values, where, eq, executedBy
+     */
     public void update_demo1() {
         SqlCondition updateSql = new SqlCondition();
         // SQL: update course_1
@@ -141,7 +160,9 @@ public class SqlCondition_Demo {
     }
 
 
-    // DELETE 使用 Demo
+    /**
+     * demo : delete_from, where, eq, where, executedBy, release
+     */
     public void delete_demo1() {
         SqlCondition deleteSql = new SqlCondition();
         // SQL: delete from course_1 c1 where c1.c_id=41
@@ -152,7 +173,9 @@ public class SqlCondition_Demo {
     }
 
 
-    // INSERT 使用 Demo
+    /**
+     * demo : insert_into, values, executedBy, release
+     */
     public void insert_demo1() {
         SqlCondition insertSql = new SqlCondition();
         // SQL: insert into course_1 values(41, 'Bella', 450, 'update_deffa')

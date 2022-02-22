@@ -19,10 +19,12 @@ public class DateUtil_Demo {
         instance.demo3();
         instance.demo4();
         instance.demo5();
-
     }
 
 
+    /**
+     * demo : dateBeforeTimes, dateAfterTimes
+     */
     public void demo1() {
         // 使用 dateBeforeTimes 获取指定时间 2 小时前的时间
         System.out.println(DateUtil.dateBeforeTimes(new Date(), Calendar.HOUR_OF_DAY, 2));
@@ -39,6 +41,9 @@ public class DateUtil_Demo {
         System.out.println(DateUtil.dateAfterTimes(new Date(), Calendar.DAY_OF_YEAR, 16));
     }
 
+    /**
+     * demo : nowBeforeTimes, nowAfterTimes
+     */
     public void demo2() {
         // 使用 nowBeforeTimes 获取现在 2 小时前的时间
         System.out.println(DateUtil.nowBeforeTimes(Calendar.HOUR_OF_DAY, 2));
@@ -55,12 +60,18 @@ public class DateUtil_Demo {
         System.out.println(DateUtil.nowAfterTimes(Calendar.DAY_OF_YEAR, 16));
     }
 
+    /**
+     * demo : dateFromStr
+     */
     public void demo3() {
         // 使用 dateFromStr 将 特定格式的字符串 转化为 日期
         System.out.println(DateUtil.dateFromStr("2020-03-12 23:10:11"));
         System.out.println(DateUtil.dateFromStr("2020-03-12", "yyyy-MM-dd"));
     }
 
+    /**
+     * demo : getDateHour
+     */
     public void demo4() {
         // 使用 getDateHour 获取指定日期对象的小时数
         System.out.println(DateUtil.getDateHour(new Date()));
@@ -68,6 +79,9 @@ public class DateUtil_Demo {
         System.out.println(DateUtil.getDateHour(new Date(), Calendar.HOUR));
     }
 
+    /**
+     * demo : newDate, onlyTimeBetween, onlyTimeAfter
+     */
     public void demo5() {
         // 使用 newDate 直接创建对应的日期对象
         Date startDate = DateUtil.newDate(2021, 12, 28, 8, 50, 30, 20);
