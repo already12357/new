@@ -15,6 +15,7 @@ import java.util.*;
 /**
  * 代码模板的帮助类,
  * 自动生成对应的接口文档
+ * 接口文档配置类 --> 复制 --> 运行 main
  */
 public class TemplateUtil {
     /**
