@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
+import com.aspose.words.MailMerge;
 import com.aspose.words.net.System.Data.DataRow;
 import com.aspose.words.net.System.Data.DataSet;
 import com.aspose.words.net.System.Data.DataTable;
@@ -130,18 +131,46 @@ public class AsposeUtil {
     }
 
 
+
+
     /**
-     * 替换 Aspose Word 中的编辑域内容
-     *
+     * 替换 Aspose Word 中的编辑域内容 ( 注意 : 不包含表格, 仅对表格之外的编辑域替换内容 )
+     * @param doc Aspose 文档对象
+     * @param data 渲染编辑域所需的数据, 如下，以键值对形式出现
+     *             {
+     *                 "col1_name1":"col1_val1",
+     *                 "col1_name2": col1_val2,
+     *                 "col1_name3":"col1_val3"
+     *             }
      */
+    public static void fillWordFields(Document doc, JSONObject data) {
+        try {
+            if (null != data && data.size() > 0) {
+                MailMerge mailMarge = doc.getMailMerge();
+                String[] fields = new String[data.size()];
+                Object[] values = new Object[data.size()];
+                int index = 0;
+
+                for (Map.Entry<String, Object> entry : data.entrySet()) {
+                    fields[index] = entry.getKey();
+                    values[index++] = entry.getValue();
+                }
+
+                mailMarge.execute(fields, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
     /**
-     * 替换 Aspose Word 中的 Table 编辑域，如下：
+     * 替换 Aspose Word 编辑域表格中的内容 ( 注意 : 有规律的表格数据 ) ，如下：
      * 《TableStart:{tableName}》
-     * 《columns1》《columns2》《columns3》《columns4》
-     * 《fields1》 《fields2》 《fields3》 《fields4》
+     * 《columns1》 | 《columns2》 | 《columns3》 | 《columns4》
+     * --------------------------------------------------
+     * 《fields1》  | 《fields2》  | 《fields3》  |《fields4》
      * 《/TableStart:{tableName}》
      *
      * @param doc 传入的 Aspose 文档对象
@@ -161,10 +190,8 @@ public class AsposeUtil {
      *                 },
      *             ......
      *             ]
-     *
-     *
      */
-    public static void fillTable(Document doc, String tableName, List<String> colList, JSONArray data) {
+    public static void fillWordTable(Document doc, String tableName, List<String> colList, JSONArray data) {
         try {
             DataTable dataTable = new DataTable(tableName);
             DataSet dataSet = new DataSet();
@@ -179,7 +206,11 @@ public class AsposeUtil {
                 DataRow rowObject = dataTable.newRow();
                 JSONObject rowData = data.getJSONObject(i);
 
-                rowData.put(String.valueOf(i), rowData.get(colList.get(i)));
+                // 每列数据渲染
+                for (int j = 0; j < colList.size(); j++) {
+                    rowObject.set(j, rowData.get(colList.get(j)));
+                }
+
                 dataTable.getRows().add(rowObject);
             }
 
