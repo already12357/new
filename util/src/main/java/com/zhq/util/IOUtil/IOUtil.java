@@ -92,7 +92,7 @@ public class IOUtil {
      * @param fileName 文件名称 ( 不包含后缀 )
      */
     public static void copyFile(InputStream fromStream, String toDir, String fileName) {
-        String filePath = toDir.concat("/").concat(fileName);
+        String filePath = toDir.concat(File.separator).concat(fileName);
         copyFile(fromStream, filePath);
     }
 
@@ -180,9 +180,8 @@ public class IOUtil {
     }
 
     /**
-     * 读取 输入流 或 文件 中的字节数据
-     * @param in 包含数据的输入流
-     * @return
+     * 读取 输入流 ( InputStream ) 或 文件 ( File ) 中的字节数据
+     * @return 返回其中的文件数据
      */
     public static byte[] bytesInStream(InputStream in) {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -221,16 +220,29 @@ public class IOUtil {
     }
 
     /**
-     * 输出文件内容的二进制字节
-     * @param file 传入的文件对象
+     * 输出传入的二进制字节
+     * @param bytes 输出的二进制字节
      */
-    public static void printBinaryContent(File file) {
-        byte[] fileBytes = IOUtil.bytesInFile(file);
+    public static void bytesPrint(byte[] bytes) {
+        if (null == bytes || bytes.length == 0) { return; }
 
-        for (int i = 0; i < fileBytes.length; i++) {
-            System.out.print(fileBytes[i] + " ");
+        for (int i = 0; i < bytes.length; i++) {
+            if (i % 16 == 0) {
+                System.out.println("");
+            }
+
+            System.out.print(bytes[i] + " ");
         }
 
         System.out.flush();
+    }
+
+    /**
+     * 输出文件内容的二进制字节
+     * @param file 传入的文件对象
+     */
+    public static void bytesPrint(File file) {
+        byte[] fileBytes = IOUtil.bytesInFile(file);
+        bytesPrint(fileBytes);
     }
 }

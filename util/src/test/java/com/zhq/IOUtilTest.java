@@ -62,6 +62,6 @@ public class IOUtilTest {
     @Test
     public void printBytesTest() {
         File file = new File("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/Picture2.png");
-        IOUtil.printBinaryContent(file);
+        IOUtil.bytesPrint(file);
     }
 }

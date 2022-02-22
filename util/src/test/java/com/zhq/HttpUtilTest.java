@@ -1,6 +1,7 @@
 package com.zhq;
 
 
+import com.config.CommonConfig;
 import com.zhq.util.IOUtil.DataUrl;
 import com.zhq.util.IOUtil.IOConstant;
 import com.zhq.util.IOUtil.IOUtil;
@@ -22,7 +23,9 @@ public class HttpUtilTest {
 
     @Test
     public void testFileSuffix() throws FileNotFoundException {
-        FileInputStream imgStream = new FileInputStream("C:/Users/Administrator/Desktop/gitRepository/util/src/main/resources/file/bg.png");
+        // 文件内容
+        String fileName = "";
+        FileInputStream imgStream = new FileInputStream(fileName);
         String srcImg = DataUrl.DATA_URL(IOConstant.PNG, IOUtil.bytesInStream(imgStream));
         System.out.println(srcImg);
     }
