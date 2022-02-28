@@ -1,5 +1,6 @@
 package com.demo.JsonUtil;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zhq.util.JsonUtil.FastjsonUtil;
@@ -14,17 +15,18 @@ public class FastjsonUtil_Demo {
     public static void main(String[] args) {
         FastjsonUtil_Demo instance = new FastjsonUtil_Demo();
 
-        instance.demo1();
-        instance.demo2();
-        instance.demo3();
-        instance.demo4();
-        instance.demo5();
-        instance.demo6();
-        instance.demo7();
-        instance.demo8();
-        instance.demo9();
-        instance.demo10();
-        instance.demo11();
+//        instance.demo1();
+//        instance.demo2();
+//        instance.demo3();
+//        instance.demo4();
+//        instance.demo5();
+//        instance.demo6();
+//        instance.demo7();
+//        instance.demo8();
+//        instance.demo9();
+//        instance.demo10();
+//        instance.demo11();
+        instance.demo12();
     }
 
     /**
@@ -197,6 +199,27 @@ public class FastjsonUtil_Demo {
 
         System.out.println("After setJKeyValueInListJ");
         System.out.println(listJ.get(10).toJSONString());
+    }
+
+    /**
+     * demo : findJObjectsInJArray, addJArrayToJArray
+     */
+    public void demo12() {
+        /**
+         * 测试数据准备
+         */
+        JSONArray jArray1 = new JSONArray();
+        JSONObject jArray1_Mock = JSON.parseObject("{\"name\":\"Jam\",\"age\":30,\"address\":\"Sunny Street 5th Lemon Town\",\"sex\":\"male\"}");
+        JSONObject jArray2_Mock = JSON.parseObject("{\"name\":\"Paul\",\"age\":45,\"address\":\"221B BakeStreet\",\"sex\":\"male\"}");
+        JSONObject jArray3_Mock = JSON.parseObject("{\"name\":\"Anne\",\"age\":45,\"address\":\"Sunny Street 5th Lemon Town\",\"sex\":\"female\"}");
+        JSONObject jArray4_Mock = JSON.parseObject("{\"name\":\"Thomas\",\"age\":55,\"address\":\"Sunny Street 5th Lemon Town\",\"sex\":\"male\"}");
+        jArray1.add(jArray1_Mock);
+        jArray1.add(jArray2_Mock);
+        jArray1.add(jArray3_Mock);
+        jArray1.add(jArray4_Mock);
+
+        JSONArray retJArray = FastjsonUtil.findJObjectsInJArray(jArray1, "name", "Jam");
+        System.out.println(retJArray.toJSONString());
     }
 }
 

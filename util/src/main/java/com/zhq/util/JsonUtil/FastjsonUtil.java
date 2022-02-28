@@ -212,4 +212,68 @@ public class FastjsonUtil {
 
         return false;
     }
+
+    /* .................添加后续支持................. */
+    /**
+     * 在 JSONArray 对象中，寻找有对应 Key-Value 对的 JSONObject 对象, 并以 JSONArray 形式将其返回
+     * 该方法类只支持单层的 JSONArray 对象查询 ( 并不递归查询 )
+     * 如 : [
+     *        {
+     *            "name"    : "Jam",
+     *            "age"     : 25,
+     *            "address" : "221B BakeStreet",
+     *            "sex"     : "male"
+     *        },
+     *        {
+     *            "name"    : "Paul",
+     *            "age"     : 45,
+     *            "address" : "12S North Ambulance Tree Town",
+     *            "sex"     : "female",
+     *        },
+     *        {
+     *            "name"    : "Anne",
+     *            "age"     :  45,
+     *            "address" : "Sunny Street 5th Lemon Town",
+     *            "sex"     : "female",
+     *        },
+     *        {
+     *            "name"    : "Thomas",
+     *            "age"     :  30,
+     *            "address" : "Sunny Street 5th Lemon Town",
+     *            "sex"     : "male",
+     *        }
+     *      ]
+     * @param jArray 传入的 JSONArray 对象
+     * @param key 键名称
+     * @param value 键对应的值 ( 支持 String, Integer, boolean 三种 )
+     *
+     */
+    public static JSONArray findJObjectsInJArray(JSONArray jArray, String key, Object value) {
+        if (null == jArray || jArray.size() == 0) {
+            return new JSONArray();
+        }
+
+        JSONArray retArray = new JSONArray();
+
+        for (int i = 0; i < jArray.size(); i++) {
+            Object jObject = jArray.get(i);
+
+            // 当为 JSONArray 的子类时
+            if (jObject.getClass().isAssignableFrom(JSONArray.class)) {
+                // 递归查询, 将查询到的结果添加到 JArray 中
+                retArray.addAll(findJObjectsInJArray(jArray, key, value));
+            }
+
+            // 当为 JSONObject 的子类时
+            if (jObject.getClass().isAssignableFrom(JSONObject.class)) {
+                for (Map.Entry<String, Object> jEntry : ((JSONObject)jObject).entrySet()) {
+                    if (jEntry.getKey().equals(key) && jEntry.getValue().equals(value)) {
+                        retArray.add(jObject);
+                    }
+                }
+            }
+        }
+
+        return retArray;
+    }
 }

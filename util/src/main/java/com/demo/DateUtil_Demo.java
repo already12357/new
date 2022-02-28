@@ -14,11 +14,12 @@ public class DateUtil_Demo {
     public static void main(String[] args) {
         DateUtil_Demo instance = new DateUtil_Demo();
 
-        instance.demo1();
-        instance.demo2();
-        instance.demo3();
-        instance.demo4();
-        instance.demo5();
+//        instance.demo1();
+//        instance.demo2();
+//        instance.demo3();
+//        instance.demo4();
+//        instance.demo5();
+        instance.demo6();
     }
 
 
@@ -92,5 +93,12 @@ public class DateUtil_Demo {
         System.out.println(DateUtil.onlyTimeBefore(startDate, new Date(), TimeUnit.DAYS));
         System.out.println(DateUtil.onlyTimeAfter(startDate, endDate, TimeUnit.HOURS));
         System.out.println(DateUtil.onlyTimeAfter(startDate, endDate, TimeUnit.SECONDS));
+    }
+
+    /**
+     * demo :
+     */
+    public void demo6() {
+        System.out.println(DateUtil.dStrToStr("", "", ""));
     }
 }

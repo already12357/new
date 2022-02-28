@@ -1,5 +1,6 @@
 package com.zhq.util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -228,6 +229,26 @@ public class DateUtil {
             default:
                 return LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE));
+        }
+    }
+
+
+    /**
+     * 将传入的时间字符串转化为另一种格式的时间字符串输出
+     * @param dInput 传入的时间内容
+     * @param inputFormat 输入的时间内容格式
+     * @param outFormat 需要的输出格式
+     */
+    public static String dStrToStr(String dInput, String inputFormat, String outFormat) {
+        synchronized (Object.class) {
+            try {
+                Date dOutput = new SimpleDateFormat(inputFormat).parse(dInput);
+                return new SimpleDateFormat(outFormat).format(dOutput);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return  "";
+            }
         }
     }
 }

@@ -176,7 +176,7 @@ public class AsposeUtil {
      * @param doc 传入的 Aspose 文档对象
      * @param tableName 编辑域表格的名称 
      * @param colList 编辑域表格的列名集合
-     * @param data 渲染编辑域表格所用的数据, 其中每一列的数据使用一个 JSONObject 存储, 所有数据组合为 JSONArray
+     * @param data 渲染编辑域表格所用的数据 ( 编辑域名称 - 编辑域值 ), 其中每一列的数据使用一个 JSONObject 存储, 所有数据组合为 JSONArray
      *             [
      *                 {
      *                     "col1_name1":"col1_val1",

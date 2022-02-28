@@ -2,10 +2,6 @@ package com.demo;
 
 import com.zhq.util.HttpUtil.HttpUtil;
 
-import javax.swing.filechooser.FileSystemView;
-import java.io.File;
-import java.io.FileInputStream;
-
 public class HttpUtil_Demo {
     public static void main(String[] args) {
         HttpUtil_Demo instance = new HttpUtil_Demo();

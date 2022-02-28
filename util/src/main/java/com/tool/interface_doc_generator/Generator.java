@@ -3,10 +3,8 @@ package com.tool.interface_doc_generator;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aspose.words.Document;
-import com.aspose.words.SaveFormat;
 import com.config.CommonConfig;
 import com.tool.interface_doc_generator.config.IConfig_1;
-import com.tool.interface_doc_generator.config.IConfig_2;
 import com.zhq.util.AsposeUtil;
 
 import java.io.File;
@@ -15,6 +13,7 @@ import java.util.List;
 
 /**
  * 接口文档生成器, 通过 AsposeUtil 替换 Word 中的文本域生成对应的接口文档
+ * 主要修改 : TMP_LOCATION, CREATE_LOCATION, mergeFieldList, tmpData1, IDocConfig 与 IConfig_1 配置中的内容
  */
 public class Generator {
     // 文件模板路径 ( 修改 )
@@ -78,7 +77,7 @@ public class Generator {
     public JSONArray tmpData1() {
         JSONArray dataRows = new JSONArray();
 
-        // 有多接口时,需要多个模板
+        // 有多接口时,添加多组 JSONObject 数据
         for (int i = 0; i < 2; i++) {
             JSONObject data = new JSONObject();
 

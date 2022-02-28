@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,11 +41,33 @@ public class HttpUtil {
     // 文件控件默认
 
 
+    /* !!!!!!!!!!!!!!!!!!!         未完成....         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+    /**
+     * 根据 Hashtable 对象传入对应的 Http 设置, 建立对应的链接
+     * @param httpHints Http 设置
+     */
+    public static HttpURLConnection openConn(Hashtable<HttpHint, String> httpHints, String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            for (Map.Entry<HttpHint, String> hint : httpHints.entrySet()) {
+                connection.setRequestProperty(hint.getKey().getPropertyName(), hint.getValue());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+
+        }
+        return null;
+    }
+
 
     /**
      * 建立一个连接
      * @param urlStr 请求地址
-     * @param method 请求的方式 ( 默认为 POST 或 GET )
      * @param method 请求的方式 ( 默认为 POST 或 GET )
      * @param contentType 服务端接受的请求数据
      * @throws IOException
