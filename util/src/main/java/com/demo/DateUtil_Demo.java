@@ -14,11 +14,11 @@ public class DateUtil_Demo {
     public static void main(String[] args) {
         DateUtil_Demo instance = new DateUtil_Demo();
 
-//        instance.demo1();
-//        instance.demo2();
-//        instance.demo3();
-//        instance.demo4();
-//        instance.demo5();
+        instance.demo1();
+        instance.demo2();
+        instance.demo3();
+        instance.demo4();
+        instance.demo5();
         instance.demo6();
     }
 
@@ -74,10 +74,17 @@ public class DateUtil_Demo {
      * demo : getDateHour
      */
     public void demo4() {
-        // 使用 getDateHour 获取指定日期对象的小时数
-        System.out.println(DateUtil.getDateHour(new Date()));
+        // 使用 hours 获取指定日期对象的小时数
+        System.out.println(DateUtil.hours(new Date()));
         // 传入 Calendar.HOUR 和 Calendar.HOUR_OF_DAY 来控制 十二小时 或 二十四小时 制
-        System.out.println(DateUtil.getDateHour(new Date(), Calendar.HOUR));
+        System.out.println(DateUtil.hours(new Date(), Calendar.HOUR));
+
+        // 同样，使用 minutes, days 等函数获取日期对象的时间信息
+        System.out.println(DateUtil.minutes(new Date()));
+        System.out.println(DateUtil.seconds(new Date()));
+        System.out.println(DateUtil.years(new Date()));
+        System.out.println(DateUtil.months(new Date()));
+        System.out.println(DateUtil.days(new Date()));
     }
 
     /**

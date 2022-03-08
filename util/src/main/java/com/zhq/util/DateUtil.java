@@ -80,18 +80,47 @@ public class DateUtil {
 
 
     /**
-     * 根据时间段获取对应的小时数
-     * @param date 日期时间
+     * 根据日期获取对应的小时数, 默认二十四小时制
+     * @param date 日期对象
      * @param calendarTimeBase Calendar 中的时间进制 ( 24小时 | 12小时)
      * @return
      */
-    public static int getDateHour(Date date, int calendarTimeBase) {
+    public static int hours(Date date, int calendarTimeBase) {
         Calendar calendar = calendarWithDate(date);
         return calendar.get(calendarTimeBase);
     }
 
-    public static int getDateHour(Date date) {
-        return getDateHour(date, Calendar.HOUR_OF_DAY);
+    public static int hours(Date date) {
+        return hours(date, Calendar.HOUR_OF_DAY);
+    }
+
+    /**
+     * 获取对应的 ( 分钟 | 秒 | 天 | 月 | 年 )
+     * @param date 日期对象
+     */
+    public static int minutes(Date date) {
+        Calendar calendar = calendarWithDate(date);
+        return calendar.get(Calendar.MINUTE);
+    }
+
+    public static int seconds(Date date) {
+        Calendar calendar = calendarWithDate(date);
+        return calendar.get(Calendar.SECOND);
+    }
+
+    public static int days(Date date) {
+        Calendar calendar = calendarWithDate(date);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int months(Date date) {
+        Calendar calendar = calendarWithDate(date);
+        return (calendar.get(Calendar.MONTH) + 1);
+    }
+
+    public static int years(Date date) {
+        Calendar calendar = calendarWithDate(date);
+        return calendar.get(Calendar.YEAR);
     }
 
 

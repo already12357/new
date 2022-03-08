@@ -3,9 +3,106 @@ package com.tool.interface_doc_generator.config;
 /**
  * 接口-1 的个性化配置信息
  */
-public class IConfig_1 {
-    // 接口一的图片信息 ( daraurl )
-    public static final String PIC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAUKADAAQAAAABAAAAUAAAAAAx4ExPAAAEVUlEQVR4Ae2dT2/TMBTA7fxrK7IxIVQOk3bgisSZCxcOk/geHEC78UG4oTGJC59i0g77BnBA2pUD0g5UCLXboE2b1LyX1NR2m66plz9jL1IUP9uvjn95thM7eeXM2C4voyfTafKKMbEfBO12FI0eG1kKia1Wa2X+KIpWpl+XWPbvM8av2u3WJ86doyBgZ5zzqXpOXApCiODiYvgO5DcQdjA+AI3xeCyzbHQsu4Jl/z5WWpYB8CaOkzwDLl8kjBQUwhsMhsdwPJDwsgxC5qMjEAA2fpI4n0cj8VoCSQFmlideyEh5FMRPotCOQiSHk8nkOUbyWZ/3VbU8MFXmuh7sKV9NmQTGkiTBfeo47lMPBwwVHjBlvh8wYEibQQA4MbA8bMqY4iA7MDGxr+bzPI/gqUCUsBBTCW8WK/YdIfiekoc5DjVblYca5txVRYDJ99ACQzWWmq5KQw8vshEhmZvOqLBEAAsj0xUIoM6jsOTBM15hJVKYE/CCwJ9LFCpMgMyvMDJdgQDqPApLBLAwMl2BAOo8CksEsDAyXcHTRZKuI2DOFXg4w6BudF+o0lgM+75+2+eNxxMtl5z/1yJJyCVAfWAumvUSCOB6nHJzNXYQ6fcvWa/3Mz3xbvch29nZyq1EnQmNtMDJJGbn5z9g/SFJ9ywc18kpt+xGAoyixcX8ZXG5taowoaFNeNmC9LK4CknNippO9du+hgKsHsy6JeKypro1sgmrJ9j0MAG0vEIEkABaErBUJwskgJYELNXJAi0B0rqwLcAq1oXx2TZ7FFvvaWI4XHzxfFlcft05vNccwHuO5T8n8OEwXq9W+We7MgVnVXAyoI5td/fRjc/imF8VlN4HyimpOgBWUXbpAOsAV2WZpQPEydC6tirKLr0PRHibDCK93i+Ne7f7gHU6q796miuUN4iYfWD5wxTUCkdD2xER4YXhvTmjmkK0LmwJntaFLQGa6qUPImaB/5tMAC2vKAEkgJYELNXJAi0BVnIfaHmOjVKndWHLy3FL1oWXfay8LM6Sxg2oN7IPxMlQc1sWZ+apQ24kQHxuxslQ33fTPQs3s7vm/f5vbUaaXvFdbcfmbEwjLXB1FZqVSgAtrwcBtARI68K2AKtYF7Y8x0arUxO2vDwEkABaErBUJwskgJYELNWb+YBpWaky1Wld2JIurQtbAjTVaRAxiRSUCWBBYGZ2AMiv1EhyPKvSuC7Mvzmci+9qNnPVSU2jsE4AHDIeowWeqNFJEoNrSzWGwkgAmaBTcnzXceaEFnzNOkcr3SDjPc+i28u7BRTBgd9oFsfJP3BIANxEJ2EYhN7WVutsMPhzCHEHEg0SjuPsu1j0J+15uvNVmQ+PaLH445tut/X3wQXyB/C3PUpH4e3tzltoyqebQrh7evw0YwbOpLHyQHJ8/37nJRzfw65/03736OTWGNkgoxmr1LHDwnK/+ncY6CfZdd3wbjdhfpXdqfATcP3+Ebs8lfBfS1J3pITEhj0AAAAASUVORK5CYII=";
-    // 接口描述
-    public static final String DESCRIPTION = "测试接口描述一.....";
+public class IConfig_1 extends AbstractConfig {
+//    // 接口名称
+//    public static final String NAME = "大厅列表";
+//    // 接口的访问路径
+//    public static final String URL = "http://localhost:8070/epoint-web-zwdt/rest/sfqhjqueue/getHallList";
+//    // 接口调用方式 ( POST, GET )
+//    public static final String METHOD = "POST";
+//    // 请求内容类型
+//    public static final String CONTENT_TYPE = "application/json;charset=utf-8;";
+//    // 可结束类型
+//    public static final String ACCEPT = "json;";
+    // 接口所需入参
+    public String INPUT() {
+        return "{\n" +
+                "    \"token\": \"\",\n" +
+                "    \"params\": {\n" +
+                "        \"centerguid\": \"ca38999e-dde6-4d63-a873-2115040e205a\"\n" +
+                "    }\n" +
+                "}";
+    }
+    // IConfig_3
+    public String OUTPUT() {
+        return "{\n" +
+                "    \"custom\": {\n" +
+                "        \"halllist\": [\n" +
+                "            {\n" +
+                "                \"hallname\": \"所有大厅\",\n" +
+                "                \"rowguid\": \"all\"\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"hallname\": \"三楼大厅\",\n" +
+                "                \"centerguid\": \"ca38999e-dde6-4d63-a873-2115040e205a\",\n" +
+                "                \"yearflag\": \"\",\n" +
+                "                \"operateusername\": \"\",\n" +
+                "                \"ordernum\": 1,\n" +
+                "                \"id\": \"\",\n" +
+                "                \"row_id\": \"\",\n" +
+                "                \"floor\": \"3\",\n" +
+                "                \"belongxiaqucode\": \"\",\n" +
+                "                \"rowguid\": \"e789f3ba-8506-46c4-af1a-ba5f19ab96e6\",\n" +
+                "                \"operatedate\": 1640656071000\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"hallname\": \"二楼大厅\",\n" +
+                "                \"centerguid\": \"ca38999e-dde6-4d63-a873-2115040e205a\",\n" +
+                "                \"yearflag\": \"\",\n" +
+                "                \"operateusername\": \"\",\n" +
+                "                \"ordernum\": 1,\n" +
+                "                \"id\": \"\",\n" +
+                "                \"row_id\": \"\",\n" +
+                "                \"floor\": \"2\",\n" +
+                "                \"belongxiaqucode\": \"\",\n" +
+                "                \"rowguid\": \"efc976f8-8a1b-4091-8046-91a0e8e9b713\",\n" +
+                "                \"operatedate\": 1640656071000\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"hallname\": \"一楼大厅\",\n" +
+                "                \"centerguid\": \"ca38999e-dde6-4d63-a873-2115040e205a\",\n" +
+                "                \"yearflag\": \"\",\n" +
+                "                \"operateusername\": \"\",\n" +
+                "                \"ordernum\": 0,\n" +
+                "                \"id\": \"\",\n" +
+                "                \"row_id\": \"\",\n" +
+                "                \"floor\": \"1\",\n" +
+                "                \"belongxiaqucode\": \"\",\n" +
+                "                \"rowguid\": \"ecdaaf59-ee9a-482e-b99e-35625fe85bbd\",\n" +
+                "                \"operatedate\": 1640656071000\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"code\": 1,\n" +
+                "        \"text\": \"\"\n" +
+                "    },\n" +
+                "    \"status\": {\n" +
+                "        \"code\": 200,\n" +
+                "        \"text\": \"\"\n" +
+                "    }\n" +
+                "}";
+    }
+
+    public String NAME() {
+        return "";
+    }
+
+    public String URL() {
+        return "http://localhost:8070/epoint-web-zwdt/rest/sfqhjqueue/getHallList";
+    }
+
+    public String METHOD() {
+        return "POST";
+    }
+
+    public String CONTENT_TYPE() {
+        return "application/json;charset=utf-8;";
+    }
+
+    public String ACCEPT() {
+        return "json;";
+    }
+
+    public String DESCRIPTION() {
+        return "获取当前中心下取号机所在大厅名称, Mac 地址不传, 可获取所有大厅列表";
+    }
 }
