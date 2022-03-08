@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.util;
 
 import com.config.CommonConfig;
 import com.zhq.util.IOUtil.IOConstant;

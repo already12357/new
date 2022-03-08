@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.util;
 
 /**
  * ApacheUtil 类的 Demo

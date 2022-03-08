@@ -1,4 +1,4 @@
-package com.demo.JsonUtil;
+package com.demo.util.JsonUtil;
 
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;

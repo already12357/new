@@ -1,4 +1,4 @@
-package com.demo.JDBCUtil;
+package com.demo.util.JDBCUtil;
 
 import com.zhq.util.JDBCUtil.DBConstant;
 import com.zhq.util.JDBCUtil.DBUtil;

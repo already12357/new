@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.util;
 
 import com.zhq.util.JsonUtil.JsonUtil;
 import com.zhq.util.StringUtil;

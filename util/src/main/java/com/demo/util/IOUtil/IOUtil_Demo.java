@@ -1,4 +1,4 @@
-package com.demo.IOUtil;
+package com.demo.util.IOUtil;
 
 import com.config.CommonConfig;
 import com.zhq.util.IOUtil.*;

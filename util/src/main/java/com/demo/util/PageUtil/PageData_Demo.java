@@ -1,4 +1,4 @@
-package com.demo.PageUtil;
+package com.demo.util.PageUtil;
 
 import com.zhq.util.JsonUtil.JsonUtil;
 import com.zhq.util.PageUtil.PageData;
