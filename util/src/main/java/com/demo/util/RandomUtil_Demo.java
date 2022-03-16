@@ -10,16 +10,17 @@ public class RandomUtil_Demo {
     public static void main(String[] args) {
         RandomUtil_Demo instance = new RandomUtil_Demo();
 
-//        instance.demo1();
-        instance.demo2();
+        instance.demo1();
+//        instance.demo2();
     }
 
     /**
-     * demo :randomNum_4, randomStr_6
+     * demo :randomNum_4, randomStr_6, randomNum_6
      */
     public void demo1() {
         System.out.println(RandomUtil.randomNum_4());
         System.out.println(RandomUtil.randomStr_6());
+        System.out.println(RandomUtil.randomNum_6());
     }
 
     /**

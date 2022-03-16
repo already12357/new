@@ -16,10 +16,17 @@ public class RandomUtil {
     }
 
     /**
-     * 生成六位随机验证码的随机数
+     * 生成六位随机验证码的随机字符串
      */
     public static String randomStr_6() {
         return randomStr_n(6, false, false);
+    }
+
+    /**
+     * 生成六位随机验证码的随机数
+     */
+    public static String randomNum_6() {
+        return randomStr_n(6, true, false);
     }
 
     /**

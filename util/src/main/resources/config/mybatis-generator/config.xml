@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyBatis Generator XML Configuration File -->
+<!DOCTYPE generatorConfigration
+        PUBLIC - "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfigration>
+</generatorConfigration>

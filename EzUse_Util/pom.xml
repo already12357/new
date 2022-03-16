@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.4</version>
+        <relativePath/>
+    </parent>
+
+    <!-- 引入子模块 -->
+    <modules>
+        <!-- 提供一些基础的帮助类 -->
+        <module>euse-common</module>
+        <!-- 用于启动的 web 项目 -->
+        <module>euse-web</module>
+        <!-- web 项目对应的后台业务模块 -->
+        <module>euse-core</module>
+        <!-- 用于支持 web 项目的后台框架模块 -->
+        <module>euse-framework-core</module>
+        <!-- 用于支持 web 项目的前台样式框架模块 -->
+        <module>euse-framework-web</module>
+    </modules>
+
+    <groupId>com.euse</groupId>
+    <artifactId>euse</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>euse</name>
+    <description>euse</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+
+        <!-- tomcat-7 插件相关配置  -->
+        <tomcat7-plugin.version>2.2</tomcat7-plugin.version>
+        <tomcat7-plugin.port>8046</tomcat7-plugin.port>
+        <tomcat7-plugin.charset>UTF-8</tomcat7-plugin.charset>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- 父模块依赖设置，用于配置给子模块依赖 -->
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 主模块启动插件 -->
+    <build>
+        <plugins>
+            <!-- SpringBoot Maven 启动插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- tomcat7 启动插件 -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat7-plugin.version}</version>
+                <configuration>
+                    <port>${tomcat7-plugin.port}</port>
+                    <charset>${tomcat7-plugin.charset}</charset>
+                </configuration>
+
+<!--                <path>/${project.artifactId}</path>-->
+<!--                <port>8092</port>-->
+<!--                <uriEncoding>${file-encoding}</uriEncoding>-->
+<!--                <url>http://localhost:8092/</url>-->
+<!--                <server>tomcat7</server>-->
+            </plugin>
+        </plugins>
+    </build>
+</project>
