@@ -1,0 +1,82 @@
+/** 
+ * Layer-Style-1
+ */
+ .log-div {
+    vertical-align: top;
+    align-items: center;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.13);
+    /* Outer Padding Set */
+    padding: 50px 75px 50px 60px;
+}
+.log-div .log-row {
+    width: 100%;
+    left: 0px;
+    top: 0px;
+
+    /* Input Row Set */
+    padding: 3px 0px;
+}
+.log-div .log-title-div {
+    text-align: center;
+    padding: 0px 20px 15px 20px;
+    font-size: 20px;
+}
+.log-div .log-label-div {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    left: 0px;
+    top: 0px;
+
+    /* Label Width Set */
+    width: 70px;
+}
+.log-div .log-input-div {
+    display: inline-block;
+    vertical-align: middle;
+    left: 0px;
+    top: 0px;
+
+    /* Set Input Part Size */
+    width: 250px;
+    height: 35px;
+}
+.log-div .log-input-icon {
+    position: absolute;
+    right: 0px;
+
+    /* Icon Margin Set */
+    margin: 10px 10px;
+}
+.log-div .log-input {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+
+    /* Input Inner Padding Set */
+    padding: 0px 36px 0px 5px;
+}
+.log-div .log-btn {
+    width: 30%;
+
+    /* Login Button Margin Set */
+    margin-left: 32%;
+}
+.log-div .log-row a {
+    vertical-align: top;
+    color: rgb(255, 0, 0);
+    font-size: 10px;
+}
+.log-div .log-message {
+    height: 20px;
+}
+.log-div .log-link-forgetpass {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+}
+.log-div .log-error-msg {
+    display: none;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表</title>
+    <script src="../js/mainBoot.js" type="text/javascript" onload="loadResource('..');"></script>
+    <link href="../css/list/list.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+</head>
+
+<!-- List 1 -->
+<script type="text/x-dot-template" id="list-tmp1">
+    <span class="list-header">{{=it.title}}</span> 
+    <ul>
+        {{for (var i = 1; i <= Math.min(it.total, 10); i++) { }}
+        <li>
+            <span class="num">{{=i}}</span>
+            <span class="content">{{=it.contentList[i-1]}}</span>
+            {{if (it.isHotImgShow[i - 1]) { }}
+            <img class="item-img" src="../img/common/fire/fire1.png">
+            {{ } }}
+        </li>
+        {{ } }}
+    </ul>
+</script>
+<!-- <div class="list-style-1 not-allow-select"></div> -->
+
+<!-- List 2 -->
+<script type="text/x-dot-template" id="list-tmp2">
+    <div class="list-style-2 not-allow-select">
+        <div class="list-frame" style="height: 100%;">
+            {{ for (var i = 0; i < it.total; i++) { }}
+            <div class="list-div">
+                <!-- !!!!!!!!!!!!!!!!!!!!! -->
+                <!-- Fill the content -->
+                <!-- !!!!!!!!!!!!!!!!!!!!! -->
+            </div>
+            {{ } }}
+        </div>
+    </div>
+</script>
+
+
+<body>
+    <!-- Style Test ..............   -->
+    <!-- <div class="list-style-2 not-allow-select">
+        <div class="list-frame" style="width: 970px; height: 100%;">
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+            <div class="list-div">
+                <img class="list-div-img" src="../img/common/eye/eye1.png">
+            </div>
+        </div>
+    </div> -->
+    <!-- Style Test ..............   -->
+
+
+
+
+    <h3 class="page-header">Vertical</h3>
+    <!-- List Divs -->
+    <div class="list-div-1">
+    </div>
+
+
+    <h3 class="page-header">Horizonal</h3>
+    <div class="list-div-2"></div>
+    <div class="list-div-3"></div>
+
+
+    <h3 class="page-header">Square</h3>
+    
+
+    <h3 class="page-header"></h3>
+    <button id="back-btn" class="btn btn-link">Go Back</button><br/>
+</body>
+<script src="../js/list/list-mock.js"></script>
+<script src="../js/list/list.js"></script>
+</html>

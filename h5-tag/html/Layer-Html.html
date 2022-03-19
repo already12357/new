@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer-Html</title>
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/Layer-Html/Layer-Html.css" rel="stylesheet">
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>Form</legend>
+    </fieldset>
+
+    <!-- Form-Log -->
+    <div class="form-log-style-1 not-allow-select" title="form-1">
+        <form class="layui-form layui-inline" action="" method="post">
+            <div class="log-title-div">Login System</div>
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Username</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-username log-input-icon"></i>
+                    <input type="text" class="layui-input log-input log-username">
+                </div>
+            </div>
+    
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Passwd</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-password log-input-icon"></i>
+                    <input type="password" class="layui-input log-input log-password">
+                </div>
+            </div>
+
+            <div class="log-row log-message">
+                <a class="log-error-msg" disabled>111111</a>
+                <a class="log-link-forgetpass">forget?</a>
+            </div>
+
+            <div class="log-row">
+                <button class="layui-btn layui-inline layui-btn-normal log-btn">登录</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-log-style-2 not-allow-select" title="form-2">
+        <header class="layui-elip">Login</header>
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input log-username" placeholder="Username">
+            </div>
+            <div class="layui-input-inline">
+                <input type="password" class="layui-input log-password" placeholder="Password">
+            </div>
+            
+            <span class="link-param">
+                <a class="link-register" href="#">Register</a>
+                <a class="link-lostpasswd" href="#">Lost Passwd?</a>
+            </span>
+
+            <div class="layui-input-inline">
+                <button lay-submit class="layui-btn log-btn">Login</button>
+            </div>
+        </form>
+    </div>
+    <!-- Form-Register -->
+    <!-- Form-Question -->
+    <!-- Form-.... -->
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>Input</legend>
+    </fieldset>
+    <!-- Input-Date -->
+    <div class="layui-inline input-date-style-1">
+        <input type="text" class="layui-input" id="input-start-date">
+    </div>
+
+    <br/>
+    <button id="back-btn" type="button" class="layui-btn layui-btn-normal layui-btn-radius">Back</button>
+</body>
+<!-- main boot js -->
+<script src="../js/const.js" type="text/javascript"></script>
+<script src="../js/mainBoot.js" type="text/javascript"></script>
+<script src="../js/common.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // process while loading
+    loadSource();
+
+    function loadSource() {
+        setContextPath('..');
+
+        // jquery
+        addScriptTag(PathConst.jQuery, "text/javascript");
+        // Layui Layer
+        addScriptTag(PathConst.Layui.js, "text/javascript");
+        addLinkTag(PathConst.Layui.css, "stylesheet");
+    }
+</script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/Layer-Html/Layer-HtmlMock.js"></script>
+<script type="text/javascript" src="../js/Layer-Html/Layer-Html.js"></script>
+</html>

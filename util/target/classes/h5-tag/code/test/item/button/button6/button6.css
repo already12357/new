@@ -1,0 +1,68 @@
+/**
+ * Button-Style-6
+ */
+.button-style-6 .button-div,
+.button-style-6 {
+    display: inline-block;
+    vertical-align: top;
+}
+.button-style-6 .button-div {
+    /* Title Top and Buttom Padding Set */
+    padding: 5px 0px 5px 0px;
+}
+.button-style-6 img {
+    display: inline-block;
+    vertical-align: middle;
+    transform: rotate(90deg);
+    transition: .5s ease 0s;
+ 
+    /* Image Size Set */
+    width: 9px;
+    height: 9px;
+}
+.button-style-6 span {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+.button-style-6 ul {
+    border: 1px solid rgb(0, 0, 0);
+    padding-left: 0px;
+    display: none;
+    position: absolute;
+    border-radius: 5px;
+    margin-top: 0px;
+
+    /* Ul Width Set */
+    width: 160px;
+    max-height: 180px;
+
+    /* Ul Margin Set */
+    margin-left: 7px;
+}
+.button-style-6 li {
+    cursor: pointer;
+    list-style: none;
+    background-color: rgb(255, 255, 255);
+    padding: 4px 10px;
+}
+.button-style-6 li:nth-child(1) {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.button-style-6 li:nth-last-child(1) {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.button-style-6 li a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    text-align: left;
+    vertical-align: middle;
+    color: black;
+}
+.button-style-6 li:hover {
+    background-color: rgb(194, 194, 194);
+}

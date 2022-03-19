@@ -1,0 +1,17 @@
+/**
+ * Icon-Style-2
+ */
+ .icon-style-2 {
+    vertical-align: top;
+    display: inline-block;
+
+    /* Icon Size Set */
+    width: 16px;
+    height: 16px;
+}
+.icon-style-2 img {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}

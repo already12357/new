@@ -1,0 +1,150 @@
+/** 
+ * Form-Log-1
+ */
+ .form-log-style-1 {
+    vertical-align: top;
+    align-items: center;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.13);
+    /* Outer Padding Set */
+    padding: 50px 75px 50px 60px;
+}
+.form-log-style-1 .log-row {
+    width: 100%;
+    left: 0px;
+    top: 0px;
+
+    /* Input Row Set */
+    padding: 3px 0px;
+}
+.form-log-style-1 .log-title-div {
+    text-align: center;
+    padding: 0px 20px 15px 20px;
+    font-size: 20px;
+}
+.form-log-style-1 .log-label-div {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    left: 0px;
+    top: 0px;
+
+    /* Label Width Set */
+    width: 70px;
+}
+.form-log-style-1 .log-input-div {
+    display: inline-block;
+    vertical-align: middle;
+    left: 0px;
+    top: 0px;
+
+    /* Set Input Part Size */
+    width: 250px;
+    height: 35px;
+}
+.form-log-style-1 .log-input-icon {
+    position: absolute;
+    right: 0px;
+
+    /* Icon Margin Set */
+    margin: 10px 10px;
+}
+.form-log-style-1 .log-input {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+
+    /* Input Inner Padding Set */
+    padding: 0px 36px 0px 5px;
+}
+.form-log-style-1 .log-btn {
+    width: 30%;
+
+    /* Login Button Margin Set */
+    margin-left: 32%;
+}
+.form-log-style-1 .log-row a {
+    vertical-align: top;
+    color: rgb(255, 0, 0);
+    font-size: 10px;
+}
+.form-log-style-1 .log-message {
+    height: 20px;
+}
+.form-log-style-1 .log-link-forgetpass {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+}
+.form-log-style-1 .log-error-msg {
+    display: none;
+}
+
+
+
+
+/** 
+ * Form-Log-2
+ */
+.form-log-style-2 {
+    vertical-align: top;
+    display: inline-block;
+    background-color: aliceblue;
+
+    /* Outer Padding Set */
+    padding: 35px 50px 35px 50px;
+}
+.form-log-style-2 header {
+    font-size: 25px;
+    font-weight: 100;
+    text-align: center;
+
+    /* Form Title Set */
+    height: 30px;
+    line-height: 25px;
+}
+.form-log-style-2 form {
+    width: 200px;
+}
+.form-log-style-2 form input {
+    height: 33px;
+    width: 200px;
+
+    /* Set Input Gap */
+    margin-top: 6px;
+}
+.form-log-style-2 .log-btn {
+    /* Button Size Set */
+    width: 75px;
+    height: 35px;
+    line-height: 12px;
+
+    /* Button Margin Set */
+    margin: 15px 0px 0px 60px;
+}
+.form-log-style-2 .link-param a {
+    font-size: 12px;
+}
+.form-log-style-2 .link-param {
+    display: block;
+    align-content: center;
+    border-bottom: 1px solid rgb(194, 191, 191);
+    /* Link Bar Padding Set */
+    padding: 8px 0px 4px 0px;
+}
+.form-log-style-2 .link-register {
+    /* <Register> Margin Set */
+    margin-left: 8px;
+}
+.form-log-style-2 .link-lostpasswd {
+    /* <Lost Passwd?> Margin Set */
+    margin-left: 65px;
+}
+
+
+/** 
+ * Input-Date-Style-1
+ */
+/* empty */
+

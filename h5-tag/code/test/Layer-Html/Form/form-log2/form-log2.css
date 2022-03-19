@@ -1,0 +1,54 @@
+.log-div {
+    vertical-align: top;
+    display: inline-block;
+    background-color: aliceblue;
+
+    /* Outer Padding Set */
+    padding: 35px 50px 35px 50px;
+}
+.log-div header {
+    font-size: 25px;
+    font-weight: 100;
+    text-align: center;
+
+    /* Form Title Set */
+    height: 30px;
+    line-height: 25px;
+}
+.log-div form {
+    width: 200px;
+}
+.log-div form input {
+    height: 33px;
+    width: 200px;
+
+    /* Set Input Gap */
+    margin-top: 6px;
+}
+.log-div .log-btn {
+    /* Button Size Set */
+    width: 75px;
+    height: 35px;
+    line-height: 12px;
+
+    /* Button Margin Set */
+    margin: 15px 0px 0px 60px;
+}
+.log-div .link-param a {
+    font-size: 12px;
+}
+.log-div .link-param {
+    display: block;
+    align-content: center;
+    border-bottom: 1px solid rgb(194, 191, 191);
+    /* Link Bar Padding Set */
+    padding: 8px 0px 4px 0px;
+}
+.log-div .link-register {
+    /* <Register> Margin Set */
+    margin-left: 8px;
+}
+.log-div .link-lostpasswd {
+    /* <Lost Passwd?> Margin Set */
+    margin-left: 65px;
+}

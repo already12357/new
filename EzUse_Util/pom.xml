@@ -35,56 +35,138 @@
     <properties>
         <java.version>1.8</java.version>
 
+        <druid.version>1.2.8</druid.version>
+        <spring.boot.admin.client.version>2.6.2</spring.boot.admin.client.version>
+        <spring.boot.admin.server.version>2.6.2</spring.boot.admin.server.version>
+        <quartz.version>2.3.2</quartz.version>
+        <codehaus.groovy.version>3.0.10</codehaus.groovy.version>
+        <guava.version>31.1-jre</guava.version>
+        <fastdfs.client.version></fastdfs.client.version>
+
         <!-- tomcat-7 插件相关配置  -->
         <tomcat7-plugin.version>2.2</tomcat7-plugin.version>
-        <tomcat7-plugin.port>8046</tomcat7-plugin.port>
-        <tomcat7-plugin.charset>UTF-8</tomcat7-plugin.charset>
+        <tomcat7-plugin.port>8088</tomcat7-plugin.port>
+        <tomcat7-plugin.encoding>UTF-8</tomcat7-plugin.encoding>
+        <tomcat7-plugin.path>/${project.artifactId}</tomcat7-plugin.path>
+        <tomcat7-plugin.url>http://localhost:${tomcat7-plugin.port}/</tomcat7-plugin.url>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <!-- 父模块依赖设置，用于配置给子模块依赖 -->
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring.boot.admin.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-server</artifactId>
+                <version>${spring.boot.admin.server.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-server-ui</artifactId>
+                <version>${spring.boot.admin.server.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+            <!-- groovy-->
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${codehaus.groovy.version}</version>
+            </dependency>
+            <!--guava-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <!--fastdfs-java-->
+            <dependency>
+                <groupId>org.csource</groupId>
+                <artifactId>fastdfs-client-java</artifactId>
+<!--                <version>${fastdfs.client.version}</version>-->
+            </dependency>
+            <!-- alibaba json -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${alibaba.fastjson.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-ehcache -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-ehcache</artifactId>
+                <version>${shiro.spring.version}</version>
+            </dependency>
+            <!--spring -shiro -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+                <version>${shiro.spring.version}</version>
+            </dependency>
+            <!--thymeleaf - extras -shiro -->
+            <dependency>
+                <groupId>com.github.theborakompanioni</groupId>
+                <artifactId>thymeleaf-extras-shiro</artifactId>
+                <version>${thymeleaf.extras.shiro.version}</version>
+            </dependency>
+            <!--alibaba druid-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.2.8</version>
+            </dependency>
+            <!--Mybatis -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis.spring.version}</version>
+            </dependency>
+            <!--Mybatis分页插件-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+            <!--Mybatis通用Mapper-->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper</artifactId>
+                <version>${tk.mybatis.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <!-- 主模块启动插件 -->
     <build>
         <plugins>
-            <!-- SpringBoot Maven 启动插件 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
             <!-- tomcat7 启动插件 -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>${tomcat7-plugin.version}</version>
                 <configuration>
+                    <path>${tomcat7-plugin.path}</path>
                     <port>${tomcat7-plugin.port}</port>
-                    <charset>${tomcat7-plugin.charset}</charset>
+                    <uriEncoding>${tomcat7-plugin.encoding}</uriEncoding>
+                    <url>${tomcat7-plugin.url}</url>
+                    <server>tomcat7</server>
                 </configuration>
-
-<!--                <path>/${project.artifactId}</path>-->
-<!--                <port>8092</port>-->
-<!--                <uriEncoding>${file-encoding}</uriEncoding>-->
-<!--                <url>http://localhost:8092/</url>-->
-<!--                <server>tomcat7</server>-->
             </plugin>
         </plugins>
     </build>

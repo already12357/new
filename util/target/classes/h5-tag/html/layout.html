@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>页面布局</title>
+</head>
+<body>
+    <button id="back-btn" class="btn btn-link">Go Back</button><br/>
+</body>
+<script>
+    $(function () {
+        $("#back-btn").click(function (e) {
+            history.back(-1);
+        });
+    })
+</script>
+</html>

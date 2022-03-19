@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form-Log2</title>
+    <link rel="stylesheet" href="./form-log2.css">
+</head>
+<body>
+    <div class="log-div not-allow-select" title="form-2">
+        <header class="layui-elip">Login</header>
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input log-username" placeholder="Username">
+            </div>
+            <div class="layui-input-inline">
+                <input type="password" class="layui-input log-password" placeholder="Password">
+            </div>
+            
+            <span class="link-param">
+                <a class="link-register" href="#">Register</a>
+                <a class="link-lostpasswd" href="#">Lost Passwd?</a>
+            </span>
+
+            <div class="layui-input-inline">
+                <button lay-submit class="layui-btn log-btn">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript" src="./common/const.js"></script>
+<script type="text/javascript" src="./common/mainBoot.js"></script>
+<script type="text/javascript" src="./common/common.js"></script>
+<script type="text/javascript">
+    loadSource();
+
+    function loadSource() {
+        setContextPath('.');
+
+        // jquery
+        addScriptTag(PathConst.jQuery, "text/javascript");
+        // layer
+        addScriptTag(PathConst.Layui.js, "text/javascript");
+        addLinkTag(PathConst.Layui.css, "stylesheet");
+    }
+</script>
+<script type="text/javascript" src="./form-log2.js"></script>
+</html>

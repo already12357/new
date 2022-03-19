@@ -1,0 +1,48 @@
+/**
+ * Button-Style-5
+ */
+ .button-style-5 {
+    vertical-align: top;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 3px;
+    padding: 6px 12px;
+    background-color: rgb(31, 133, 251);
+    transition: .2s ease-out 0s;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.button-style-5:hover {
+    cursor: pointer;
+}
+.button-style-5:active {
+    -ms-transform: scale(0.96, 0.96);
+    transform: scale(0.96, 0.96);
+    transition: .2s ease-out 0s;
+}
+.button-style-5 span {
+    display: inline-block;
+    text-decoration: none;
+    vertical-align: middle;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 5px;
+}
+.button-style-5 div {
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+
+    /* BgColor Set */
+    background-color: rgb(99, 105, 105);
+}
+.button-style-5 img {
+    /* Padding Set */
+    padding: 7px 7px;
+
+    /* Image Size Set */
+    width: 30px;
+    height: 30px;
+}

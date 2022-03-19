@@ -1,0 +1,40 @@
+/**
+ * Icon-Style-4
+ */
+ @keyframes icon4-span-load {
+    0% {
+        -moz-transform: scale(2);
+        -ms-transform: scale(2);
+        transform: scale(2);
+        -o-transform: scale(2);
+        -webkit-transform: scale(2);
+        opacity: 1;
+    }
+    100% {
+        -moz-transform: scale(1);;
+        -ms-transform: scale(1);
+        transform: scale(1);
+        -o-transform: scale(1);
+        -webkit-transform: scale(1);
+        opacity: 0.5;
+    }
+}
+.icon-style-4 {
+    display: inline-block;
+    vertical-align: top;
+    padding: 2px 2px;
+
+    /* Frame Size Set */
+    height: 10px;
+}
+.icon-style-4 span {
+    width: 4px;
+    height: 4px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
+
+    /* span margin set */
+    margin: 0px 2px;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form-Log1</title>
+    <link rel="stylesheet", href="./form-log1.css">
+</head>
+<body>
+    <div class="log-div not-allow-select" title="form-1">
+        <form class="layui-form layui-inline" action="" method="post">
+            <div class="log-title-div">Login System</div>
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Username</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-username log-input-icon"></i>
+                    <input type="text" class="layui-input log-input log-username">
+                </div>
+            </div>
+    
+            <div class="log-row">
+                <div class="log-label-div">
+                    <label>Passwd</label>
+                </div>
+                <div class="log-input-div">
+                    <i class="layui-icon layui-icon-password log-input-icon"></i>
+                    <input type="password" class="layui-input log-input log-password">
+                </div>
+            </div>
+
+            <div class="log-row log-message">
+                <a class="log-error-msg" disabled>111111</a>
+                <a class="log-link-forgetpass">forget?</a>
+            </div>
+
+            <div class="log-row">
+                <button class="layui-btn layui-inline layui-btn-normal log-btn">登录</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript" src="./common/const.js"></script>
+<script type="text/javascript" src="./common/mainBoot.js"></script>
+<script type="text/javascript" src="./common/common.js"></script>
+<script type="text/javascript">
+    // process while loading
+    loadSource();
+
+    function loadSource() {
+        setContextPath('.');
+
+        // jquery
+        addScriptTag(PathConst.jQuery, "text/javascript");
+        // Layui Layer
+        addScriptTag(PathConst.Layui.js, "text/javascript");
+        addLinkTag(PathConst.Layui.css, "stylesheet");
+    }
+</script>
+<script type="text/javascript" src="./form-log1.js"></script>
+</html>

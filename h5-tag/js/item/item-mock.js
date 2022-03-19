@@ -11,7 +11,7 @@ function MOCK_load_Button6() {
             "7444444444",
             "4444444444448"
         ],
-        "total" : 7,
+        "total" : 7
     };
 
     load_Button6(mockData, ".button-div-6", "#button-tmp6");
@@ -26,11 +26,6 @@ function MOCK_load_Icon2() {
 /* Mock Icon4 */
 function MOCK_load_Icon4() {
     load_Icon4(".icon-style-4", 5, 0.25);
-}
-
-/* Mock Input4 */
-function MOCK_load_Input4() {
-    load_Input4('.input-style-4');
 }
 
 /* Mock Input5 */

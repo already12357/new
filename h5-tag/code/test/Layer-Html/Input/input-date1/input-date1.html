@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input-Date-1</title>
+</head>
+<body>
+    <!-- Input-Date -->
+    <div class="layui-inline div-date">
+        <input type="text" class="layui-input" id="input-start-date">
+    </div>
+</body>
+<script type="text/javascript" src="./common/const.js"></script>
+<script type="text/javascript" src="./common/mainBoot.js"></script>
+<script type="text/javascript">
+    loadSource();
+
+    function loadSource() {
+        setContextPath('.');
+
+        // jquery
+        addScriptTag(PathConst.jQuery, "text/javascript");
+        // layer
+        addScriptTag(PathConst.Layui.js, "text/javascript");
+        addLinkTag(PathConst.Layui.css, "stylesheet");
+    }
+</script>
+<script type="text/javascript" src="./input-date1.js"></script>
+</html>

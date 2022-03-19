@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap3-Html</title>
+</head>
+<body>
+
+</body>
+<script src="./js/const.js" type="text/javascript"></script>
+<script src="./js/mainBoot.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // process while loading
+    loadSource();
+    
+    function loadSource() {
+        setContextPath('..');
+        // jquery
+        addScriptTag(ref_Path.jQuery, "text/javascript");
+        // bootstrap
+        addLinkTag(ref_Path.bootstrap3.css, "stylesheet");
+        addScriptTag(ref_Path.bootstrap3.js, "text/javascript");
+    }
+</script>
+</html>

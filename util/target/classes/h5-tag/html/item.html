@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>item</title>
+    <!-- 2. 获取直接控件库的启动 js 文件 -->
+    <script src="../js/mainBoot.js" type="text/javascript" onload="loadResource('..');"></script>
+    <link href="../css/item/item.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+</head>
+
+<!-- Button 6 -->
+<script type="text/x-dot-template" id="button-tmp6">
+    <div class="button-div">
+        <img src="../img/common/trangle/triangle1.svg">
+        <span>Button Style-6</span>
+    </div>
+    <div class="list-div">
+        <ul>
+            {{for (var i = 0; i < it.total; i++) { }}
+            <li>
+                <a class="x-overflow-ellipsis x-limit-Line1">{{=it.contentList[i]}}</a>
+            </li>
+            {{ } }}
+        </ul>
+    </div>
+</script>
+
+<body>
+    <h3 class="page-header">Button</h3>
+    <!-- Button 1 -->
+    <p class="button-style-1 not-allow-select" title="button-1">
+        <a href="#">Button Style-1</a>
+    </p>
+
+    <!-- Button 2 -->
+    <div class="button-style-2 not-allow-select" title="button-2">
+        <a href="#">Button Style-2</a>
+    </div>
+
+    <!-- Button 3 -->
+    <div class="button-style-3 not-allow-select" title="button-3">Button Style-3</div>
+
+    <!-- Button 4 -->
+    <div class="button-style-4 not-allow-select" title="button-4">
+        <!-- viewBox 设置截取 svg 内容的区域坐标 -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="3,3,18,18" fill="#5F6368"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>Button Style-4</span>
+    </div>
+
+    <!-- Button 5 --> 
+    <a class="button-style-5 not-allow-select" title="button-5">
+        <div style="pointer-events: auto;"><img src="../img/common/pencil/pencil2.png" /></div><span style="pointer-events: auto;">Button Style-5</span>
+    </a>
+
+    <!-- Button 6 -->
+    <!-- 通过后台的 addClass 等 jquery 方法，去除渲染的外部 div -->
+    <!-- 通过拼接字符串, 来实现渲染区域的标识传入 -->
+    <div class="button-div-6" title="button-6">
+    </div>
+
+
+
+    <h3 class="page-header">Icon</h3>
+    <!-- Icon 1 -->
+    <div class="icon-style-1" title="icon-1">
+        <img src="../img/common/code/code1.png">
+    </div>
+
+    <!-- Icon 2 -->
+    <div class="icon-style-2 not-allow-select" title="icon-2">
+        <img src="../img/common/choose/choose1/choose1.png">
+        <input hidden class="icon2-value" name="icon-value-2" value="0">
+    </div>
+
+    <!-- Icon3 -->
+    <img title="icon-3" src="../img/common/title/explorer/chrome/chrome1.svg" class="icon-style-3 rotate-slow not-allow-select">
+
+    <!-- Icon4 -->
+    <div class="icon-style-4 not-allow-select" title="icon-4">
+    </div>
+
+
+    <h3 class="page-header">Input</h3>
+    <!-- Input 1 -->
+    <input class="input-style-1" type="text" placeholder="Here's the place Holder" title="input-1">
+
+    <!-- Input 2 -->
+    <input class="input-style-2" type="text" placeholder="Here's the place Holder" title="input-2">
+
+    <!-- Input 3 -->
+    <input class="input-style-3" type="text" placeholder="Here's the place Holder" title="input-3">
+    
+    <!-- Input 4-->
+    <select class="input-style-4 appearnce-none not-allow-select" title="input-4">
+        <option>默认</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+    </select>
+
+    <!-- Input-test -->
+    <input type="date">
+
+
+
+
+
+    <h3 class="page-header"></h3>
+    <br/><button id="back-btn" class="btn btn-link">Go Back</button><br/>
+</body>
+<script src="../js/item/item-mock.js"></script>
+<script src="../js/item/item.js"></script>
+</html>
+

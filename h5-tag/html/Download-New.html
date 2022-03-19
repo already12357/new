@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download-New</title>
+</head>
+<body>
+    <h2 class="page-header">Layer</h2>
+    <h3>Form</h3>
+    <button id="layer-form-log1" class="btn btn-link">
+        <a href="../code/package/Layer-Html/Form/form-log1.zip" download="form-log1.zip">Form-Log-1</a>
+    </button>
+    <button id="layer-form-log2" class="btn btn-link">
+        <a href="../code/package/Layer-Html/Form/form-log2.zip" download="form-log2.zip">Form-Log-2</a>
+    </button>
+
+    <h3>Input</h3>
+    <button id="layer-input-date1" class="btn btn-link">
+        <a href="../code/package/Layer-Html/Input/input-date1.zip" download="input-date1.zip">Input-Date-1</a>
+    </button>
+
+    <br/><br/><br/>
+
+    <h2 class="page-header">Native</h2>
+    <h3>Button</h3>
+    <button id="native-button-1" class="btn btn-link">
+        <a href="../code/package/Native-Html/Button/button1.zip" download="button1.zip">Button-1</a>
+    </button>
+    <button id="native-button-2" class="btn btn-link">
+        <a href="../code/package/Native-Html/Button/button2.zip" download="button2.zip">Button-2</a>
+    </button>
+    <button id="native-button-3" class="btn btn-link">
+        <a href="../code/package/Native-Html/Button/button3.zip" download="button3.zip">Button-3</a>
+    </button>
+
+    <br/><br/><br/>
+
+    <h2 class="page-header">Bootstrap3</h2>
+    <h3 class="page-header">b3</h3>
+
+    <br/><br/><br/>
+
+    <button id="back-btn" class="btn btn-link">Back</button>
+</body>
+
+<script src="../js/const.js" type="text/javascript"></script>
+<script src="../js/mainBoot.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // process while loading
+    loadSource();
+
+    function loadSource() {
+        setContextPath('..');
+        // jquery
+        addScriptTag(ref_Path.jQuery, "text/javascript");
+        // bootstrap
+        addLinkTag(ref_Path.bootstrap3.css, "stylesheet");
+        addScriptTag(ref_Path.bootstrap3.js, "text/javascript");
+    }
+</script>
+<script type="text/javascript" src="../js/Download-New/Download-New.js"></script>
+</html>

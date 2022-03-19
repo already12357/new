@@ -6,9 +6,6 @@ window.onload = function() {
     load_Layer1('.layer-style-1');
     load_Layer2('.layer-style-2');
 
-
-
-
     /** test Function */
     $("#test-layer").click(function (e) { 
         top.layer.msg("hello", 3);

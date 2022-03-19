@@ -1,0 +1,39 @@
+.button-style-1 {
+    display: inline-block;
+    text-align: center;
+    font-size: 0px;
+    vertical-align: top;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Margin Set */
+    /* margin-top: 10px; */
+}
+.button-style-1 a {
+    display: inline-block;
+    border: 1px solid rgb(0, 122, 255);
+    color: rgb(0, 122, 255);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: .3s ease 0s;
+
+    /* Padding Set */
+    padding: 4px 10px;
+    
+    /* Font Size Set */
+    font-size: 13px;
+}
+.button-style-1 a:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 122, 255);
+    transition: .3s ease 0s;
+}
+
+
+.not-allow-select {
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

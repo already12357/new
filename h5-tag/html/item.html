@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>item</title>
-    <!-- 2. 获取直接控件库的启动 js 文件 -->
-    <script src="../js/mainBoot.js" type="text/javascript" onload="loadResource('..');"></script>
     <link href="../css/item/item.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
 </head>
@@ -43,31 +41,6 @@
 
 <body>
     <h3 class="page-header">Button</h3>
-    <!-- Button 1 -->
-    <p class="button-style-1 not-allow-select" title="button-1">
-        <a href="#">Button Style-1</a>
-    </p>
-
-    <!-- Button 2 -->
-    <div class="button-style-2 not-allow-select" title="button-2">
-        <a href="#">Button Style-2</a>
-    </div>
-
-    <!-- Button 3 -->
-    <div class="button-style-3 not-allow-select" title="button-3">Button Style-3</div>
-
-    <!-- Button 4 -->
-    <div class="button-style-4 not-allow-select" title="button-4">
-        <!-- viewBox 设置截取 svg 内容的区域坐标 -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="3,3,18,18" fill="#5F6368"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <span>Button Style-4</span>
-    </div>
-
-    <!-- Button 5 --> 
-    <a class="button-style-5 not-allow-select" title="button-5">
-        <div style="pointer-events: auto;"><img src="../img/common/pencil/pencil2.png" /></div><span style="pointer-events: auto;">Button Style-5</span>
-    </a>
-
     <!-- Button 6 -->
     <!-- 通过后台的 addClass 等 jquery 方法，去除渲染的外部 div -->
     <!-- 通过拼接字符串, 来实现渲染区域的标识传入 -->
@@ -105,20 +78,37 @@
 
     <!-- Input 3 -->
     <input class="input-style-3" type="text" placeholder="Here's the place Holder" title="input-3">
-    
-    <!-- Input 4-->
-    <div class="layui-inline input-style-4">
-        <input type="text" class="layui-input" id="input-start-date">
-    </div>
 
     <!-- Input 5 -->
     <div class="input-div-5"></div>
-
-
+    
+    
 
     <h3 class="page-header"></h3>
     <br/><button id="back-btn" class="btn btn-link">Go Back</button><br/>
 </body>
+<!-- main boot js -->
+<script src="../js/const.js" type="text/javascript"></script>
+<script src="../js/mainBoot.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // process while loading
+    loadSource();
+
+    function loadSource() {
+        setContextPath('..');
+
+        // jquery
+        addScriptTag(ref_Path.jQuery, "text/javascript");
+        // bootstrap
+        // addLinkTag(ref_Path.bootstrap3.css, "stylesheet");
+        // addScriptTag(ref_Path.bootstrap3.js, "text/javascript");
+        // doT
+        addScriptTag(ref_Path.doT, "text/javascript");
+        // nicescroll
+        addScriptTag(ref_Path.jqPlugin.nicescroll, "text/javascript");
+    }
+</script>
+<!-- 2. 获取直接控件库的启动 js 文件 -->
 <script src="../js/item/item-mock.js"></script>
 <script src="../js/item/item.js"></script>
 </html>

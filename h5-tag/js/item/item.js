@@ -1,16 +1,16 @@
 window.onload = function() {
+    init();
+
     /* load the component, or onload event */
     MOCK_load_Icon2();
     MOCK_load_Icon4();
     MOCK_load_Button6();
-    MOCK_load_Input4();
     MOCK_load_Input5();
 
     $("#back-btn").click(function (e) {
         window.location.href = "../index.html";
     });
 }
-
 
 
 
@@ -83,7 +83,6 @@ function onStyle_Icon4(dotCount, loadInterval, comJqSelector) {
  * Button 6
  */
 function load_Button6(renderData, comJqSelector, tmpJqSelector) {
-
     // render template data
     render_Button6(renderData, comJqSelector, tmpJqSelector);
 
@@ -133,29 +132,6 @@ function render_Button6(jsondata, comJqSelector, tmpJqSelector) {
     $("" + comJqSelector).empty().html(templateContent(jsondata));
 }
 
-
-
-/********************************
- * Input 4
- */
-/**
- * 
- * @param {String} comJqSelector component div's jq selector string
- */
- function load_Input4(comJqSelector) {
-    init_Input4(comJqSelector);
-}
-function init_Input4(comJqSelector) {
-    layui.use(['laydate'], function() {
-        var dateLayer = layui.laydate;
-        dateLayer.render({
-            elem : comJqSelector + " #input-start-date",
-            format : "yyyy/MM/dd",
-            isInitValue: false,
-            range: true
-        });
-    });
-}
 
 
 /********************************

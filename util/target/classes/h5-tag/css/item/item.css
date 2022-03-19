@@ -1,0 +1,494 @@
+/******************************************************/
+/** BUTTON **/
+/**
+ * Button-Style-1
+ */
+.button-style-1 {
+    display: inline-block;
+    text-align: center;
+    font-size: 0px;
+    vertical-align: top;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Margin Set */
+    /* margin-top: 10px; */
+}
+.button-style-1 a {
+    display: inline-block;
+    border: 1px solid rgb(0, 122, 255);
+    color: rgb(0, 122, 255);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: .3s ease 0s;
+
+    /* Padding Set */
+    padding: 4px 10px;
+    
+    /* Font Size Set */
+    font-size: 13px;
+}
+.button-style-1 a:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 122, 255);
+    transition: .3s ease 0s;
+}
+
+
+/**
+ * Button-Style-2
+ */
+.button-style-2 {
+    display: inline-block;
+    color:rgb(245, 165, 35);
+    font-size:0px;
+    border-radius:14px;
+    text-align:center;
+    vertical-align: top;
+
+    /* Margin Set */
+    /* margin: auto */
+}
+.button-style-2 a {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    
+    /* Font Size Set */
+    font-size:12px;
+
+    display: inline-block;
+    border:1px solid rgb(204, 204, 216);
+    background-color:rgb(255, 255, 255);
+    color:rgb(85, 86, 102);
+    border-radius:14px;
+    text-decoration: none;
+
+    /* Padding Set */
+    padding: 4px 12px;
+
+    transition: .5s ease 0s;
+}
+.button-style-2 a:hover {
+    color:rgb(85, 86, 102);
+    border-color:rgb(85, 86, 102);
+    transition: .5s ease 0s;
+}
+
+
+/**
+ * Button-Style-3
+ */
+.button-style-3 {
+    display: inline-block;
+    vertical-align: top;
+
+    /* Padding Set */
+    padding: 4px 8px;
+    
+    border: 0;
+    outline: none;
+    border-radius: 12px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(31, 133, 251);
+    
+    /* Font Size Set */
+    font-size: 10px;
+
+    font-weight: bold;
+    -webkit-transition: .5s ease 0s;
+    transition: .5s ease 0s;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Margin Set */
+    /* margin: auto */
+}
+.button-style-3:hover {
+    cursor: pointer;
+}
+
+
+/**
+ * Button-Style-4
+ */
+.button-style-4 {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 16px;
+    padding: 4px 12px 4px 12px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161);/* IE */
+    -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161); /* Firefox */
+    -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161); /* Safari and Chrome */
+    behavior: url(ie-css3.htc);
+    vertical-align: top;
+}
+.button-style-4:hover {background-color: #eaeaf1;}
+.button-style-4 svg {
+    vertical-align: middle;
+
+    /* Icon Size Set */
+    width: 12px;
+    height: 12px;
+}
+.button-style-4 span {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 400;
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    margin-top: -3px;
+
+    /* Font Size Set */
+    font-size: 16px;
+}
+
+
+/**
+ * Button-Style-5
+ */
+.button-style-5 {
+    vertical-align: top;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 3px;
+    padding: 6px 12px;
+    background-color: rgb(31, 133, 251);
+    transition: .2s ease-out 0s;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.button-style-5:hover {
+    cursor: pointer;
+}
+.button-style-5:active {
+    -ms-transform: scale(0.96, 0.96);
+    transform: scale(0.96, 0.96);
+    transition: .2s ease-out 0s;
+}
+.button-style-5 span {
+    display: inline-block;
+    text-decoration: none;
+    vertical-align: middle;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 5px;
+}
+.button-style-5 div {
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+
+    /* BgColor Set */
+    background-color: rgb(99, 105, 105);
+}
+.button-style-5 img {
+    /* Padding Set */
+    padding: 7px 7px;
+
+    /* Image Size Set */
+    width: 30px;
+    height: 30px;
+}
+
+
+/**
+ * Button-Style-6
+ */
+.button-style-6 .button-div,
+.button-style-6 {
+    display: inline-block;
+    vertical-align: top;
+}
+.button-style-6 .button-div {
+    padding: 5px 0px 5px 0px;
+}
+.button-style-6 img {
+    display: inline-block;
+    vertical-align: middle;
+    transform: rotate(90deg);
+    transition: .5s ease 0s;
+
+    /* Image Size Set */
+    width: 9px;
+    height: 9px;
+}
+.button-style-6 span {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+.button-style-6 ul {
+    border: 1px solid rgb(0, 0, 0);
+    padding-left: 0px;
+    display: none;
+    position: absolute;
+    border-radius: 5px;
+
+    /* Ul Width Set */
+    width: 160px;
+    max-height: 180px;
+
+    /* Ul Margin Set */
+    margin-left: 7px;
+}
+.button-style-6 li {
+    cursor: pointer;
+    list-style: none;
+    background-color: rgb(255, 255, 255);
+    padding: 4px 10px;
+}
+.button-style-6 li:nth-child(1) {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.button-style-6 li:nth-last-child(1) {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.button-style-6 li a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    text-align: left;
+    vertical-align: middle;
+    color: black;
+}
+.button-style-6 li:hover {
+    background-color: rgb(194, 194, 194);
+}
+
+
+
+
+/******************************************************/
+/** ICON  **/
+/**
+ * Icon-Style-1
+ */
+.icon-style-1 {
+    vertical-align: top;
+    display: inline-block;
+    border-radius: 90px;
+    background-color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.161);
+    transition: .5s ease 0s;
+}
+.icon-style-1:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.161);
+    transition: .5s ease 0s;
+}
+.icon-style-1 img {
+    outline: none;
+    display: block;
+
+    /* Image Size Set */
+    width: 37px;
+    height: 37px;
+
+    /* Padding Set */
+    padding: 7px 7px;
+}
+
+
+/**
+ * Icon-Style-2
+ */
+.icon-style-2 {
+    vertical-align: top;
+    display: inline-block;
+
+    /* Icon Size Set */
+    width: 16px;
+    height: 16px;
+}
+.icon-style-2 img {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+/**
+ * Icon-Style-3
+ */
+.icon-style-3 {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+.icon-style-3:hover {
+    cursor: pointer;
+}
+
+
+/**
+ * Icon-Style-4
+ */
+@keyframes icon4-span-load {
+    0% {
+        -moz-transform: scale(2);
+        -ms-transform: scale(2);
+        transform: scale(2);
+        -o-transform: scale(2);
+        -webkit-transform: scale(2);
+        opacity: 1;
+    }
+    100% {
+        -moz-transform: scale(1);;
+        -ms-transform: scale(1);
+        transform: scale(1);
+        -o-transform: scale(1);
+        -webkit-transform: scale(1);
+        opacity: 0.5;
+    }
+}
+.icon-style-4 {
+    display: inline-block;
+    vertical-align: top;
+    padding: 2px 2px;
+    font-size: 0px;
+
+    /* Frame Size Set */
+    height: 10px;
+}
+.icon-style-4 span {
+    width: 4px;
+    height: 4px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
+    opacity: 0.5;
+
+    /* span margin set */
+    margin: 0px 2px;
+}
+
+
+
+/******************************************************/
+/** INPUT  **/
+/**
+ * Input-Style-1
+ */
+.input-style-1 {
+    border: none;
+    vertical-align: top;
+    outline: none;
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    border-radius: 10px;
+    background-color: rgb(227, 237, 247);
+    color: rgb(0, 114, 255);
+
+    /* Width Set*/
+    width: 300px;
+
+    /* Inner Padding Set */
+    padding: 8px 10px 8px 16px;
+
+    /* Font Size Set */
+    font-size: 14px;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.input-style-1::-moz-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1:-moz-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1:-ms-input-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1::-webkit-input-placeholder { color: rgba(0, 115, 255, 0.363); }
+.input-style-1::-ms-clear { display: none; }
+
+
+/**
+ * Input-Style-2
+ */
+.input-style-2 {
+    vertical-align: top;
+    border: 1px solid rgb(198, 211, 227);
+    border-radius: 4px;
+    outline: none;
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    color: rgb(113, 134, 162);;
+
+    /* Width Set*/
+    width: 300px;
+
+    /* Inner Padding Set */
+    padding: 8px 10px 8px 16px;
+
+    /* Font Size Set */
+    font-size: 14px;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.input-style-2:focus {
+    border: 1px solid rgb(113, 134, 162);
+}
+.input-style-2::-moz-placeholder { color: rgb(198, 211, 227); }
+.input-style-2:-moz-placeholder { color: rgb(198, 211, 227); }
+.input-style-2:-ms-input-placeholder { color: rgb(198, 211, 227); }
+.input-style-2::-webkit-input-placeholder { color: rgb(198, 211, 227); }
+.input-style-2::-ms-clear { display: none; }
+
+
+/**
+ * Input-Style-3
+ */
+.input-style-3 {
+    vertical-align: top;
+    display: inline-block;
+    color: rgb(34, 34, 38);
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    border-radius: 16px 0px 0px 16px;
+    border: 1px solid rgb(232, 232, 237);
+    outline: none;
+    transition: padding-right .5s ease 0s;
+
+    /* Inner Padding Set */
+    padding: 6px 10px 6px 16px;
+
+    /* Font Size Set */
+    font-size: 14px;
+
+    /* Margin Set */
+    /* margin: auto; */
+}
+.input-style-3:focus {
+    border: 1px solid rgb(252, 85, 49);
+    transition: padding-right .5s ease 0s;
+
+    /* Set Stratch Direction By Padding Direction */
+    /* Padding Right Set */
+    padding-right: 150px;
+}
+.input-style-3::-ms-clear { display: none; }
+
+
+/**
+ * Input-Style-4
+ */
+.input-style-4 {
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+    font-size: 17px;
+    border: 1px solid rgb(0, 0, 0);
+    padding: 4px 6px 4px 4px;
+    border-radius: 4px;
+    outline: none;
+    background-color: url("../../img/common/fire/fire1.png") no-repeat right center black;
+    padding-right: 160px;
+}
+.input-style-4::selection {
+    background: transparent;
+}
+.input-style-4::-ms-expand {
+    display: none;
+}
+.input-style-4 option {
+    border: 1px solid rgb(0, 0, 0);
+    font-family: "Microsoft YaHei", arial, helvetica, clean, sans-serif;
+}

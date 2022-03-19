@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- main boot js -->
-    <script src="./js/mainBoot.js" type="text/javascript" 
-    onload="loadResource('.');"></script>
-    <!-- BootStrap Link Tag -->
-    <!-- <link rel="stylesheet" href="css/css-ref/bootstrap-3.4.1-dist/css/bootstrap.css">
-    <script src="css/css-ref/bootstrap-3.4.1-dist/js/bootstrap.js"></script> -->
-    
     <title>Index</title>
 </head>
 <body>
@@ -22,74 +14,33 @@
     <button id="navigator-btn" class="btn btn-link">navigator</button><br/>
     <button id="panel-btn" class="btn btn-link">panel</button><br/>
     <button id="table-btn" class="btn btn-link">table</button><br/>
-    <button id="form-btn" class="btn btn-link">form</button><br/>
     <button id="download-btn" class="btn btn-link">download</button><br/>
+    <button id="jsapi-btn" class="btn btn-link">js-api</button>
+    
+    <h3 class="page-header">ReConstructed Below</h3>
+    <button id="layerHtml-btn">Layer-Style</button>
+    <button id="bootstrap3Html-btn">Bootstrap3-Style</button>
+    <button id="NativeHtml-btn">Native-Style</button>
+    <button id="download-btn-new" class="btn btn-link">download-New</button>
 
     <h3 class="page-header"></h3>
     <button id="download-update-btn" class="btn btn-link">update download package</button><br/>
 </body>
-
+<!-- main boot js -->
+<script src="./js/const.js" type="text/javascript"></script>
+<script src="./js/mainBoot.js" type="text/javascript"></script>
 <script type="text/javascript">
-    window.onload = function() {
-        /**
-         * bind click events
-         */
-         $("#item-btn").click(function (e) { 
-            window.location.href = "html/item.html";
-        });
-        $("#layout-btn").click(function (e) { 
-            window.location.href = "html/layout.html";
-        });
-        $("#list-btn").click(function (e) { 
-            window.location.href = "html/list.html";
-        });
-        $("#navigator-btn").click(function (e) { 
-            window.location.href = "html/navigator.html";
-        });
-        $("#panel-btn").click(function (e) { 
-            window.location.href = "html/panel.html";
-        });
-        $("#table-btn").click(function (e) { 
-            window.location.href = "html/table.html";
-        });
-        $("#form-btn").click(function (e) { 
-            window.location.href = "html/form.html";
-        });
-        $("#download-btn").click(function (e) { 
-            window.location.href = "html/download.html";
-        });
+    // process while loading
+    loadSource();
 
-
-        // call .exe to package all the file in ./code/package/~
-        $("#download-update-btn").click(function (e) { 
-            // user layer confirm
-            top.layer.confirm(
-                'Are you sure to update download package?', 
-                {
-                    title : 'Confirm',
-                    btn : ['Right now', 'Not this time']
-                },
-                function() {
-                    top.layer.closeAll();
-                    // loading layer page
-                    let loadMask = layer.load(2, {
-                        shade: [0.8, '#fff']
-                    });
-
-                    
-                    /* call shell to package file in test directory */
-                    /* Integer 7-zip, using js to call it */
-                    // new ActiveXObject("")
-
-
-                    // close loading layer page
-                    layer.close(loadMask);
-                    // open msg layer
-                    layer.msg('Finished');
-                },
-                function() { top.layer.closeAll(); }
-            );
-        });
+    function loadSource() {
+        setContextPath('.');
+        // jquery
+        addScriptTag(ref_Path.jQuery, "text/javascript");
+        // bootstrap
+        addLinkTag(ref_Path.bootstrap3.css, "stylesheet");
+        addScriptTag(ref_Path.bootstrap3.js, "text/javascript");
     }
 </script>
+<script type="text/javascript" src="./js/index.js" defer></script>
 </html>

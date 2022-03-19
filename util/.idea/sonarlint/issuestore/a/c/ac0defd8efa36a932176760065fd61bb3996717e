@@ -1,0 +1,13 @@
+
+s
+java:S1166�"W异常处理不能丢失原始异常的所有信息（流式写法可能存在误报）(񓊱�����
+s
+java:S1166�"W异常处理不能丢失原始异常的所有信息（流式写法可能存在误报）(񓊱�����
+�java:SE2014="�不安全的对象创建.请使用框架方法FileManagerUtil.createFile方法创建.相关规范链接：https://fdoc.epoint.com.cn/onlinedoc/rest/d/7JN3Mn(����
+�java:SE2014="�不安全的对象创建.请使用框架方法FileManagerUtil.createFile方法创建.相关规范链接：https://fdoc.epoint.com.cn/onlinedoc/rest/d/7JN3Mn(����
+D	java:S106�")用logger代替System.out或者System.err(ޞҗ�����
+>	java:S106�")用logger代替System.out或者System.err(���7
+?	java:S106�")用logger代替System.out或者System.err(ڎ��
+D	java:S106�")用logger代替System.out或者System.err(ޞҗ�����
+>	java:S106�")用logger代替System.out或者System.err(���7
+?	java:S106�")用logger代替System.out或者System.err(ڎ��

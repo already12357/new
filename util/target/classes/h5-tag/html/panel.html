@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Component</title>
+    <script type="text/javascript" src="../js/mainBoot.js" onload="loadResource('..');"></script>
+    <link rel="stylesheet" href="../css/panel/panel.css">
+</head>
+
+<!-- Swiper Template -->
+<!-- Tmp 1 -->
+<script id="swiper-tmp1" type="text/x-dot-template">
+    <div class="swiper-container" id="com_swiper1">
+        <div class="swiper-wrapper">
+            {{for (var i in it.imglist) { }}
+            <div class="swiper-slide">
+                <a onclick="Swiper1_toDetail();"><img src="{{=it.imglist[i]}}"></a>
+            </div>
+            {{ } }}
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</script>
+
+<!-- Tmp 2 -->
+<script id="swiper-tmp2" type="text/x-dot-template">
+    <div class="swiper-container" id="com_swiper2">
+        <div class="swiper-wrapper">
+            {{for (var i in it.imglist) { }}
+            <div class="swiper-slide">
+                <a onclick="Swiper2_toDetail();"><img src="{{=it.imglist[i]}}"></a>
+            </div>
+            {{ } }}
+        </div>
+    </div>
+</script>
+
+<!-- Tmp 3 -->
+<script id="swiper-tmp3" type="text/x-dot-template">
+    <div class="" id="com_swiper3">
+        <div id="pictures_div">
+            {{for (var i in it.imglist[i]) { }}
+            <img src="{{=it.imglist[i]}}" />
+            {{ } }}
+        </div>
+
+        <!-- 图片对应的文本存放区域 -->
+        <div class="swiper-container" id="text_swiper">
+            {{for (var i in it.textlist) { }}
+            <div class="swiper-slide">
+                <span>{{=it.textlist[i]}}</span>
+            </div>
+            {{ } }}
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</script>
+<!-- END: Swiper Template -->
+
+
+<body>
+    <!-- swiper 1 -->
+    <h3 class="page-header">Swiper</h3>
+    <div class="swiper1">
+    </div>
+    
+    <!-- swiper2-->
+    <div class="swiper2">
+    </div>
+
+    <!-- swiper3 -->
+    <div class="swiper3">
+        <div id="com_swiper3">
+            <!-- 图片存放区域 -->
+            <div id="pictures_div">
+                <img src="../img/panel/picture2.png" />
+                <img src="../img/panel/picture1.png" />
+            </div>
+
+            <!-- 图片对应的文本存放区域 -->
+            <div class="swiper-container" id="text_swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                       11111
+                    </div>
+                    <div class="swiper-slide">
+                        22222
+                    </div>
+                    <div class="swiper-slide">
+                        33333
+                    </div>
+                </div>
+                <div class="text_swiper_pagniation"></div>
+            </div>
+        </div>
+    </div>
+
+    <br/><button id="back-btn" class="btn btn-link">Go Back</button><br/>
+</body>
+<!-- 通过 js : 在 <body> 标签对后添加对应的 swiper script 标签 -->
+<script type="text/javascript" src="../ref/Swiper/swiper-3.4.2/dist/js/swiper.min.js"></script>
+<script type="text/javascript" src="../js/panel/panel-mock.js"></script>
+<script type="text/javascript" src="../js/panel/panel.js"></script>
+</html>
